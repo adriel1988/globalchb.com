@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/page-header";
 import { ProjectsSection } from "@/components/projects-team";
 import { StatsStrip } from "@/components/extras-sections";
-import { getProjects } from "@/lib/data";
+import { getProjects, getSettings } from "@/lib/supabase-data";
 
 export const metadata: Metadata = {
   title: "Proyectos Eléctricos Realizados en el Sur de Florida",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function ProyectosPage() {
-  const projects = await getProjects();
+  const [projects, settings] = await Promise.all([getProjects(), getSettings()]);
 
   return (
     <>
@@ -37,7 +37,7 @@ export default async function ProyectosPage() {
             "Real developments that prove our execution capability: residential communities and commercial projects across South Florida.",
         }}
       />
-      <ProjectsSection projects={projects} />
+      <ProjectsSection projects={projects} googleReviewsUrl={settings.googleReviewsUrl} />
       <StatsStrip />
     </>
   );

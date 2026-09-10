@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/page-header";
 import { CatalogSection } from "@/components/catalog-section";
 import { NewsletterSection } from "@/components/newsletter-section";
-import { getProducts } from "@/lib/data";
+import { getProducts } from "@/lib/supabase-data";
 
 export const metadata: Metadata = {
   title: "Catálogo de Productos Eléctricos — Paneles, Cargadores EV y Más",

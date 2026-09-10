@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/page-header";
 import { ServicesSection } from "@/components/services-section";
 import { ProcessSection } from "@/components/process-why-sections";
 import { AssurancesSection, ServiceAreasSection } from "@/components/extras-sections";
-import { getServices } from "@/lib/data";
+import { getServices } from "@/lib/supabase-data";
 
 export const metadata: Metadata = {
   title: "Servicios Eléctricos — Paneles, Trifásicos, Trimble y Carga EV",

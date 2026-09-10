@@ -1,12 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/language-provider";
 import { COMPANY } from "@/lib/i18n";
-import { MapPin, Mail, Phone, Clock, Navigation, ArrowRight, ArrowUpRight } from "lucide-react";
+import { MapPin, Mail, Phone, Clock, Navigation, ArrowUpRight } from "lucide-react";
 
 export function ContactSection() {
-  const { locale, toggleLocale } = useLanguage();
+  const { locale } = useLanguage();
 
   const labels = locale === "es"
     ? {
@@ -99,22 +98,6 @@ export function ContactSection() {
           ))}
         </dl>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <a href={COMPANY.contactUrl} target="_blank" rel="noopener noreferrer">
-            <Button size="lg">
-              {labels.ctaPrimary}
-              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-            </Button>
-          </a>
-          <a href={COMPANY.whatsapp} target="_blank" rel="noopener noreferrer">
-            <Button size="lg" variant="outline">
-              {labels.ctaSecondary}
-            </Button>
-          </a>
-          <Button variant="ghost" size="sm" onClick={toggleLocale} className="text-xs text-muted-foreground">
-            {labels.switchHint}
-          </Button>
-        </div>
       </div>
     </section>
   );

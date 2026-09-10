@@ -92,8 +92,8 @@ export function WhyUsSection() {
           <div className="relative order-first lg:order-last">
             <div className="overflow-hidden rounded-2xl shadow-2xl">
               <Image
-                src="/images/svc-trimble.png"
-                alt="Equipo de robótica Trimble trazando puntos eléctricos en losa"
+                src="/images/Experiencia.webp"
+                alt="Experiencia eléctrica que se traduce en resultados — Global Technology &amp; Electrical Services"
                 width={1152}
                 height={864}
                 className="h-auto w-full object-cover"

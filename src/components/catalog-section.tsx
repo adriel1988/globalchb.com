@@ -19,6 +19,7 @@ export type ProductItem = {
   currency: string;
   unit: string | null;
   inStock: boolean;
+  photoUrls: string | null;
 };
 
 const categoryIcons: Record<string, typeof Zap> = {
@@ -139,13 +140,20 @@ export function CatalogSection({ products }: { products: ProductItem[] }) {
                 key={p.id}
                 className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.02] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:bg-white/[0.09] hover:shadow-[0_24px_48px_-24px_rgba(212,160,23,0.45)]"
               >
-                {/* Cabecera: icono categoría + SKU */}
-                <div className="flex items-start justify-between gap-2">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/30 via-primary/12 to-transparent text-primary ring-1 ring-inset ring-primary/35">
+                {/* Foto del producto o icono de categoría */}
+                {p.photoUrls ? (
+                  <div className="h-40 w-full overflow-hidden rounded-xl">
+                    <img
+                      src={p.photoUrls}
+                      alt={locale === "es" ? p.nameEs : p.nameEn}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/30 via-primary/12 to-transparent text-primary ring-1 ring-inset ring-primary/35">
                     <CatIcon className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  <span className="mt-1 text-xs tabular-nums tracking-wider text-slate-500">{p.sku}</span>
-                </div>
+                  </div>
+                )}
 
                 {/* Disponibilidad */}
                 <span className="mt-4 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider">

@@ -22,19 +22,17 @@ const NAV = [
 function BrandLogo({ compact = false }: { compact?: boolean }) {
   return (
     <span
-      className={`inline-flex items-center rounded-2xl border-[2.2px] border-[#D4A017] bg-black/80 shadow-[0_0_25px_rgba(212,160,23,0.3)] ${
-        compact ? "gap-2.5 p-1.5" : "gap-3.5 p-3"
-      }`}
+      className={`inline-flex items-center rounded-2xl border-[2.2px] border-[#D4A017] bg-black/80 shadow-[0_0_25px_rgba(212,160,23,0.3)] ${compact ? "gap-2.5 p-1.5" : "gap-3.5 p-3"
+        }`}
     >
       <span
-        className={`shrink-0 overflow-hidden rounded-xl border-2 border-[#D4A017] bg-black ${
-          compact ? "size-10" : "size-12"
-        }`}
+        className={`shrink-0 overflow-hidden rounded-xl border-2 border-[#D4A017] bg-black ${compact ? "size-10" : "size-12"
+          }`}
       >
         <img
-          src="/brand-logo-hd.jpg"
+          src="/brand-logo-hd.png"
           alt="Logotipo de Global Technology & Electrical Services"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover scale-140"
           width={compact ? 40 : 48}
           height={compact ? 40 : 48}
         />
@@ -79,21 +77,19 @@ export function SiteHeader() {
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   const navLinkClass = (active: boolean) =>
-    `rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-      active
-        ? "text-primary"
-        : scrolled
-          ? "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-          : "text-white/80 hover:bg-white/10 hover:text-white"
+    `rounded-md px-3 py-2 text-sm font-medium transition-colors ${active
+      ? "text-primary"
+      : scrolled
+        ? "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+        : "text-white/80 hover:bg-white/10 hover:text-white"
     }`;
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled
           ? "bg-background/95 shadow-md backdrop-blur supports-[backdrop-filter]:bg-background/85"
           : "bg-transparent"
-      }`}
+        }`}
     >
       <div className="flex h-[77px] w-full items-center justify-between gap-3 px-4 sm:px-6 lg:px-10">
         <Link href="/" aria-label={COMPANY.name} className="shrink-0">
@@ -139,9 +135,8 @@ export function SiteHeader() {
                     key={id}
                     href={href}
                     onClick={() => setOpen(false)}
-                    className={`rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent ${
-                      isActive(href) ? "text-primary" : "text-foreground"
-                    }`}
+                    className={`rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent ${isActive(href) ? "text-primary" : "text-foreground"
+                      }`}
                   >
                     {navLabels[id]}
                   </Link>

@@ -8,7 +8,7 @@ import { CatalogSection } from "@/components/catalog-section";
 import { FaqSection } from "@/components/faq-contact-sections";
 import { ContactSection } from "@/components/contact-section";
 import { NewsletterSection } from "@/components/newsletter-section";
-import { getProjects, getServices, getProducts } from "@/lib/data";
+import { getProjects, getServices, getProducts, getSettings } from "@/lib/supabase-data";
 import { COMPANY } from "@/lib/i18n";
 
 export const metadata: Metadata = {
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [services, projects, products] = await Promise.all([getServices(), getProjects(), getProducts()]);
+  const [services, projects, products, settings] = await Promise.all([getServices(), getProjects(), getProducts(), getSettings()]);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -145,7 +145,7 @@ export default async function Home() {
       <ServicesSection services={services} />
       <ProcessSection />
       <WhyUsSection />
-      <ProjectsSection projects={projects} />
+      <ProjectsSection projects={projects} googleReviewsUrl={settings.googleReviewsUrl} />
       <CompanySection />
       <StoriesSection />
       <TeamSection />

@@ -144,7 +144,7 @@ export const dict = {
       kicker: "Nuestro equipo",
       title: "Capaces, organizados y listos para entregar",
       p1: "Creemos que un equipo sólido es la base de cada proyecto exitoso. Nuestro equipo está formado por profesionales con experiencia, cada uno aportando habilidades especializadas para garantizar calidad y eficiencia en cada trabajo que emprendemos.",
-      p2: "Conocerás a las personas detrás de nuestro trabajo: desde gerentes de proyecto y supervisores hasta técnicos especializados. Nos enorgullecemos de un equipo bien estructurado, organizado para manejar proyectos de cualquier escala con precisión, seguridad y profesionalismo.",
+      p2: "Conocerás a las personas detrás de nuestro trabajo: desde gerentes de proyecto y supervisores hasta técnicos especializados. Nos enorgullecemos de un equipo bien estructurado con roles claros, listo para manejar proyectos de cualquier escala con precisión, seguridad y profesionalismo.",
       p3: "Con una cadena de mando clara y el trabajo en equipo como núcleo de nuestras operaciones, nuestra mano de obra está totalmente preparada para entregar excelentes resultados, a tiempo y dentro del presupuesto.",
       roles: [
         { title: "Gerentes de proyecto", desc: "Planificación, coordinación y comunicación directa contigo de principio a fin." },

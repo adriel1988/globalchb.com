@@ -59,7 +59,7 @@ export function CompanySection() {
           <div className="relative order-first lg:order-last">
             <div className="overflow-hidden rounded-2xl shadow-2xl">
               <Image
-                src="/images/about-company.png"
+                src="/images/about-company.webp"
                 alt="Equipo de electricistas revisando planos en obra"
                 width={1152}
                 height={864}
