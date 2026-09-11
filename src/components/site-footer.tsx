@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import {
   Dialog,
   DialogContent,
@@ -45,9 +44,9 @@ function PolicyDialog({
         </DialogHeader>
         <ScrollArea className="max-h-[60vh] pr-4">
           <div className="space-y-5">
-            {sections.map((s) => (
-              <section key={s.heading}>
-                <h3 className="text-sm font-normal text-foreground">{s.heading}</h3>
+            {sections.map((s, idx) => (
+              <section key={s.heading || `section-${idx}`}>
+                {s.heading ? <h3 className="text-sm font-normal text-foreground">{s.heading}</h3> : null}
                 {s.body.map((p, i) => (
                   <p key={i} className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                     {p}
@@ -72,14 +71,10 @@ export function SiteFooter() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
 
-  const serviceLinks = locale === "es"
-    ? ["Paneles residenciales y subpaneles", "Paneles comerciales", "Paneles trifásicos", "Trazado eléctrico con Trimble", "Estaciones de carga EV/RV", "Interruptores e iluminación"]
-    : ["Residential panels & sub panels", "Commercial panels", "3-phase panels", "Electrical layout with Trimble", "EV/RV charging stations", "Switches & lighting"];
-
   return (
     <footer className="mt-auto bg-slate-950 text-slate-300">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
           <div>
             <p className="mt-2 text-sm leading-relaxed text-slate-400">{t.footer.about}</p>
             <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1 text-xs text-slate-400">
@@ -87,19 +82,6 @@ export function SiteFooter() {
               {COMPANY.legalName}
             </p>
           </div>
-
-          <nav aria-label={t.footer.servicesTitle}>
-            <h3 className="text-sm font-normal uppercase tracking-wider text-white">{t.footer.servicesTitle}</h3>
-            <ul className="mt-4 space-y-2.5 text-sm">
-              {serviceLinks.map((s) => (
-                <li key={s}>
-                  <Link href="/servicios" className="text-slate-400 transition-colors hover:text-primary">
-                    {s}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
 
           <div id="contacto" className="scroll-mt-24">
             <h3 className="text-sm font-normal uppercase tracking-wider text-white">{t.footer.contactTitle}</h3>

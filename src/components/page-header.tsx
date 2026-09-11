@@ -1,13 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
 
 type Copy = { kicker?: string; title: string; subtitle?: string };
 
 export function PageHeader({ es, en }: { es: Copy; en: Copy }) {
-  const { locale, t } = useLanguage();
+  const { locale } = useLanguage();
   const c = locale === "es" ? es : en;
 
   return (
@@ -28,18 +26,13 @@ export function PageHeader({ es, en }: { es: Copy; en: Copy }) {
       />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-slate-400">
-          <Link href="/" className="transition-colors hover:text-primary">
-            {t.nav.home}
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5 text-slate-600" aria-hidden="true" />
-          <span aria-current="page" className="text-primary">
+        {c.kicker ? (
+          <p className="text-sm font-medium uppercase tracking-widest text-primary">
             {c.kicker}
-          </span>
-        </nav>
+          </p>
+        ) : null}
 
-        <h1 className="mt-5 max-w-3xl text-3xl font-normal tracking-tight sm:text-4xl lg:text-5xl">
+        <h1 className="mt-2 max-w-3xl text-3xl font-normal tracking-tight sm:text-4xl lg:text-5xl">
           {c.title}
         </h1>
         {c.subtitle ? (

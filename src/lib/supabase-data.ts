@@ -78,7 +78,7 @@ export async function getProducts(): Promise<ProductItem[]> {
       currency: "USD",
       unit: null,
       inStock: row.is_active ?? true,
-      photoUrls: normalizePhotoUrl(row.photo_urls),
+      photoUrls: normalizePhotoUrls(row.photo_urls),
     })) as ProductItem[];
   } catch (err) {
     console.error("[getProducts] Unexpected error:", err);
@@ -174,4 +174,29 @@ function normalizePhotoUrl(value: unknown): string | null {
     return (value as string[])[0] ?? null;
   }
   return null;
+}
+
+function normalizePhotoUrls(value: unknown): string[] {
+  if (!value) return [];
+  if (Array.isArray(value)) {
+    return value.map(String).filter(Boolean);
+  }
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (trimmed.startsWith("[")) {
+      try {
+        const arr = JSON.parse(trimmed);
+        if (Array.isArray(arr)) {
+          return arr.map(String).filter(Boolean);
+        }
+      } catch {
+        // Fallback
+      }
+    }
+    if (trimmed.includes(",")) {
+      return trimmed.split(",").map((s) => s.trim()).filter(Boolean);
+    }
+    return [trimmed];
+  }
+  return [];
 }

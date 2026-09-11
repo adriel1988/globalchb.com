@@ -5,7 +5,7 @@ import { dict, type Dict, type Locale } from "@/lib/i18n";
 
 type LanguageContextType = {
   locale: Locale;
-  t: Dict;
+  t: (typeof dict)[Locale];
   setLocale: (l: Locale) => void;
   toggleLocale: () => void;
 };

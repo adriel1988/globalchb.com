@@ -3,7 +3,17 @@
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Package, PackageOpen, ShoppingCart, Zap, PlugZap, Lightbulb, ShieldCheck } from "lucide-react";
+import {
+  Package,
+  PackageOpen,
+  ShoppingCart,
+  Zap,
+  PlugZap,
+  Lightbulb,
+  ShieldCheck,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
 import { useOrder } from "@/components/order-context";
 
@@ -19,7 +29,7 @@ export type ProductItem = {
   currency: string;
   unit: string | null;
   inStock: boolean;
-  photoUrls: string | null;
+  photoUrls: string[] | string | null;
 };
 
 const categoryIcons: Record<string, typeof Zap> = {
@@ -28,6 +38,107 @@ const categoryIcons: Record<string, typeof Zap> = {
   lighting: Lightbulb,
   protection: ShieldCheck,
 };
+
+function ProductImageGallery({
+  photoUrls,
+  alt,
+  fallbackIcon: FallbackIcon,
+}: {
+  photoUrls: string[] | string | null;
+  alt: string;
+  fallbackIcon: React.ComponentType<any>;
+}) {
+  const photos = useMemo(() => {
+    if (!photoUrls) return [];
+    if (Array.isArray(photoUrls)) return photoUrls.map(String).filter(Boolean);
+    if (typeof photoUrls === "string") {
+      const trimmed = photoUrls.trim();
+      if (trimmed.startsWith("[")) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          if (Array.isArray(parsed)) return parsed.map(String).filter(Boolean);
+        } catch {
+          // fallback
+        }
+      }
+      if (trimmed.includes(",")) {
+        return trimmed.split(",").map((s) => s.trim()).filter(Boolean);
+      }
+      return [trimmed];
+    }
+    return [];
+  }, [photoUrls]);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  if (photos.length === 0) {
+    return (
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/30 via-primary/12 to-transparent text-primary ring-1 ring-inset ring-primary/35">
+        <FallbackIcon className="h-5 w-5" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  const hasMultiple = photos.length > 1;
+
+  const handlePrev = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev === 0 ? photos.length - 1 : prev - 1));
+  };
+
+  const handleNext = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev === photos.length - 1 ? 0 : prev + 1));
+  };
+
+  return (
+    <div className="group/gallery relative h-40 w-full overflow-hidden rounded-xl bg-slate-900 select-none">
+      <img
+        src={photos[currentIndex]}
+        alt={`${alt} (${currentIndex + 1}/${photos.length})`}
+        className="h-full w-full object-cover transition-transform duration-500 group-hover/gallery:scale-105"
+      />
+
+      {hasMultiple && (
+        <>
+          {/* Flecha menor que (<) en la esquina izquierda transparente */}
+          <button
+            type="button"
+            onClick={handlePrev}
+            aria-label="Foto anterior"
+            className="absolute left-1.5 top-1/2 -translate-y-1/2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/35 text-white/95 backdrop-blur-xs border border-white/25 transition-all hover:bg-black/65 hover:scale-110 active:scale-95 shadow-md"
+          >
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" strokeWidth={2.5} />
+          </button>
+
+          {/* Flecha mayor que (>) en la esquina derecha transparente */}
+          <button
+            type="button"
+            onClick={handleNext}
+            aria-label="Foto siguiente"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/35 text-white/95 backdrop-blur-xs border border-white/25 transition-all hover:bg-black/65 hover:scale-110 active:scale-95 shadow-md"
+          >
+            <ChevronRight className="h-4 w-4" aria-hidden="true" strokeWidth={2.5} />
+          </button>
+
+          {/* Indicadores de paginación */}
+          <div className="absolute bottom-2 inset-x-0 z-10 flex items-center justify-center gap-1 pointer-events-none">
+            {photos.map((_, idx) => (
+              <span
+                key={idx}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  idx === currentIndex ? "w-3.5 bg-primary shadow-xs" : "w-1.5 bg-white/60"
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 export function CatalogSection({ products }: { products: ProductItem[] }) {
   const { t, locale } = useLanguage();
@@ -140,20 +251,12 @@ export function CatalogSection({ products }: { products: ProductItem[] }) {
                 key={p.id}
                 className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.02] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:bg-white/[0.09] hover:shadow-[0_24px_48px_-24px_rgba(212,160,23,0.45)]"
               >
-                {/* Foto del producto o icono de categoría */}
-                {p.photoUrls ? (
-                  <div className="h-40 w-full overflow-hidden rounded-xl">
-                    <img
-                      src={p.photoUrls}
-                      alt={locale === "es" ? p.nameEs : p.nameEn}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/30 via-primary/12 to-transparent text-primary ring-1 ring-inset ring-primary/35">
-                    <CatIcon className="h-5 w-5" aria-hidden="true" />
-                  </div>
-                )}
+                {/* Foto(s) del producto con visor y flechas transparentes o icono de categoría */}
+                <ProductImageGallery
+                  photoUrls={p.photoUrls}
+                  alt={locale === "es" ? p.nameEs : p.nameEn}
+                  fallbackIcon={CatIcon}
+                />
 
                 {/* Disponibilidad */}
                 <span className="mt-4 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider">

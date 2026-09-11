@@ -4,6 +4,18 @@ export const COMPANY = {
   name: "Global Technology & Electrical Services",
   shortName: "GTech Electrical",
   legalName: "GLOBALTECHELECTRICAL CONTRACTOR",
+  welcome: {
+    es: "BIENVENIDOS A GLOBAL TECHNOLOGY SU CONTRATISTA ELÉCTRICO",
+    en: "WELCOME TO GLOBAL TECHNOLOGY YOUR ELECTRICAL CONTRACTOR",
+  },
+  welcomeOffice: {
+    es: "Nos encantaría recibirte en nuestra oficina",
+    en: "we love to receive you at us office",
+  },
+  receiveInfo: {
+    es: "¿Te gustaría recibir información de nosotros?",
+    en: "will like to receive information from us",
+  },
   tagline: {
     es: "Contratista Eléctrico Certificado · Florida",
     en: "State-Certified Electrical Contractor · Florida",
@@ -21,7 +33,15 @@ export const COMPANY = {
     es: "Sur de Florida: Miami, Aventura, Coral Gables, Delray Beach, Davie y alrededores",
     en: "South Florida: Miami, Aventura, Coral Gables, Delray Beach, Davie and surrounding areas",
   },
-  hours: { es: "Lunes a viernes, 9:00 am – 5:00 pm", en: "Monday to Friday, 9:00 AM – 5:00 PM" },
+  hours: {
+    es: "Lunes a viernes, 09:00 am – 05:00 pm",
+    en: "Monday to Friday, 09:00 am – 05:00 pm",
+  },
+  openToday: {
+    es: "Abierto hoy · 09:00 am – 05:00 pm",
+    en: "Open today · 09:00 am – 05:00 pm",
+  },
+  copyright: "Copyright © 2025 GLOBALTECHELECTRICAL CONTRACTOR - All Rights Reserved.",
 };
 
 export const dict = {
@@ -37,18 +57,18 @@ export const dict = {
       cta: "Contactar",
     },
     hero: {
-      badge: "Contratista eléctrico certificado por el estado · Florida",
+      badge: "BIENVENIDOS A GLOBAL TECHNOLOGY SU CONTRATISTA ELÉCTRICO",
       title: "Energía y precisión eléctrica para tu proyecto",
       highlight: "precisión eléctrica",
       subtitle:
-        "En Global Technology & Electrical Services somos un contratista eléctrico certificado por el estado con más de 7 años de experiencia combinada. Estamos a la vanguardia de la innovación eléctrica, con servicios especializados alineados a los últimos avances en tecnología de construcción, para proyectos residenciales y comerciales.",
-      ctaPrimary: "Contactar",
-      ctaSecondary: "Explorar servicios",
+        "Global Technology and Electrical Services es un contratista eléctrico certificado por el estado, que aporta más de 7 años de experiencia combinada a cada proyecto. Nos enorgullecemos de estar a la vanguardia de la innovación eléctrica, ofreciendo servicios especializados alineados con los últimos avances en tecnología de la construcción.",
+      ctaPrimary: "Contáctanos",
+      ctaSecondary: "¿Te gustaría recibir información de nosotros?",
       imageAlt: "Torres de transmisión eléctrica de alto voltaje al atardecer dorado — Global Technology & Electrical Services",
       badges: [
         { title: "Certificación estatal", desc: "Contratista eléctrico licenciado y asegurado en Florida" },
-        { title: "7+ años combinados", desc: "Experiencia de nuestro equipo en cada proyecto" },
-        { title: "Residencial y comercial", desc: "Paneles, iluminación, cargadores EV y más" },
+        { title: "7+ años combinados", desc: "Experiencia y vanguardia de nuestro equipo en cada proyecto" },
+        { title: "Residencial y comercial", desc: "Paneles, iluminación, cargadores EV, Trimble y más" },
       ],
       stats: [
         { value: "7+", label: "Años de experiencia combinada" },
@@ -60,29 +80,99 @@ export const dict = {
     company: {
       kicker: "Nuestra empresa",
       title: "Un contratista eléctrico a la vanguardia de la innovación",
-      p1: "Global Technology and Electrical Services es un contratista eléctrico certificado por el estado que aporta más de 7 años de experiencia combinada a cada proyecto. Nos enorgullecemos de estar a la vanguardia de la innovación eléctrica, ofreciendo servicios especializados alineados con los últimos avances en tecnología de construcción.",
-      p2: "Nuestra trayectoria incluye proyectos residenciales, comerciales y de gran escala en el sur de Florida: desde boutiques de lujo y centros comerciales hasta garajes públicos y comunidades enteras de apartamentos. Cada obra refleja nuestra dedicación a la precisión, la calidad y la satisfacción del cliente.",
+      paragraphs: [
+        "Global Technology and Electrical Services es un contratista eléctrico certificado por el estado, que aporta más de 7 años de experiencia combinada a cada proyecto. Nos enorgullecemos de estar a la vanguardia de la innovación eléctrica, ofreciendo servicios especializados alineados con los últimos avances en tecnología de la construcción.",
+        "Nuestra trayectoria incluye una rica historia de colaboración desde la costa este hasta la costa oeste de Florida (Fort Myers, Naples, Sarasota hasta Orlando) con firmas eléctricas líderes como Power Design, OC Electrical y Unlimited Electric, lo que ha perfeccionado nuestras habilidades y conocimientos en el campo. Desde 2020, hemos ampliado nuestro enfoque, atendiendo directamente a clientes en diversos sectores, desde desarrollos residenciales hasta proyectos comerciales e industriales de alta gama.",
+        "Nuestro portafolio incluye instalaciones a gran escala tales como comunidades estilo jardín de 426 unidades, edificios de 8 pisos con cerca de 300 unidades de apartamentos, apartamentos de lujo en Fisher Island, casas club, clínicas y residencias unifamiliares, así como complejos proyectos comerciales. Aportamos una experiencia inigualable en la integración de sistemas avanzados como control de iluminación Lutron, instalaciones de baterías Tesla, cargadores EV, soluciones Leviton y paneles inteligentes Span Smart Panels. Estos sistemas proporcionan una gestión energética precisa, brindando eficiencia y sostenibilidad para cada cliente.",
+        "Nuestra capacidad para proporcionar soluciones energéticas prácticas y rentables nos convierte en el socio preferido de contratistas generales como ANF Construction, Thornton Construction, Kast Construction, GD Construction y 13th Floor Investments. Ya sea nueva construcción, renovación, instalaciones comerciales complejas o servicios subterráneos primarios de infraestructura de servicios públicos (FPL), entregamos resultados que cumplen con los más altos estándares de la industria.",
+        "En Global Technology and Electrical Services nos enfocamos en la calidad, la innovación y la satisfacción del cliente, asegurando que cada proyecto se complete a tiempo y según las especificaciones. Asóciese con nosotros para obtener soluciones eléctricas confiables que impulsan su futuro.",
+      ],
+      p1: "Global Technology and Electrical Services es un contratista eléctrico certificado por el estado, que aporta más de 7 años de experiencia combinada a cada proyecto. Nos enorgullecemos de estar a la vanguardia de la innovación eléctrica, ofreciendo servicios especializados alineados con los últimos avances en tecnología de la construcción.",
+      p2: "Nuestra trayectoria abarca colaboraciones de costa este a oeste con firmas líderes y una alianza preferente con contratistas generales como ANF Construction, Thornton Construction, Kast Construction, GD Construction y 13th Floor Investments.",
+      showLess: "Mostrar menos",
+      showMore: "Leer más sobre nuestra empresa",
       features: [
-        { title: "Innovación constante", desc: "Tecnología de construcción y herramientas de última generación en cada instalación." },
-        { title: "Calidad certificada", desc: "Trabajo conforme a los más altos estándares de la industria de la construcción." },
-        { title: "Cliente en el centro", desc: "Comunicación clara, cumplimiento de plazos y resultados tangibles." },
+        { title: "Innovación constante", desc: "Tecnología de construcción, robótica Trimble y herramientas de última generación." },
+        { title: "Calidad certificada", desc: "Instalaciones conformes a los más altos estándares del código eléctrico y la industria." },
+        { title: "Cliente en el centro", desc: "Comunicación transparente, cumplimiento estricto de plazos y resultados tangibles." },
       ],
     },
     stories: {
       kicker: "Nuestro trabajo en acción · Historias de éxito",
-      title: "Proyectos destacados e historias de éxito",
+      title: "Nuestro trabajo en acción: Proyectos destacados e historias de éxito",
       subtitle:
-        "En Global Technology and Electrical Services nos enorgullecemos de entregar resultados excepcionales en cada proyecto, transformando nuestra experiencia en éxitos tangibles. Nuestro compromiso con la calidad y el apego a los más altos estándares de la industria de la construcción nos ha permitido construir relaciones de confianza con desarrolladores, constructores y propietarios en todo el sur de Florida.",
-      cta: "Ver galería de proyectos",
+        "En Global Technology and Electrical Services nos enorgullecemos de entregar resultados excepcionales en cada proyecto, transformando nuestra experiencia en éxitos tangibles. Nuestro compromiso con la calidad y el apego a los más altos estándares de la industria de la construcción nos ha permitido contribuir a una amplia gama de proyectos residenciales, comerciales y de infraestructura. He aquí una muestra de nuestros proyectos completados, destacando nuestra colaboración con líderes de la industria:",
+      cta: "Ver imágenes de nuestros proyectos",
+      ctaText: "Ver imágenes de nuestros proyectos",
+      showLess: "Mostrar menos",
+      showMore: "Ver todas las historias de éxito",
+      status: "Completado y entregado",
+      items: [
+        {
+          name: "Kavista Apartments",
+          partner: "ANF Construction / Supporting Brothers Developers",
+          desc: "En asociación con ANF Construction, apoyando a los hermanos como desarrolladores, brindamos soluciones eléctricas avanzadas para este moderno proyecto residencial, garantizando una integración fluida de sistemas de vanguardia.",
+        },
+        {
+          name: "Metropolitan Coral Square",
+          partner: "Kast Construction / Brack Group",
+          desc: "En colaboración con Kast Construction para Brack Group, nuestro equipo entregó servicios eléctricos confiables para este desarrollo de uso mixto a gran escala, con enfoque en eficiencia y durabilidad.",
+        },
+        {
+          name: "Parking Garage 7",
+          partner: "Thornton Construction / City of Coral Gables",
+          desc: "En asociación con Thornton Construction para la Ciudad de Coral Gables, desempeñamos un papel crucial brindando instalaciones eléctricas que cumplen con los altos estándares de la ciudad para esta infraestructura clave.",
+        },
+        {
+          name: "AVIDA Aventura Station",
+          partner: "Strategy Group / Fifield",
+          desc: "Colaborando con Strategy Group para Fifield, contribuimos al desarrollo de este proyecto residencial premier, ofreciendo soluciones eléctricas personalizadas alineadas con la visión del proyecto.",
+        },
+        {
+          name: "Park @ Delray Phase 2",
+          partner: "FPL Underground Utilities & Services",
+          desc: "Enfocados en servicios públicos y canalizaciones subterráneas de FPL, nuestra experiencia garantizó una implementación fluida de sistemas eléctricos complejos, allanando el camino para futuras fases de este desarrollo.",
+        },
+        {
+          name: "Med Squared",
+          partner: "Medical & Commercial Development",
+          desc: "Entregamos servicios eléctricos integrales para este proyecto, asegurando la integración de tecnología moderna y eficiencia en cada aspecto de la construcción.",
+        },
+        {
+          name: "Vista Lago Townhomes",
+          partner: "Costland Construction / FPL Services",
+          desc: "Asociados con Costland Construction para proveer servicios de FPL y servicios públicos, asegurando que la comunidad de townhomes reciba una infraestructura eléctrica confiable y eficiente.",
+        },
+        {
+          name: "Bella Vista Apartments",
+          partner: "Integra Managed / FPL & Low Voltage",
+          desc: "En asociación con Integra Managed, gestionamos servicios de FPL y bajo voltaje para respaldar las necesidades de este desarrollo residencial con precisión y calidad.",
+        },
+        {
+          name: "Park @ Delray Phase I (423 Unidades)",
+          partner: "423 Apartamentos / Major Development",
+          desc: "Entrega de servicios eléctricos de alta calidad para este desarrollo de gran envergadura de 423 unidades de apartamentos.",
+        },
+        {
+          name: "South Pointe Mixed-Use (169 Unidades)",
+          partner: "169 Apartamentos de Uso Mixto",
+          desc: "Asegurando instalaciones eléctricas de vanguardia para este proyecto multifacético de 169 apartamentos.",
+        },
+        {
+          name: "Oakwood Village at Fort Myers (265 Unidades)",
+          partner: "265 Unidades Multifamiliares",
+          desc: "Entrega de servicios eléctricos confiables que satisfacen las necesidades de esta creciente comunidad multifamiliar de 265 unidades.",
+        },
+      ],
     },
     horizon: {
       kicker: "Proyectos y trabajos eléctricos en curso",
       title: "Proyectos emocionantes en el horizonte",
       subtitle:
-        "Mirando hacia adelante, actualmente participamos en proyectos significativos que están por completarse:",
-      projects: ["9927 East Bay Harbor", "9781 East Bay Harbor"],
+        "Mirando hacia adelante, actualmente participamos en proyectos significativos que están por completarse, incluyendo:",
+      projects: ["9927 East Bay harbor", "9781 East Bay harbor"],
       closing:
-        "Cada proyecto demuestra nuestra dedicación a la precisión, la calidad y la satisfacción del cliente, consolidándonos como un socio confiable en la industria de la construcción. Nuestro trabajo refleja el estándar que define a Global Technology & Electrical Services.",
+        "Cada proyecto demuestra nuestra dedicación a la precisión, la calidad y la satisfacción del cliente, consolidándonos como un socio confiable en la industria de la construcción. Nuestro trabajo refleja nuestro compromiso de superar los límites de lo que es posible con soluciones eléctricas modernas, desde desarrollos a gran escala hasta servicios residenciales especializados.",
     },
     services: {
       kicker: "Para más información sobre los servicios haz clic en este botón",
@@ -112,22 +202,23 @@ export const dict = {
     },
     projects: {
       kicker: "Nuestros proyectos",
-      title: "Trabajos realizados que hablan por sí solos",
-      subtitle:
-        "Una selección de desarrollos donde hemos ejecutado la ingeniería y la instalación eléctrica completa.",
+      title: "Nuestros proyectos",
+      subtitle: "Ferrari Boutique Aventura Mall, Coral Square Miami, Parking Garage 7 @ City of Coral Gables, The Kavista Apartments, South Point Mix Use, Parks @ Delray, Club House Parks @ Delray, AVIDA Aventura Apartments, Metropolitan Coral Square.",
       galleryTitle: "Trabajo general realizado",
+      showMore: "Mostrar más",
+      showLess: "Mostrar menos",
       viewProject: "Ver proyecto",
       types: { residential: "Residencial", commercial: "Comercial", mixed: "Uso mixto" },
     },
     pillars: {
       kicker: "Nuestra trayectoria",
       title: "Una historia construida proyecto a proyecto",
-      subtitle: "Lo que comenzó con trabajos residenciales hoy ejecuta instalaciones eléctricas completas para desarrolladores, constructores y propietarios.",
+      subtitle: "Más de 7 años de experiencia combinada ejecutando instalaciones eléctricas para desarrolladores, constructores y propietarios.",
       items: [
-        { title: "7+ años de experiencia combinada", desc: "Un equipo con trayectoria en obras residenciales, comerciales y de gran escala." },
-        { title: "De boutiques a comunidades", desc: "Hemos electrificado desde boutiques de lujo hasta comunidades enteras de apartamentos." },
-        { title: "Tecnología de vanguardia", desc: "Robot Trimble, estudios infrarrojos y herramientas de última generación en cada obra." },
-        { title: "Pioneros en carga EV", desc: "Primeros en adoptar infraestructura de carga para vehículos eléctricos en nueva construcción." },
+        { title: "7+ años de experiencia combinada", desc: "Un equipo con sólida trayectoria en obras residenciales, comerciales y de gran escala." },
+        { title: "De costa este a costa oeste", desc: "Colaboraciones de Fort Myers, Naples y Sarasota hasta Orlando con las mayores firmas del sector." },
+        { title: "Tecnología de vanguardia", desc: "Robot Trimble, Lutron, baterías Tesla, cargadores EV y paneles inteligentes Span." },
+        { title: "Socio preferente de GCs", desc: "Aliados de ANF Construction, Thornton, Kast Construction, GD Construction y 13th Floor." },
       ],
     },
     certs: {
@@ -143,8 +234,9 @@ export const dict = {
     team: {
       kicker: "Nuestro equipo",
       title: "Capaces, organizados y listos para entregar",
+      subtitle: "Capaces, organizados y listos para entregar",
       p1: "Creemos que un equipo sólido es la base de cada proyecto exitoso. Nuestro equipo está formado por profesionales con experiencia, cada uno aportando habilidades especializadas para garantizar calidad y eficiencia en cada trabajo que emprendemos.",
-      p2: "Conocerás a las personas detrás de nuestro trabajo: desde gerentes de proyecto y supervisores hasta técnicos especializados. Nos enorgullecemos de un equipo bien estructurado con roles claros, listo para manejar proyectos de cualquier escala con precisión, seguridad y profesionalismo.",
+      p2: "En esta sección conocerás a las personas detrás de nuestro trabajo: desde gerentes de proyecto y supervisores hasta técnicos especializados. Nos enorgullecemos de nuestro equipo bien estructurado, organizado para manejar proyectos de cualquier escala con precisión, seguridad y profesionalismo.",
       p3: "Con una cadena de mando clara y el trabajo en equipo como núcleo de nuestras operaciones, nuestra mano de obra está totalmente preparada para entregar excelentes resultados, a tiempo y dentro del presupuesto.",
       roles: [
         { title: "Gerentes de proyecto", desc: "Planificación, coordinación y comunicación directa contigo de principio a fin." },
@@ -165,9 +257,8 @@ export const dict = {
     },
     catalog: {
       kicker: "Todos los productos",
-      title: "Catálogo de productos eléctricos para pedir en línea",
-      subtitle:
-        "Explora nuestro catálogo de equipos y accesorios eléctricos y envía tu solicitud de pedido en minutos. Un asesor confirma disponibilidad, instalación y precio final antes de cualquier cobro.",
+      title: "Catálogo de productos eléctricos",
+      subtitle: "Equipos y accesorios eléctricos profesionales para tu propiedad o proyecto.",
       all: "Todos",
       order: "Pedir",
       from: "Desde",
@@ -176,7 +267,7 @@ export const dict = {
       outOfStock: "Bajo pedido",
       empty: "¡Nuevos productos están en camino!",
       loading: "Cargando catálogo…",
-      note: "Los precios son de referencia del equipo e instalación básica; se confirman según alcance, marca y vigencia. Disponemos de más productos a solicitud.",
+      note: "Los precios son de referencia del equipo e instalación básica; se confirman según alcance, marca y vigencia.",
       categories: {
         panels: "Paneles",
         evCharging: "Carga EV/RV",
@@ -192,33 +283,33 @@ export const dict = {
         {
           num: "01",
           title: "Evaluamos tu proyecto",
-          desc: "Visitamos el sitio, revisamos tus necesidades eléctricas y detectamos signos de paneles obsoletos, sobrecargas o riesgos.",
+          desc: "Revisamos tus necesidades eléctricas, cargas de potencia y detectamos signos de paneles obsoletos o sobrecargas.",
         },
         {
           num: "02",
           title: "Diseñamos y tramitamos permisos",
-          desc: "Preparamos el trazado eléctrico —con tecnología Trimble cuando aplica— y gestionamos permisos e inspecciones requeridas.",
+          desc: "Preparamos el trazado eléctrico —con tecnología robótica Trimble cuando aplica— y gestionamos los permisos requeridos.",
         },
         {
           num: "03",
           title: "Instalamos con precisión",
-          desc: "Ejecutamos la instalación con materiales certificados, cableado limpio y protocolos de seguridad estrictos.",
+          desc: "Ejecutamos la instalación con materiales certificados, cableado ordenado y protocolos estrictos de seguridad.",
         },
         {
           num: "04",
           title: "Probamos y entregamos",
-          desc: "Realizamos pruebas, termografía y troubleshooting final, y entregamos tu sistema listo para operar.",
+          desc: "Realizamos pruebas, inspecciones y troubleshooting final, entregando tu sistema listo para operar.",
         },
       ],
     },
     whyUs: {
       kicker: "Por qué elegirnos",
       title: "Experiencia eléctrica que se traduce en resultados",
-      subtitle: "Combinamos certificación, tecnología y un equipo organizado para entregar en tiempo y forma.",
+      subtitle: "Combinamos más de 7 años de experiencia, tecnología de vanguardia y un equipo organizado para entregar en tiempo y presupuesto.",
       items: [
-        { title: "Contratista certificado", desc: "Licencia estatal y aseguramiento vigente para trabajos residenciales y comerciales." },
+        { title: "Contratista certificado", desc: "Licencia estatal de Florida y seguros vigentes para proyectos residenciales y comerciales." },
         { title: "Tecnología Trimble", desc: "Trazados y perforaciones de losa de máxima precisión que minimizan riesgos." },
-        { title: "Pioneros en carga EV", desc: "Especialistas en infraestructura de carga para vehículos eléctricos en nueva construcción." },
+        { title: "Pioneros en carga EV", desc: "Especialistas certificados en infraestructura de recarga para vehículos eléctricos." },
         { title: "Equipo con cadena de mando", desc: "Estructura organizada que entrega proyectos de cualquier escala a tiempo y dentro del presupuesto." },
       ],
     },
@@ -228,36 +319,36 @@ export const dict = {
       items: [
         {
           q: "¿Cuáles son las señales de que necesito reemplazar mi panel eléctrico?",
-          a: "Síntomas como disparos frecuentes del interruptor principal, luces que parpadean y tomacorrientes calientes pueden indicar la necesidad de un panel nuevo. Los paneles se vuelven obsoletos o insuficientes con el tiempo, especialmente al agregar equipos de alto consumo o cargar vehículos eléctricos.",
+          a: "Síntomas como disparos frecuentes del interruptor, luces que parpadean y tomacorrientes calientes pueden indicar la necesidad de un panel nuevo. Ignorar estos problemas puede provocar peligrosos riesgos de seguridad en su propiedad.",
         },
         {
           q: "¿Qué servicios ofrece Global Technology & Electrical Services?",
-          a: "Reemplazo de paneles eléctricos residenciales y subpaneles, paneles comerciales, paneles trifásicos, trazado eléctrico con robot Trimble, estaciones de carga para vehículos eléctricos y RV, interruptores e iluminación interior y exterior, sistemas inteligentes, cableado para generadores y transferencias para huracanes, mantenimiento, termografía y más.",
+          a: "Reemplazo de paneles eléctricos residenciales y subpaneles, paneles comerciales, sistemas trifásicos, trazado con robot Trimble, estaciones de carga para vehículos eléctricos y RV, iluminación interior/exterior, sistemas inteligentes (Lutron/Crestron), generadores, estudios termográficos infrarrojos y certificaciones ante el código.",
         },
         {
           q: "¿Tramitan permisos e inspecciones?",
-          a: "Sí. Las nuevas instalaciones de cableado en construcción incluyen gestión de permisos e inspecciones. Nos encargamos de todo el proceso ante la autoridad correspondiente para que tu proyecto cumpla con el código eléctrico.",
+          a: "Sí. Gestionamos el 100% de los permisos e inspecciones correspondientes ante las autoridades de cada municipalidad o condado en Florida.",
         },
         {
           q: "¿Qué es el trazado eléctrico con robot Trimble?",
-          a: "Utilizamos la tecnología de medición y modelado avanzada de Trimble para mediciones precisas del sitio, colocación exacta de componentes eléctricos y perforaciones de losa, minimizando riesgos y agilizando el trazado en obras de nueva construcción.",
+          a: "Utilizamos la tecnología avanzada de medición y modelado Trimble (escaneo 3D, BIM y estaciones totales robóticas) para mediciones exactas del sitio y perforaciones de losa milimétricas, reduciendo errores y acelerando la obra.",
         },
         {
-          q: "¿Instalan cargadores para vehículos eléctricos en casas y edificios?",
-          a: "Sí. Somos pioneros en cableado e instalación de estaciones de carga avanzadas para vehículos eléctricos y RV, tanto en proyectos de nueva construcción que deben alinearse con la creciente demanda de la industria EV como en propiedades existentes.",
+          q: "¿Son instaladores certificados de cargadores para vehículos eléctricos?",
+          a: "Sí. Somos pioneros e instaladores certificados con licencia oficial para instalar estaciones RV Charger Point, con paneles dedicados independientes para máxima seguridad.",
         },
         {
-          q: "¿Atienden emergencias y trabajos para huracanes?",
-          a: "Realizamos cableado de potencia para generadores e interruptores de transferencia para huracanes, además de mantenimiento de sistemas eléctricos, estudios infrarrojos y troubleshooting. Contáctanos para evaluar tu caso.",
+          q: "¿Atienden emergencias y trabajos de respaldo para huracanes?",
+          a: "Sí. Realizamos cableado de potencia para generadores e interruptores de transferencia para huracanes, mantenimiento de sistemas eléctricos y troubleshooting.",
         },
       ],
     },
     newsletter: {
-      kicker: "Boletín",
-      title: "Iluminación moderna y diseño de interiores",
+      kicker: "Contáctanos",
+      title: "Suscríbete para nuevas tecnologías y diseño de interiores",
       subtitle:
-        "Suscríbete para recibir nueva tecnología e ideas de iluminación moderna y diseño de interiores que combinan confort y lujo.",
-      emailPh: "correo electrónico",
+        "¡Recibe un boletín con nuevas tecnologías e increíbles diseños de iluminación que combinan confort y lujo!",
+      emailPh: "Correo electrónico",
       label: "Correo electrónico",
       register: "Registrarme",
       sending: "Registrando…",
@@ -289,9 +380,25 @@ export const dict = {
       successRef: "Tu número de referencia es",
       error: "No pudimos registrar tu pedido. Inténtalo de nuevo.",
     },
+    contact: {
+      kicker: "Contacto",
+      title: "Nos encantaría recibirte en nuestra oficina",
+      businessHours: "Horario de atención",
+      openToday: "Abierto hoy",
+      hoursTime: "09:00 am – 05:00 pm",
+      formTitle: "Contáctanos",
+      nameLabel: "Nombre",
+      emailLabel: "Correo electrónico*",
+      messageLabel: "Mensaje",
+      attachFiles: "Adjuntar archivos",
+      attachmentsCount: "Archivos adjuntos (0)",
+      recaptchaNote: "Este sitio está protegido por reCAPTCHA y aplican la Política de Privacidad y Términos de Servicio de Google.",
+      send: "Enviar",
+      cancel: "Cancelar",
+    },
     footer: {
       about:
-        "Contratista eléctrico certificado por el estado con más de 7 años de experiencia combinada. Servicios eléctricos residenciales y comerciales alineados con los últimos avances en tecnología de construcción.",
+        "Global Technology & Electrical Services es un contratista eléctrico certificado por el estado con más de 7 años de experiencia combinada. Servicios residenciales y comerciales de vanguardia en Florida.",
       servicesTitle: "Servicios",
       contactTitle: "Contacto",
       legalTitle: "Legal",
@@ -303,9 +410,9 @@ export const dict = {
     },
     policies: {
       privacyTitle: "Política de Privacidad",
-      privacyUpdated: "Última actualización: enero 2026",
-      termsTitle: "Términos y Condiciones",
-      termsUpdated: "Última actualización: enero 2026",
+      privacyUpdated: "Última actualización: julio de 2026",
+      termsTitle: "Términos de Servicio",
+      termsUpdated: "Última actualización: julio de 2026",
       close: "Cerrar",
     },
   },
@@ -321,18 +428,18 @@ export const dict = {
       cta: "Contact",
     },
     hero: {
-      badge: "State-certified electrical contractor · Florida",
+      badge: "WELCOME TO GLOBAL TECHNOLOGY YOUR ELECTRICAL CONTRACTOR",
       title: "Power and electrical precision for your project",
       highlight: "electrical precision",
       subtitle:
-        "At Global Technology & Electrical Services we are a state-certified electrical contractor with over 7 years of combined expertise. We pride ourselves on being at the forefront of electrical innovation, offering specialized services aligned with the latest advancements in construction technology, for residential and commercial projects.",
-      ctaPrimary: "Contact",
-      ctaSecondary: "Explore services",
+        "Global Technology and Electrical Services is a state-certified electrical contractor, bringing over 7 years of combined expertise to every project. We pride ourselves on being at the forefront of electrical innovation, offering specialized services that align with the latest advancements in construction technology.",
+      ctaPrimary: "Contact us",
+      ctaSecondary: "will like to receive information from us",
       imageAlt: "High-voltage electrical transmission towers at golden sunset — Global Technology & Electrical Services",
       badges: [
         { title: "State certification", desc: "Licensed and insured electrical contractor in Florida" },
-        { title: "7+ combined years", desc: "Our team's expertise on every single project" },
-        { title: "Residential & commercial", desc: "Panels, lighting, EV chargers and more" },
+        { title: "7+ combined years", desc: "Our team's expertise and innovation on every project" },
+        { title: "Residential & commercial", desc: "Panels, lighting, EV chargers, Trimble & more" },
       ],
       stats: [
         { value: "7+", label: "Years of combined expertise" },
@@ -342,34 +449,104 @@ export const dict = {
       ],
     },
     company: {
-      kicker: "Our company",
+      kicker: "OUR COMPANY",
       title: "An electrical contractor at the forefront of innovation",
+      paragraphs: [
+        "Global Technology and Electrical Services is a state-certified electrical contractor, bringing over 7 years of combined expertise to every project. We pride ourselves on being at the forefront of electrical innovation, offering specialized services that align with the latest advancements in construction technology.",
+        "Our journey includes a rich history of collaboration from the east coast to the west coast (Fort Myer,Naples, Sarasota to Orlando) with leading electrical firms like Power Design, OC Electrical, and Unlimited Electric, which has sharpened our skills and knowledge in the field. Since 2020, we have expanded our focus, directly serving clients in diverse sectors, from residential developments to high-end commercial and industrial projects.",
+        "Our portfolio includes large-scale installations such as 426-unit garden-style communities, 8 story buildings close to the 300 apartments units, luxury apartments at fisher island, clubhouses, clinics, and residential homes, as well as complex commercial projects. We bring unmatched expertise in the integration of advanced systems like Lutron lighting control, Tesla battery installations, EV chargers, Leviton solutions, and Span Smart Panels. These systems provide precise energy management, delivering efficiency and sustainability for every client.",
+        "Our ability to provide practical, cost-effective energy solutions makes us a preferred partner for general contractors like ANF Construction, Thornton Construction, Kast Construction, and GD Construction, 13 Floor Investments , Whether it’s new construction, renovation, or complex commercial installations, primary utility underground . We deliver results that meet the highest industry standards.",
+        "At Global Technology and Electrical Services, we focus on quality, innovation, and customer satisfaction, ensuring every project is completed on time and to specification. Partner with us for reliable electrical solutions that power your future.",
+      ],
       p1: "Global Technology and Electrical Services is a state-certified electrical contractor, bringing over 7 years of combined expertise to every project. We pride ourselves on being at the forefront of electrical innovation, offering specialized services that align with the latest advancements in construction technology.",
-      p2: "Our journey includes residential, commercial and large-scale projects across South Florida: from luxury boutiques and shopping centers to public parking garages and entire apartment communities. Each project reflects our dedication to precision, quality and client satisfaction.",
+      p2: "Our journey includes a rich history of collaboration from the east coast to the west coast with leading electrical firms and preferred partnership with general contractors like ANF Construction, Thornton Construction, Kast Construction, GD Construction, and 13th Floor Investments.",
+      showLess: "Show Less",
+      showMore: "Read more about our company",
       features: [
-        { title: "Constant innovation", desc: "State-of-the-art construction technology on every installation." },
-        { title: "Certified quality", desc: "Work performed to the highest standards of the construction industry." },
+        { title: "Constant innovation", desc: "State-of-the-art construction technology, Trimble robotics and advanced tools." },
+        { title: "Certified quality", desc: "Work performed to the highest standards of the construction industry and code." },
         { title: "Client-centered", desc: "Clear communication, on-time delivery and tangible results." },
       ],
     },
     stories: {
-      kicker: "Our work in action · Success stories",
-      title: "Featured projects & success stories",
+      kicker: "OUR WORK IN ACTIONS SUCCESS STORIES",
+      title: "Our Work in Action: Featured Projects & Success Stories",
       subtitle:
-        "At Global Technology and Electrical Services, we pride ourselves on delivering exceptional results in every project, transforming our expertise into tangible successes. Our commitment to quality and adherence to the highest standards in the construction industry have allowed us to build trusted relationships with developers, builders and property owners throughout South Florida.",
-      cta: "See project gallery",
+        "At Global Technology and Electrical Services, we pride ourselves on delivering exceptional results in every project, transforming our expertise into tangible successes. Our commitment to quality and adherence to the highest standards in the construction industry have allowed us to contribute to a wide range of residential, commercial, and infrastructure projects. Here’s a glimpse into some of our completed projects, showcasing our partnership with industry leaders:",
+      cta: "See images of our projects",
+      ctaText: "See images of our projects",
+      showLess: "Show Less",
+      showMore: "View all success stories",
+      status: "Completed & Delivered",
+      items: [
+        {
+          name: "Kavista Apartments",
+          partner: "ANF Construction / Supporting Brothers Developers",
+          desc: "Partnered with ANF Construction, supporting brothers as developers, we provided advanced electrical solutions for this modern residential project, ensuring a seamless integration of state-of-the-art systems.",
+        },
+        {
+          name: "Metropolitan Coral Square",
+          partner: "Kast Construction / Brack Group",
+          desc: "In collaboration with Kast Construction for Brack Group, our team delivered reliable electrical services to this large-scale mixed-use development, focusing on efficiency and durability",
+        },
+        {
+          name: "Parking Garage 7",
+          partner: "Thornton Construction / City of Coral Gables",
+          desc: "Partnering with Thornton Construction for the City of Coral Gables, we played a crucial role in providing electrical installations that meet the city’s high standards for this key infrastructure project.",
+        },
+        {
+          name: "AVIDA Aventura Station",
+          partner: "Strategy Group / Fifield",
+          desc: "Collaborating with Strategy Group for Fifield, we contributed to the development of this premier residential project, offering tailored electrical solutions that align with the project’s vision.",
+        },
+        {
+          name: "Park @ Delray Phase 2",
+          partner: "FPL Underground Utilities & Services",
+          desc: "Focused on underground FPL services and utilities, our expertise ensured a smooth implementation of complex electrical systems, paving the way for the future phases of this development.",
+        },
+        {
+          name: "Med Squared",
+          partner: "Medical & Commercial Build",
+          desc: "Delivered comprehensive electrical services for this project, ensuring the integration of modern technology and efficiency in every aspect of the build.",
+        },
+        {
+          name: "Vista Lago Townhomes",
+          partner: "Costland Construction",
+          desc: "Partnered with Costland Construction to provide FPL and utility services, ensuring the townhome community received reliable and efficient electrical infrastructure.",
+        },
+        {
+          name: "Bella Vista Apartments",
+          partner: "Integra Managed FPL & Low Voltage",
+          desc: "Partnered with Integra Managed FPL and low-voltage utility services to support the needs of this residential development, delivering precision and quality.",
+        },
+        {
+          name: "Park @ Delray Phase I 423 apartments units",
+          partner: "423 Apartments Major Development",
+          desc: "Delivering high-quality electrical services to this major development.",
+        },
+        {
+          name: "South Pointe Mixed-Use 169 apartments",
+          partner: "169 Apartments Mixed-Use",
+          desc: "We are ensuring cutting-edge electrical installations for this diverse-use project.",
+        },
+        {
+          name: "Oakwood Village at Fort Myer - 265 units multi",
+          partner: "265 Units Multifamily Community",
+          desc: "Deliver reliable electrical services that meet the needs of this growing community.",
+        },
+      ],
     },
     horizon: {
-      kicker: "Projects & electrical work in progress",
-      title: "Exciting projects on the horizon",
-      subtitle: "Looking ahead, we are currently involved in significant projects that are set to be completed:",
-      projects: ["9927 East Bay Harbor", "9781 East Bay Harbor"],
+      kicker: "PROJECTS & ELECTRICAL WORK SERVICES PROVIDED",
+      title: "Exciting Projects on the Horizon",
+      subtitle: "Looking ahead, we are currently involved in significant projects that are set to be completed , including:",
+      projects: ["9927 East Bay harbor", "9781 East Bay harbor"],
       closing:
-        "Each project demonstrates our dedication to precision, quality and client satisfaction, making us a trusted partner in the construction industry. Our work reflects the standard that defines Global Technology & Electrical Services.",
+        "Each project demonstrates our dedication to precision, quality, and client satisfaction, making us a trusted partner in the construction industry. Our work reflects our commitment to pushing the boundaries of what’s possible with modern electrical solutions, from large-scale developments to specialized residential services.",
     },
     services: {
-      kicker: "For more information about services click this button",
-      title: "Electrical services for residential and commercial",
+      kicker: "FOR MORE INFORMATION ABOUT SERVICES CLICK THIS BOTTOM",
+      title: "ELECTRICAL SERVICES FOR RESIDENTIAL AND COMMERCIAL",
       subtitle:
         "From panel replacements to EV chargers and smart lighting: we cover your property's full electrical cycle, with permits and inspections included.",
       requestInfo: "Request information",
@@ -394,22 +571,24 @@ export const dict = {
       note: "City not listed? Contact us — we most likely cover your area.",
     },
     projects: {
-      kicker: "Our projects",
-      title: "Work performed that speaks for itself",
-      subtitle: "A selection of developments where we have delivered complete electrical engineering and installation.",
-      galleryTitle: "General work performed",
+      kicker: "OUR PROJECTS",
+      title: "OUR PROJECTS",
+      subtitle: "Ferrari Boutique Aventura Mall, Coral Square Miami, Parking Garage 7 @ City of Coral Gables, The Kavista Apartments, South Point Mix Use, Parks @ Delray, Club House Parks @ Delray, AVIDA Aventura Apartments, Metropolitan Coral Square.",
+      galleryTitle: "GENERAL WORK PERFORMED",
+      showMore: "Show More",
+      showLess: "Show Less",
       viewProject: "View project",
       types: { residential: "Residential", commercial: "Commercial", mixed: "Mixed-use" },
     },
     pillars: {
       kicker: "Our track record",
       title: "A story built project by project",
-      subtitle: "What began with residential jobs today delivers complete electrical installations for developers, builders and property owners.",
+      subtitle: "Over 7 years of combined expertise delivering complete electrical installations for developers, builders and property owners.",
       items: [
         { title: "7+ years of combined expertise", desc: "A team with a proven track record in residential, commercial and large-scale projects." },
-        { title: "From boutiques to communities", desc: "We have electrified everything from luxury boutiques to entire apartment communities." },
-        { title: "State-of-the-art technology", desc: "Trimble robot, infrared surveys and the latest tools on every job site." },
-        { title: "EV charging pioneers", desc: "First adopters of electric vehicle charging infrastructure in new construction." },
+        { title: "East to West Coast Florida", desc: "Collaborations from Fort Myers, Naples and Sarasota to Orlando with top electrical firms." },
+        { title: "State-of-the-art technology", desc: "Trimble robotics, Lutron, Tesla batteries, EV chargers and Span Smart Panels." },
+        { title: "Preferred GC Partner", desc: "Trusted partner for ANF Construction, Thornton, Kast Construction, GD Construction and 13th Floor." },
       ],
     },
     certs: {
@@ -423,10 +602,11 @@ export const dict = {
       ],
     },
     team: {
-      kicker: "Our team",
-      title: "Skilled, organized, and ready to deliver",
-      p1: "We believe that a strong team is the foundation of every successful project. Our team is made up of experienced professionals, each bringing specialized skills to ensure quality and efficiency in every job we take on.",
-      p2: "Here you'll meet the people behind our work — from project managers and supervisors to skilled tradesmen. We take pride in our well-structured team, organized to handle projects of any scale with precision, safety and professionalism.",
+      kicker: "OUR TEAM",
+      title: "Skilled, Organized, and Ready to Deliver",
+      subtitle: "Skilled, Organized, and Ready to Deliver",
+      p1: "We believe that a strong team is the foundation of every successful project. Our team is made up of experienced professionals, each bringing specialized skills to ensure quality and efficency in every job we take on.",
+      p2: "In this section, you'll meet the people behind our work - from project managers and supervisors to skilled tradesmen. We take pride in our well-structured team, organized to handle projects of any scale with precision, safety, and professionalism.",
       p3: "With a clear chain of command and teamwork at the core of our operations, our manpower is fully prepared to deliver excellent results, on time and on budget.",
       roles: [
         { title: "Project managers", desc: "Planning, coordination and direct communication with you from start to finish." },
@@ -446,10 +626,9 @@ export const dict = {
       ],
     },
     catalog: {
-      kicker: "All products",
-      title: "Electrical products catalog you can order online",
-      subtitle:
-        "Browse our catalog of electrical equipment and accessories and submit your order request in minutes. An advisor confirms availability, installation and final pricing before any charge.",
+      kicker: "All Products",
+      title: "All Products",
+      subtitle: "Professional electrical products and equipment for your property or commercial project.",
       all: "All",
       order: "Order",
       from: "From",
@@ -458,7 +637,7 @@ export const dict = {
       outOfStock: "On request",
       empty: "New products are coming soon!",
       loading: "Loading catalog…",
-      note: "Prices are reference prices for the equipment and basic installation; confirmed based on scope, brand and current rates. More products available on request.",
+      note: "Prices are reference prices for the equipment and basic installation; confirmed based on scope, brand and current rates.",
       categories: {
         panels: "Panels",
         evCharging: "EV/RV Charging",
@@ -474,7 +653,7 @@ export const dict = {
         {
           num: "01",
           title: "We assess your project",
-          desc: "We visit the site, review your electrical needs and detect signs of outdated panels, overloads or hazards.",
+          desc: "We review your electrical needs, load calculations and detect signs of outdated panels or overloads.",
         },
         {
           num: "02",
@@ -496,7 +675,7 @@ export const dict = {
     whyUs: {
       kicker: "Why choose us",
       title: "Electrical expertise that translates into results",
-      subtitle: "We combine certification, technology and an organized team to deliver on time and on budget.",
+      subtitle: "We combine over 7 years of combined expertise, cutting-edge technology and an organized team to deliver on time and on budget.",
       items: [
         { title: "Certified contractor", desc: "State license and current insurance for residential and commercial work." },
         { title: "Trimble technology", desc: "Maximum-precision device layouts and slab penetrations that minimize risks." },
@@ -510,11 +689,11 @@ export const dict = {
       items: [
         {
           q: "What are the signs that I need to replace my electrical panel?",
-          a: "Symptoms such as frequent circuit breaker trips, flickering lights and warm outlets can all point to a need for a new electrical panel. Panels become outdated or insufficient over time, especially when adding high-demand equipment or EV charging.",
+          a: "Symptoms such as frequent circuit breaker trips, flickering lights and warm outlets can all point to a need for a new electrical panel. Ignoring these problems can lead to dangerous safety risks in your home.",
         },
         {
           q: "What services does Global Technology & Electrical Services offer?",
-          a: "Residential electrical panel replacement and sub panels, commercial panel replacements, 3-phase panels, electrical layout with Trimble robot, RV/EV charger stations, interior and outdoor switches and lighting, smart home systems, generator and hurricane transfer switch wiring, maintenance, infrared surveys and troubleshooting.",
+          a: "Residential electrical panel replacement and sub panels, commercial panel replacements, 3-phase panels, electrical layout with Trimble robot, RV/EV charger stations, interior and outdoor switches and lighting, smart home systems (Lutron/Crestron), generators, infrared surveys, and code compliance inspections.",
         },
         {
           q: "Do you handle permits and inspections?",
@@ -522,11 +701,11 @@ export const dict = {
         },
         {
           q: "What is electrical layout with the Trimble robot?",
-          a: "We use Trimble's advanced measurement and modeling technology for accurate site measurements, precise placement of electrical components and slab penetrations, minimizing risks and streamlining layouts on new construction sites.",
+          a: "We use Trimble's advanced measurement and modeling technology (3D laser scanning, BIM, and robotic total stations) for accurate site measurements, precise placement of electrical components and slab penetrations, minimizing risks and streamlining layouts on construction sites.",
         },
         {
           q: "Do you install EV chargers in homes and buildings?",
-          a: "Yes. We are pioneers in the wiring and installation of advanced vehicle charger stations, both for new construction projects that must align with the growing demand of the EV industry and for existing properties.",
+          a: "Yes. We are Certified installers with an official License to install RV Charger Point, specializing in dedicated electrical panels that support the additional loads required for EV charging separate from primary services.",
         },
         {
           q: "Do you handle emergencies and hurricane-related work?",
@@ -535,13 +714,13 @@ export const dict = {
       ],
     },
     newsletter: {
-      kicker: "Newsletter",
-      title: "Modern lighting & interior design",
+      kicker: "Contact Us",
+      title: "Subscribe for new Technology and interior house Designs",
       subtitle:
-        "Subscribe for new technology and modern lighting and interior design ideas that combine comfort and luxury!",
-      emailPh: "email address",
+        "Get a newsletter with new technologies and incredible lighting designs that combine comfort and luxury!",
+      emailPh: "email",
       label: "Email address",
-      register: "Register",
+      register: "register",
       sending: "Registering…",
       success: "Subscription registered! You'll hear from us soon.",
       error: "We couldn't register your subscription. Please try again.",
@@ -571,6 +750,22 @@ export const dict = {
       successRef: "Your reference number is",
       error: "We couldn't register your order. Please try again.",
     },
+    contact: {
+      kicker: "CONTACT US",
+      title: "we love to receive you at us office",
+      businessHours: "Business Hours",
+      openToday: "Open today",
+      hoursTime: "09:00 am – 05:00 pm",
+      formTitle: "Contact Us",
+      nameLabel: "Name",
+      emailLabel: "Email*",
+      messageLabel: "Message",
+      attachFiles: "Attach Files",
+      attachmentsCount: "Attachments (0)",
+      recaptchaNote: "This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.",
+      send: "Send",
+      cancel: "Cancel",
+    },
     footer: {
       about:
         "State-certified electrical contractor with over 7 years of combined expertise. Residential and commercial electrical services aligned with the latest advancements in construction technology.",
@@ -579,18 +774,18 @@ export const dict = {
       legalTitle: "Legal",
       privacy: "Privacy Policy",
       terms: "Terms & Conditions",
-      rights: "All rights reserved.",
+      rights: "All Rights Reserved.",
       copyright: "Copyright © 2025 GLOBALTECHELECTRICAL CONTRACTOR - All Rights Reserved.",
       businessName: "GLOBAL TECHNOLOGY & ELECTRICAL SERVICES",
     },
     policies: {
       privacyTitle: "Privacy Policy",
-      privacyUpdated: "Last updated: January 2026",
-      termsTitle: "Terms & Conditions",
-      termsUpdated: "Last updated: January 2026",
+      privacyUpdated: "Last updated: July 2026",
+      termsTitle: "Terms of Service",
+      termsUpdated: "Last updated: July 2026",
       close: "Close",
     },
   },
 } as const;
 
-export type Dict = typeof dict.es;
+export type Dict = (typeof dict)[Locale];

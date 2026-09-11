@@ -170,29 +170,26 @@ export function ProjectsSection({
 
       {/* ─── Modal de detalle ────────────────────────────────────────────── */}
       <Dialog open={selected !== null} onOpenChange={(open) => !open && setSelected(null)}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+        <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-3xl lg:max-w-4xl">
           <DialogDescription className="sr-only">
             {selected?.location ?? t.projects.viewProject}
           </DialogDescription>
           {selected && (
             <>
               <DialogHeader>
-                <DialogTitle className="pr-6 text-lg">{selected.name}</DialogTitle>
+                <DialogTitle className="pr-6 text-lg sm:text-xl font-normal">{selected.name}</DialogTitle>
               </DialogHeader>
 
-              {/* Imagen del modal — aspect-ratio fijo para que no se rompa */}
-              <div className="relative w-full overflow-hidden rounded-xl" style={{ aspectRatio: "16/9" }}>
+              {/* Visor de imagen — limpio, sin marco negro y ajustado al tamaño de la foto */}
+              <div className="flex items-center justify-center w-full overflow-hidden rounded-xl">
                 {selected.image ? (
-                  <Image
+                  <img
                     src={selected.image}
                     alt={selected.name}
-                    fill
-                    sizes="(min-width: 640px) 672px, 100vw"
-                    className="object-cover"
-                    unoptimized={selected.image.startsWith("http")}
+                    className="max-h-[70vh] w-auto max-w-full rounded-xl object-contain shadow-sm"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center bg-gradient-to-br from-primary/20 via-slate-900 to-slate-950">
+                  <div className="flex h-64 w-full items-center justify-center rounded-xl bg-muted">
                     <MapPin className="h-12 w-12 text-primary/40" aria-hidden="true" />
                   </div>
                 )}
@@ -266,7 +263,7 @@ export function TeamSection() {
                   >
                     <span
                       aria-hidden="true"
-                      className="pointer-events-none absolute -right-1 -top-3 select-none text-5xl font-normal text-primary/10"
+                      className="pointer-events-none absolute right-5 top-5 select-none text-3xl font-normal leading-none text-primary/20"
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>

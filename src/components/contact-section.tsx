@@ -5,43 +5,41 @@ import { COMPANY } from "@/lib/i18n";
 import { MapPin, Mail, Phone, Clock, Navigation, ArrowUpRight } from "lucide-react";
 
 export function ContactSection() {
-  const { locale } = useLanguage();
+  const { locale, t } = useLanguage();
 
   const labels = locale === "es"
     ? {
-        kicker: "Contacto",
-        title: "Hablemos de tu proyecto eléctrico",
+        kicker: "CONTACT US",
+        title: "Nos encantaría recibirte en nuestra oficina",
         subtitle:
-          "Estamos listos para atenderte en el sur de Florida. Escríbenos por WhatsApp, envíanos un correo o visita nuestra oficina en Davie.",
+          `${COMPANY.name} · Abierto hoy: 09:00 am – 05:00 pm. Estamos listos para atenderte en el sur de Florida.`,
         address: "Dirección",
         email: "Correo electrónico",
         phone: "Teléfono / WhatsApp",
-        hours: "Horario",
+        hours: "Horario de atención",
         area: "Área de servicio",
-        ctaPrimary: "Contactar",
+        ctaPrimary: "Contact us",
         ctaSecondary: "Escríbenos por WhatsApp",
-        switchHint: "Ver en inglés",
       }
     : {
-        kicker: "Contact",
-        title: "Let's talk about your electrical project",
+        kicker: "CONTACT US",
+        title: "we love to receive you at us office",
         subtitle:
-          "We are ready to serve you across South Florida. Message us on WhatsApp, send us an email or visit our Davie office.",
+          `${COMPANY.name} · Business Hours: Open today 09:00 am – 05:00 pm. Ready to serve you across South Florida.`,
         address: "Address",
-        email: "Email",
+        email: "Email*",
         phone: "Phone / WhatsApp",
-        hours: "Business hours",
+        hours: "Business Hours",
         area: "Service area",
         ctaPrimary: "Contact us",
         ctaSecondary: "Message us on WhatsApp",
-        switchHint: "Ver en español",
       };
 
   const cards = [
     { icon: MapPin, label: labels.address, value: COMPANY.address, href: undefined as string | undefined },
+    { icon: Clock, label: labels.hours, value: COMPANY.openToday[locale], href: undefined },
     { icon: Mail, label: labels.email, value: COMPANY.email, href: `mailto:${COMPANY.email}` },
     { icon: Phone, label: labels.phone, value: COMPANY.phone, href: COMPANY.whatsapp },
-    { icon: Clock, label: labels.hours, value: COMPANY.hours[locale], href: undefined },
     { icon: Navigation, label: labels.area, value: COMPANY.area[locale], href: undefined },
   ];
 
@@ -97,7 +95,6 @@ export function ContactSection() {
             </div>
           ))}
         </dl>
-
       </div>
     </section>
   );

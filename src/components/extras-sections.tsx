@@ -49,7 +49,7 @@ export function AssurancesSection() {
               >
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute -right-1 -top-3 select-none text-5xl font-normal text-primary/10"
+                  className="pointer-events-none absolute right-6 top-6 select-none text-4xl font-normal leading-none text-primary/20"
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
@@ -188,7 +188,7 @@ export function TeamCapabilitiesSection() {
               >
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute -right-2 -top-4 select-none text-7xl font-normal text-primary/10 transition-colors duration-300 group-hover:text-primary/20"
+                  className="pointer-events-none absolute right-6 top-6 select-none text-4xl font-normal leading-none text-primary/20 transition-colors duration-300 group-hover:text-primary/30"
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
@@ -240,7 +240,7 @@ export function PillarsSection() {
               >
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute -right-1 -top-3 select-none text-5xl font-normal text-primary/10"
+                  className="pointer-events-none absolute right-6 top-6 select-none text-4xl font-normal leading-none text-primary/20"
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>

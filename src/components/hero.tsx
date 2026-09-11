@@ -44,7 +44,7 @@ export function Hero() {
               </Button>
             </a>
             <Link
-              href="/servicios"
+              href="#newsletter"
               className="inline-flex h-11 items-center justify-center rounded-md border border-white/30 bg-white/5 px-8 text-sm font-medium text-white transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
             >
               {t.hero.ctaSecondary}
