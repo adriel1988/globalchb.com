@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
   // Permite acceso HMR desde la red local (192.168.x.x)
   allowedDevOrigins: ["192.168.1.150", "192.168.1.*"],
   images: {
+    // Máxima calidad: el optimizador nunca recomprime por debajo de 100
+    // (Next 16 usa [75] por defecto). La resolución se sirve según el
+    // tamaño de pantalla y la densidad (retina), hasta el tamaño original.
+    qualities: [100],
     remotePatterns: [
       // Supabase Storage — permite cargar imágenes desde cualquier proyecto Supabase
       {
