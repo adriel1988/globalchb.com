@@ -6,10 +6,23 @@ import { useGc, useLanguage } from "@/components/language-provider";
 import type { ServiceItem } from "@/components/services-section";
 import { COMPANY } from "@/lib/i18n";
 
+const RATE_UNIT: Record<string, { en: string; es: string }> = {
+  "flat rate": { en: "flat rate", es: "tarifa fija" },
+  "per hour": { en: "per hour", es: "por hora" },
+  "per unit": { en: "per unit", es: "por unidad" },
+  "per sq ft": { en: "per sq ft", es: "por pie²" },
+};
+
 /** Recursos: precalificación, servicio residencial (catálogo de Supabase) y soluciones de producto. */
 export function ResourcesContent({ services }: { services: ServiceItem[] }) {
   const c = useGc().resources;
   const { locale } = useLanguage();
+  const price = (s: ServiceItem) => {
+    if (!s.rate || s.rate <= 0) return locale === "es" ? "Consultar precio" : "Request a quote";
+    const amount = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: s.rate % 1 === 0 ? 0 : 2 }).format(s.rate);
+    const unit = s.rateUnit ? RATE_UNIT[s.rateUnit]?.[locale] ?? s.rateUnit : null;
+    return `${locale === "es" ? "Desde" : "From"} ${amount}${unit ? ` · ${unit}` : ""}`;
+  };
 
   return (
     <section className="bg-offwhite py-16 sm:py-20">
@@ -46,6 +59,7 @@ export function ResourcesContent({ services }: { services: ServiceItem[] }) {
                       {(locale === "es" ? s.descEs : s.descEn) && (
                         <span className="mt-1 line-clamp-2 block text-xs text-slate-500">{locale === "es" ? s.descEs : s.descEn}</span>
                       )}
+                      <span className="mt-1.5 block text-[11px] font-semibold uppercase tracking-[0.12em] text-gold">{price(s)}</span>
                     </span>
                     <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-slate-400 transition-colors group-hover:text-gold" aria-hidden="true" />
                   </a>

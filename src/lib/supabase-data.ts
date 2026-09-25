@@ -6,8 +6,8 @@
  *
  * Tablas y filtros:
  *  - Proyectos  → portfolio_gallery  (is_published_to_web = true, order by display_order)
- *  - Catálogo   → product_catalog    (is_active = true, is_published_to_web = true)
- *  - Servicios  → service_catalog    (is_active = true)
+ *  - Catálogo   → product_catalog    (is_active, is_published_to_web, order by display_order)
+ *  - Servicios  → service_catalog    (is_active, show_on_web, order by display_order)
  *  - Settings   → settings           (organization_id fijo)
  */
 
@@ -58,10 +58,11 @@ export async function getProducts(): Promise<ProductItem[]> {
   try {
     const { data, error } = await getSupabaseAdmin()
       .from("product_catalog")
-      .select("id, name, description, price, category, photo_urls, is_active, is_published_to_web, sku")
+      .select("id, name, name_en, description, description_en, price, category, photo_urls, is_active, is_published_to_web, sku, display_order")
       .eq("is_active", true)
       .eq("is_published_to_web", true)
       .eq("organization_id", ORG_ID)
+      .order("display_order", { ascending: true, nullsFirst: false })
       .order("name", { ascending: true });
 
     if (error) {
@@ -73,11 +74,11 @@ export async function getProducts(): Promise<ProductItem[]> {
       id: row.id,
       sku: row.sku ?? row.id,
       nameEs: row.name ?? "",
-      nameEn: row.name ?? "",
+      nameEn: row.name_en || row.name || "",
       descEs: row.description ?? "",
-      descEn: row.description ?? "",
-      category: row.category ?? "panels",
-      price: typeof row.price === "number" ? row.price : parseFloat(row.price ?? "0"),
+      descEn: row.description_en || row.description || "",
+      category: row.category ?? "",
+      price: typeof row.price === "number" ? row.price : parseFloat(row.price ?? "0") || 0,
       currency: "USD",
       unit: null,
       inStock: row.is_active ?? true,
@@ -95,9 +96,11 @@ export async function getServices(): Promise<ServiceItem[]> {
   try {
     const { data, error } = await getSupabaseAdmin()
       .from("service_catalog")
-      .select("id, name, description, category, is_active")
+      .select("id, name, name_en, description, description_en, category, rate, rate_unit, image_url, display_order")
       .eq("is_active", true)
+      .eq("show_on_web", true)
       .eq("organization_id", ORG_ID)
+      .order("display_order", { ascending: true, nullsFirst: false })
       .order("name", { ascending: true });
 
     if (error) {
@@ -105,29 +108,23 @@ export async function getServices(): Promise<ServiceItem[]> {
       return [];
     }
 
-    return (data ?? []).filter((row) => !isInternalService(row.name, row.description)).map((row) => ({
+    return (data ?? []).map((row) => ({
       id: row.id,
       slug: row.id,
       nameEs: row.name ?? "",
-      nameEn: row.name ?? "",
+      nameEn: row.name_en || row.name || "",
       descEs: row.description ?? "",
-      descEn: row.description ?? "",
+      descEn: row.description_en || row.description || "",
       icon: "HousePlug",
+      category: row.category ?? null,
+      rate: typeof row.rate === "number" ? row.rate : parseFloat(row.rate ?? "0") || 0,
+      rateUnit: row.rate_unit ?? null,
+      image: row.image_url ?? null,
     })) as ServiceItem[];
   } catch (err) {
     console.error("[getServices] Unexpected error:", err);
     return [];
   }
-}
-
-/**
- * `service_catalog` aún no tiene `show_on_web`: se excluyen las filas internas
- * (tarifas de destajo / take off para pagar a piece workers), que no son públicas.
- * Cuando exista la columna `show_on_web`, filtrar por ella y quitar esta función.
- */
-function isInternalService(name: string | null, description: string | null) {
-  const text = `${name ?? ""} ${description ?? ""}`.toLowerCase();
-  return /\bpi[e]?ce\s*-?\s*work|\btake\s*-?\s*off\b|destajo/.test(text);
 }
 
 // ─── Settings ─────────────────────────────────────────────────────────────────

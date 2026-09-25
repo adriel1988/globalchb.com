@@ -12,13 +12,19 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 });
 
 /**
- * Cliente con service-role — SOLO usar en Route Handlers / Server Actions.
+ * Cliente de servidor (clave secreta) — SOLO usar en Server Components, Route Handlers / Server Actions.
  * Nunca exponer al cliente.
  */
+export function getServerKey() {
+  // Preferida: clave `sb_secret_…` propia de la web (Supabase › Settings › API Keys).
+  // Respaldo: la service_role legacy, hasta que se desactive.
+  return process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+}
+
 export function getSupabaseAdmin() {
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const serviceRoleKey = getServerKey();
   if (!serviceRoleKey) {
-    throw new Error("SUPABASE_SERVICE_ROLE_KEY is not set");
+    throw new Error("SUPABASE_SECRET_KEY / SUPABASE_SERVICE_ROLE_KEY is not set");
   }
   return createClient(supabaseUrl, serviceRoleKey, {
     auth: { persistSession: false },

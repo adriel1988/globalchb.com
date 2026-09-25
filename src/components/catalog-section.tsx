@@ -12,6 +12,9 @@ import {
   ShieldCheck,
   ChevronLeft,
   ChevronRight,
+  ToggleRight,
+  Fuel,
+  Siren,
 } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
 import { useOrder } from "@/components/order-context";
@@ -31,11 +34,28 @@ export type ProductItem = {
   photoUrls: string[] | string | null;
 };
 
+/** Categorías de `product_catalog.category` (texto del CRM, en español). */
 const categoryIcons: Record<string, typeof Zap> = {
+  "Paneles y breakers": Zap,
+  "Tomas e interruptores": ToggleRight,
+  "Iluminación": Lightbulb,
+  "Carga de vehículos eléctricos": PlugZap,
+  "Generadores": Fuel,
+  "Seguridad": Siren,
   panels: Zap,
   evCharging: PlugZap,
   lighting: Lightbulb,
   protection: ShieldCheck,
+};
+
+const categoryEn: Record<string, string> = {
+  "Paneles y breakers": "Panels & Breakers",
+  "Tomas e interruptores": "Outlets & Switches",
+  "Iluminación": "Lighting",
+  "Carga de vehículos eléctricos": "EV Charging",
+  "Generadores": "Generators",
+  "Seguridad": "Safety",
+  "Materiales": "Materials",
 };
 
 function ProductImageGallery({
@@ -72,8 +92,12 @@ function ProductImageGallery({
 
   if (photos.length === 0) {
     return (
-      <div className="tech-grid flex aspect-[4/3] w-full items-center justify-center bg-navy text-gold">
-        <FallbackIcon className="h-8 w-8" aria-hidden="true" />
+      <div className="relative flex aspect-[4/3] w-full flex-col items-center justify-center gap-3 overflow-hidden bg-gradient-to-br from-navy-700 to-navy text-gold">
+        <div className="tech-grid absolute inset-0" aria-hidden="true" />
+        <span className="relative flex h-16 w-16 items-center justify-center border border-gold/40 bg-navy/60">
+          <FallbackIcon className="h-8 w-8" aria-hidden="true" />
+        </span>
+        <span className="eyebrow relative text-[10px] text-white/40">Global Technology</span>
       </div>
     );
   }
@@ -148,13 +172,15 @@ export function CatalogSection({ products }: { products: ProductItem[] }) {
     openOrder({
       type: "product",
       id: p.id,
-      name: p.nameEs,
-      price: p.price,
+      name: locale === "es" ? p.nameEs : p.nameEn,
+      // Precio 0 = sin precio publicado: no se muestra "$0"
+      price: p.price > 0 ? p.price : null,
       currency: p.currency,
       unit: p.unit,
     });
 
   const categoryLabels: Record<string, string> = {
+    ...(locale === "en" ? categoryEn : {}),
     panels: t.catalog.categories.panels,
     evCharging: t.catalog.categories.evCharging,
     lighting: t.catalog.categories.lighting,
@@ -228,18 +254,28 @@ export function CatalogSection({ products }: { products: ProductItem[] }) {
                     </span>
                   </span>
 
-                  <h3 className="font-display mb-4 mt-3 text-2xl text-navy">{name}</h3>
+                  {p.category && (
+                    <p className="mt-2 text-[11px] uppercase tracking-[0.14em] text-slate-400">{categoryLabels[p.category] ?? p.category}</p>
+                  )}
+                  <h3 className="font-display mb-4 mt-1 text-2xl text-navy">{name}</h3>
                   {desc && <p className="mt-1 flex-1 text-sm leading-relaxed text-slate-600 line-clamp-3">{desc}</p>}
 
                   {/* Precio + pedir */}
                   <div className="mt-auto flex items-end justify-between gap-3 border-t border-navy/15 pt-4">
-                    <div>
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">{t.catalog.from}</p>
-                      <p className="stat-number mt-1 text-3xl text-navy">
-                        {formatPrice(p)}
-                        {p.unit && <span className="font-sans text-xs font-normal text-slate-500"> / {p.unit}</span>}
+                    {p.price > 0 ? (
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">{t.catalog.from}</p>
+                        <p className="stat-number mt-1 text-3xl text-navy">
+                          {formatPrice(p)}
+                          {p.unit && <span className="font-sans text-xs font-normal text-slate-500"> / {p.unit}</span>}
+                        </p>
+                      </div>
+                    ) : (
+                      // Precio 0 en el CRM = "Consultar precio"
+                      <p className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+                        {locale === "es" ? "Consultar precio" : "Request a quote"}
                       </p>
-                    </div>
+                    )}
                     <button
                       type="button"
                       onClick={() => onOrder(p)}

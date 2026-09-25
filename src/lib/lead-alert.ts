@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { getServerKey } from "@/lib/supabase";
 
 const CRM_URL = "https://gtech.globalchb.com";
 
@@ -50,7 +51,8 @@ export async function sendLeadAlertEmail(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+        apikey: getServerKey(),
+        Authorization: `Bearer ${getServerKey()}`,
       },
       body: JSON.stringify({ to, subject: title, html, fromName: "Global Technology · Website" }),
       signal: AbortSignal.timeout(8000),

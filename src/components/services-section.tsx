@@ -22,6 +22,12 @@ export type ServiceItem = {
   descEs: string;
   descEn: string;
   icon: string;
+  category?: string | null;
+  /** Tarifa de `service_catalog.rate` (0 o null = sin precio publicado). */
+  rate?: number | null;
+  /** `flat rate` | `per hour` | `per unit` | `per sq ft` */
+  rateUnit?: string | null;
+  image?: string | null;
 };
 
 const iconMap: Record<string, LucideIcon> = {
