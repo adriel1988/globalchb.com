@@ -145,3 +145,19 @@ La web muestra al cliente una referencia `GTE-XXXXXXXX` = los 8 primeros caracte
 3. **Documentos del lead:** en la ficha del lead, listar `lead_documents` y abrirlos con URL firmada del bucket `project-documents` (ver arriba).
 4. **Pedidos con varios productos:** hoy es un producto por envío. Si se quiere carrito, haría falta otra tabla (por ejemplo `lead_items`) con migración.
 5. **Enlace directo al lead:** si el CRM tiene una ruta tipo `/dashboard/leads?id=<lead_id>`, pasármela y la pongo en el email.
+
+---
+
+## 5. Actualizar la web al instante cuando cambia el CRM
+
+La web guarda en caché las lecturas de `portfolio_gallery`, `product_catalog` y `service_catalog` durante **1 minuto**. Para que un cambio salga **al momento**, el CRM (o un Database Webhook de Supabase) puede llamar a:
+
+```
+POST https://<dominio-de-la-web>/api/revalidate
+Header: x-revalidate-secret: <REVALIDATE_SECRET>
+Body:   { "table": "portfolio_gallery" }   // o "product_catalog" / "service_catalog"
+```
+
+- Acepta también el cuerpo estándar de los **Database Webhooks** de Supabase (`{ "type": "INSERT", "table": "portfolio_gallery", "record": {...} }`), así que se puede configurar un webhook en INSERT/UPDATE/DELETE de esas 3 tablas apuntando a esa URL con la cabecera `x-revalidate-secret`.
+- Sin `table` se borran las tres cachés. Una tabla desconocida devuelve 400; sin el secreto correcto, 401.
+- `REVALIDATE_SECRET` es una variable de entorno de Vercel (secreto largo y aleatorio) que comparten la web y el CRM.

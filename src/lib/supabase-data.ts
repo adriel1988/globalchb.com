@@ -17,8 +17,18 @@ import type { ServiceItem } from "@/components/services-section";
 import type { ProductItem } from "@/components/catalog-section";
 import type { ProjectItem } from "@/components/projects-team";
 
-/** Caché de lecturas públicas: los cambios del CRM aparecen en ≤ 5 minutos. */
-const CACHE_SECONDS = 300;
+/**
+ * Caché de lecturas públicas: los cambios del CRM aparecen en ≤ 1 minuto, o al
+ * instante si el CRM llama a POST /api/revalidate (ver src/app/api/revalidate).
+ */
+const CACHE_SECONDS = 60;
+
+/** Etiquetas de caché por tabla del CRM. */
+export const CACHE_TAGS = {
+  portfolio_gallery: "portfolio",
+  product_catalog: "products",
+  service_catalog: "services",
+} as const;
 
 const ORG_ID =
   process.env.NEXT_PUBLIC_ORG_ID ?? "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
@@ -48,7 +58,7 @@ async function fetchProjects(): Promise<ProjectItem[]> {
   })) as ProjectItem[];
 }
 
-const cachedProjects = unstable_cache(fetchProjects, ["getProjects"], { revalidate: CACHE_SECONDS });
+const cachedProjects = unstable_cache(fetchProjects, ["getProjects"], { revalidate: CACHE_SECONDS, tags: [CACHE_TAGS.portfolio_gallery] });
 
 export async function getProjects(): Promise<ProjectItem[]> {
   try {
@@ -90,7 +100,7 @@ async function fetchProducts(): Promise<ProductItem[]> {
   })) as ProductItem[];
 }
 
-const cachedProducts = unstable_cache(fetchProducts, ["getProducts"], { revalidate: CACHE_SECONDS });
+const cachedProducts = unstable_cache(fetchProducts, ["getProducts"], { revalidate: CACHE_SECONDS, tags: [CACHE_TAGS.product_catalog] });
 
 export async function getProducts(): Promise<ProductItem[]> {
   try {
@@ -131,7 +141,7 @@ async function fetchServices(): Promise<ServiceItem[]> {
   })) as ServiceItem[];
 }
 
-const cachedServices = unstable_cache(fetchServices, ["getServices"], { revalidate: CACHE_SECONDS });
+const cachedServices = unstable_cache(fetchServices, ["getServices"], { revalidate: CACHE_SECONDS, tags: [CACHE_TAGS.service_catalog] });
 
 export async function getServices(): Promise<ServiceItem[]> {
   try {
