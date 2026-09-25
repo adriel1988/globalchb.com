@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Inter, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -30,17 +31,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Idioma elegido por el visitante (cookie) → la página se pinta ya en ese idioma
+  const locale = (await cookies()).get("gchb-locale")?.value === "es" ? "es" : "en";
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${barlowCondensed.variable} font-sans antialiased bg-background text-foreground`}
       >
-        <SiteShell>{children}</SiteShell>
+        <SiteShell locale={locale}>{children}</SiteShell>
         <Toaster />
       </body>
     </html>

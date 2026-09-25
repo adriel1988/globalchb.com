@@ -18,19 +18,22 @@ const LanguageContext = createContext<LanguageContextType>({
   toggleLocale: () => {},
 });
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  // Inglés por defecto (mercado de developers / GCs). Siempre hidrata con "en" para que
-  // SSR y cliente coincidan 100% (sin mismatch de Radix/useId); luego aplica la preferencia guardada.
-  const [locale, setLocaleState] = useState<Locale>("en");
+export const LOCALE_COOKIE = "gchb-locale";
 
-  // Lee la preferencia guardada después de montar, diferido para evitar renders en cascada
+export function LanguageProvider({ children, initialLocale = "en" }: { children: ReactNode; initialLocale?: Locale }) {
+  // El servidor lee la cookie `gchb-locale` y pinta ya en ese idioma, así que
+  // SSR y cliente coinciden y el texto no "brinca" al recargar. Inglés por defecto.
+  const [locale, setLocaleState] = useState<Locale>(initialLocale);
+
+  // Migración única: preferencia antigua solo en localStorage → pasa a cookie.
   useEffect(() => {
-    const id = window.setTimeout(() => {
-      const stored = window.localStorage.getItem("gchb-locale");
-      if (stored === "en" || stored === "es") setLocaleState(stored);
-    }, 0);
-    return () => window.clearTimeout(id);
-  }, []);
+    if (document.cookie.includes(`${LOCALE_COOKIE}=`)) return;
+    const stored = window.localStorage.getItem(LOCALE_COOKIE);
+    if ((stored === "en" || stored === "es") && stored !== initialLocale) {
+      document.cookie = `${LOCALE_COOKIE}=${stored}; path=/; max-age=31536000; samesite=lax`;
+      setLocaleState(stored);
+    }
+  }, [initialLocale]);
 
   // Sincroniza el atributo lang del documento con el idioma activo
   useEffect(() => {
@@ -39,7 +42,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const setLocale = (l: Locale) => {
     setLocaleState(l);
-    window.localStorage.setItem("gchb-locale", l);
+    document.cookie = `${LOCALE_COOKIE}=${l}; path=/; max-age=31536000; samesite=lax`;
+    try {
+      window.localStorage.setItem(LOCALE_COOKIE, l);
+    } catch {
+      // almacenamiento no disponible
+    }
   };
   const toggleLocale = () => setLocale(locale === "es" ? "en" : "es");
 

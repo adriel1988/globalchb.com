@@ -54,8 +54,6 @@ export const metadata: Metadata = {
  * 05 Ground-up · 06 Built to execute · 07 Technology · 08 Trusted experience ·
  * 09 Request a proposal · FAQ · Footer (layout)
  */
-// Lee Supabase en el servidor y cachea 5 minutos (los cambios del CRM aparecen en ≤ 5 min)
-export const revalidate = 300;
 
 export default async function Home() {
   // Proyectos publicados desde el CRM (Supabase portfolio_gallery)

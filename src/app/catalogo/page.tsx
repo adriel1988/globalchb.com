@@ -14,8 +14,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Lee Supabase en el servidor y cachea 5 minutos (los cambios del CRM aparecen en ≤ 5 min)
-export const revalidate = 300;
 
 export default async function CatalogoPage() {
   const products = await getProducts();

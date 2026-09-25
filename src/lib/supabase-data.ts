@@ -11,118 +11,134 @@
  *  - Settings   → settings           (organization_id fijo)
  */
 
+import { unstable_cache } from "next/cache";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import type { ServiceItem } from "@/components/services-section";
 import type { ProductItem } from "@/components/catalog-section";
 import type { ProjectItem } from "@/components/projects-team";
+
+/** Caché de lecturas públicas: los cambios del CRM aparecen en ≤ 5 minutos. */
+const CACHE_SECONDS = 300;
 
 const ORG_ID =
   process.env.NEXT_PUBLIC_ORG_ID ?? "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
 
 // ─── Proyectos ────────────────────────────────────────────────────────────────
 
+async function fetchProjects(): Promise<ProjectItem[]> {
+  const { data, error } = await getSupabaseAdmin()
+    .from("portfolio_gallery")
+    .select("id, project_id, title, description, photo_url, display_order, is_published_to_web, created_at")
+    .eq("is_published_to_web", true)
+    .eq("organization_id", ORG_ID)
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: false });
+
+  if (error) throw new Error(error.message);
+
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    slug: row.project_id ?? "",
+    name: row.title ?? "",
+    location: null,
+    image: normalizePhotoUrl(row.photo_url),
+    descEs: row.description ?? null,
+    descEn: row.description ?? null,
+    category: null,
+  })) as ProjectItem[];
+}
+
+const cachedProjects = unstable_cache(fetchProjects, ["getProjects"], { revalidate: CACHE_SECONDS });
+
 export async function getProjects(): Promise<ProjectItem[]> {
   try {
-    const { data, error } = await getSupabaseAdmin()
-      .from("portfolio_gallery")
-      .select("id, project_id, title, description, photo_url, display_order, is_published_to_web, created_at")
-      .eq("is_published_to_web", true)
-      .eq("organization_id", ORG_ID)
-      .order("display_order", { ascending: true })
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error("[getProjects] Supabase error:", error.message);
-      return [];
-    }
-
-    return (data ?? []).map((row) => ({
-      id: row.id,
-      slug: row.project_id ?? "",
-      name: row.title ?? "",
-      location: null,
-      image: normalizePhotoUrl(row.photo_url),
-      descEs: row.description ?? null,
-      descEn: row.description ?? null,
-      category: null,
-    })) as ProjectItem[];
+    return await cachedProjects();
   } catch (err) {
-    console.error("[getProjects] Unexpected error:", err);
+    // Los errores no se guardan en caché: el siguiente intento vuelve a consultar.
+    console.error("[getProjects]", err);
     return [];
   }
 }
 
 // ─── Catálogo de Productos ────────────────────────────────────────────────────
 
+async function fetchProducts(): Promise<ProductItem[]> {
+  const { data, error } = await getSupabaseAdmin()
+    .from("product_catalog")
+    .select("id, name, name_en, description, description_en, price, category, photo_urls, is_active, is_published_to_web, sku, display_order")
+    .eq("is_active", true)
+    .eq("is_published_to_web", true)
+    .eq("organization_id", ORG_ID)
+    .order("display_order", { ascending: true, nullsFirst: false })
+    .order("name", { ascending: true });
+
+  if (error) throw new Error(error.message);
+
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    sku: row.sku ?? row.id,
+    nameEs: row.name ?? "",
+    nameEn: row.name_en || row.name || "",
+    descEs: row.description ?? "",
+    descEn: row.description_en || row.description || "",
+    category: row.category ?? "",
+    price: typeof row.price === "number" ? row.price : parseFloat(row.price ?? "0") || 0,
+    currency: "USD",
+    unit: null,
+    inStock: row.is_active ?? true,
+    photoUrls: normalizePhotoUrls(row.photo_urls),
+  })) as ProductItem[];
+}
+
+const cachedProducts = unstable_cache(fetchProducts, ["getProducts"], { revalidate: CACHE_SECONDS });
+
 export async function getProducts(): Promise<ProductItem[]> {
   try {
-    const { data, error } = await getSupabaseAdmin()
-      .from("product_catalog")
-      .select("id, name, name_en, description, description_en, price, category, photo_urls, is_active, is_published_to_web, sku, display_order")
-      .eq("is_active", true)
-      .eq("is_published_to_web", true)
-      .eq("organization_id", ORG_ID)
-      .order("display_order", { ascending: true, nullsFirst: false })
-      .order("name", { ascending: true });
-
-    if (error) {
-      console.error("[getProducts] Supabase error:", error.message);
-      return [];
-    }
-
-    return (data ?? []).map((row) => ({
-      id: row.id,
-      sku: row.sku ?? row.id,
-      nameEs: row.name ?? "",
-      nameEn: row.name_en || row.name || "",
-      descEs: row.description ?? "",
-      descEn: row.description_en || row.description || "",
-      category: row.category ?? "",
-      price: typeof row.price === "number" ? row.price : parseFloat(row.price ?? "0") || 0,
-      currency: "USD",
-      unit: null,
-      inStock: row.is_active ?? true,
-      photoUrls: normalizePhotoUrls(row.photo_urls),
-    })) as ProductItem[];
+    return await cachedProducts();
   } catch (err) {
-    console.error("[getProducts] Unexpected error:", err);
+    // Los errores no se guardan en caché: el siguiente intento vuelve a consultar.
+    console.error("[getProducts]", err);
     return [];
   }
 }
 
 // ─── Catálogo de Servicios ────────────────────────────────────────────────────
 
+async function fetchServices(): Promise<ServiceItem[]> {
+  const { data, error } = await getSupabaseAdmin()
+    .from("service_catalog")
+    .select("id, name, name_en, description, description_en, category, rate, rate_unit, image_url, display_order")
+    .eq("is_active", true)
+    .eq("show_on_web", true)
+    .eq("organization_id", ORG_ID)
+    .order("display_order", { ascending: true, nullsFirst: false })
+    .order("name", { ascending: true });
+
+  if (error) throw new Error(error.message);
+
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    slug: row.id,
+    nameEs: row.name ?? "",
+    nameEn: row.name_en || row.name || "",
+    descEs: row.description ?? "",
+    descEn: row.description_en || row.description || "",
+    icon: "HousePlug",
+    category: row.category ?? null,
+    rate: typeof row.rate === "number" ? row.rate : parseFloat(row.rate ?? "0") || 0,
+    rateUnit: row.rate_unit ?? null,
+    image: row.image_url ?? null,
+  })) as ServiceItem[];
+}
+
+const cachedServices = unstable_cache(fetchServices, ["getServices"], { revalidate: CACHE_SECONDS });
+
 export async function getServices(): Promise<ServiceItem[]> {
   try {
-    const { data, error } = await getSupabaseAdmin()
-      .from("service_catalog")
-      .select("id, name, name_en, description, description_en, category, rate, rate_unit, image_url, display_order")
-      .eq("is_active", true)
-      .eq("show_on_web", true)
-      .eq("organization_id", ORG_ID)
-      .order("display_order", { ascending: true, nullsFirst: false })
-      .order("name", { ascending: true });
-
-    if (error) {
-      console.error("[getServices] Supabase error:", error.message);
-      return [];
-    }
-
-    return (data ?? []).map((row) => ({
-      id: row.id,
-      slug: row.id,
-      nameEs: row.name ?? "",
-      nameEn: row.name_en || row.name || "",
-      descEs: row.description ?? "",
-      descEn: row.description_en || row.description || "",
-      icon: "HousePlug",
-      category: row.category ?? null,
-      rate: typeof row.rate === "number" ? row.rate : parseFloat(row.rate ?? "0") || 0,
-      rateUnit: row.rate_unit ?? null,
-      image: row.image_url ?? null,
-    })) as ServiceItem[];
+    return await cachedServices();
   } catch (err) {
-    console.error("[getServices] Unexpected error:", err);
+    // Los errores no se guardan en caché: el siguiente intento vuelve a consultar.
+    console.error("[getServices]", err);
     return [];
   }
 }
