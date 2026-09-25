@@ -26,9 +26,6 @@ export const metadata: Metadata = {
   description:
     "State-certified electrical construction subcontractor for multifamily, mixed-use and commercial projects in Florida: electrical, fire alarm, low voltage, BDA/ERCS, EV infrastructure and emergency power.",
   metadataBase: new URL("https://globalchb.com"),
-  icons: {
-    icon: "/favicon.svg",
-  },
 };
 
 export default async function RootLayout({
