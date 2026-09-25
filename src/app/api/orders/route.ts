@@ -1,62 +1,90 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { getSupabaseAdmin } from "@/lib/supabase";
+import { sendLeadAlertEmail } from "@/lib/lead-alert";
+import { EMAIL_RE, ORG_ID, clientIp, rateLimited, str, upsertWebLead } from "@/lib/leads";
 
 export const dynamic = "force-dynamic";
 
-function generateReference() {
-  const now = new Date();
-  const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
-  const rand = Math.random().toString(36).slice(2, 7).toUpperCase();
-  return `GTE-${stamp}-${rand}`;
-}
-
+/**
+ * POST /api/orders — formulario "Order request" del Catálogo.
+ * Se guarda como lead del CRM (tabla `leads`, source "website"), con
+ * project_type "Pedido de producto: <producto>" y el detalle en `notes`.
+ * El producto se identifica por `product_catalog.id` (itemId).
+ */
 export async function POST(req: NextRequest) {
+  let body: Record<string, unknown>;
   try {
-    const body = await req.json();
-    const { itemType, itemName, quantity, customerName, customerEmail } = body ?? {};
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "invalid_json" }, { status: 400 });
+  }
 
-    if (!itemType || !itemName || !customerName || !customerEmail) {
-      return NextResponse.json(
-        { error: "itemType, itemName, customerName and customerEmail are required" },
-        { status: 400 }
-      );
-    }
+  if (str(body.website)) return NextResponse.json({ ok: true, reference: "GTE" }, { status: 201 });
+  if (rateLimited(clientIp(req.headers))) return NextResponse.json({ error: "rate_limited" }, { status: 429 });
 
-    const order = await db.orderRequest.create({
-      data: {
-        reference: generateReference(),
-        itemType: String(itemType) === "service" ? "service" : "product",
-        itemId: body.itemId ?? null,
-        itemName: String(itemName).slice(0, 300),
-        quantity: Math.max(1, parseInt(String(quantity)) || 1),
-        customerName: String(customerName).slice(0, 200),
-        customerEmail: String(customerEmail).slice(0, 200),
-        customerPhone: body.customerPhone ? String(body.customerPhone).slice(0, 50) : null,
-        propertyType: body.propertyType === "commercial" ? "commercial" : body.propertyType === "residential" ? "residential" : null,
-        serviceCity: body.serviceCity ? String(body.serviceCity).slice(0, 200) : null,
-        message: body.message ? String(body.message).slice(0, 2000) : null,
-      },
+  const f = {
+    itemType: body.itemType === "service" ? "service" : "product",
+    itemId: str(body.itemId, 64),
+    itemName: str(body.itemName, 300),
+    quantity: Math.min(9999, Math.max(1, parseInt(String(body.quantity)) || 1)),
+    name: str(body.customerName),
+    email: str(body.customerEmail).toLowerCase(),
+    phone: str(body.customerPhone, 50),
+    propertyType: body.propertyType === "commercial" ? "commercial" : body.propertyType === "residential" ? "residential" : "",
+    city: str(body.serviceCity),
+    message: str(body.message, 2000),
+  };
+
+  if (!f.itemName || !f.name || !f.email) {
+    return NextResponse.json({ error: "itemName, customerName and customerEmail are required" }, { status: 400 });
+  }
+  if (!EMAIL_RE.test(f.email)) return NextResponse.json({ error: "invalid_email" }, { status: 400 });
+
+  const label = f.itemType === "service" ? "Solicitud de servicio" : "Pedido de producto";
+  const request = [
+    `${label} — website catálogo (${new Date().toISOString().slice(0, 16).replace("T", " ")} UTC)`,
+    `${f.itemType === "service" ? "Servicio" : "Producto"}: ${f.itemName}`,
+    f.itemId && `ID ${f.itemType === "service" ? "service_catalog" : "product_catalog"}: ${f.itemId}`,
+    `Cantidad: ${f.quantity}`,
+    f.propertyType && `Tipo de propiedad: ${f.propertyType === "commercial" ? "Comercial" : "Residencial"}`,
+    f.city && `Ciudad / dirección: ${f.city}`,
+    f.message && `\nNotas:\n${f.message}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  try {
+    const supabase = getSupabaseAdmin();
+    const { leadId, isUpdate } = await upsertWebLead(supabase, {
+      name: f.name,
+      company: null,
+      email: f.email,
+      phone: f.phone || null,
+      city: f.city || null,
+      projectType: `${label}: ${f.itemName}${f.quantity > 1 ? ` (x${f.quantity})` : ""}`,
+      request,
+      smsConsent: false,
     });
 
-    return NextResponse.json(
-      { ok: true, reference: order.reference, id: order.id },
-      { status: 201 }
+    await sendLeadAlertEmail(
+      supabase,
+      ORG_ID,
+      {
+        id: leadId,
+        name: f.name,
+        company: "",
+        email: f.email,
+        phone: f.phone,
+        projectType: label,
+        projectName: `${f.itemName} × ${f.quantity}`,
+        isUpdate,
+      },
+      request,
     );
+
+    return NextResponse.json({ ok: true, reference: `GTE-${leadId.slice(0, 8).toUpperCase()}`, id: leadId }, { status: 201 });
   } catch (error) {
     console.error("POST /api/orders error:", error);
     return NextResponse.json({ error: "Failed to create order request" }, { status: 500 });
-  }
-}
-
-export async function GET() {
-  try {
-    const orders = await db.orderRequest.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 50,
-    });
-    return NextResponse.json(orders);
-  } catch (error) {
-    console.error("GET /api/orders error:", error);
-    return NextResponse.json({ error: "Failed to fetch orders" }, { status: 500 });
   }
 }
