@@ -67,6 +67,11 @@ export function ProposalForm() {
       website: get("website"),
       scope,
       locale,
+      smsConsent: fd.get("smsConsent") === "on",
+      page: window.location.pathname,
+      utm: new URLSearchParams(
+        [...new URLSearchParams(window.location.search)].filter(([k]) => k.startsWith("utm_")),
+      ).toString(),
       files: files.map(({ kind, file }) => ({ kind, name: file.name, size: file.size, type: file.type })),
     };
 
@@ -86,6 +91,11 @@ export function ProposalForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+      if (res.status === 429) {
+        setStatus("idle");
+        setError(c.errors.rate);
+        return;
+      }
       if (!res.ok) throw new Error(String(res.status));
       const data: { leadId: string | null; uploads: { index: number; path: string; token: string | null }[] } = await res.json();
 
@@ -298,7 +308,12 @@ export function ProposalForm() {
         </p>
       )}
 
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <label className="mt-8 flex items-start gap-3 text-sm text-slate-600">
+        <input type="checkbox" name="smsConsent" className="mt-0.5 h-4 w-4 shrink-0 accent-navy" />
+        <span>{c.smsConsent}</span>
+      </label>
+
+      <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-slate-500">{c.consent}</p>
         <button
           type="submit"

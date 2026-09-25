@@ -27,8 +27,9 @@ export async function getProjects(): Promise<ProjectItem[]> {
       .from("portfolio_gallery")
       .select("id, project_id, title, description, photo_url, display_order, is_published_to_web, created_at")
       .eq("is_published_to_web", true)
+      .eq("organization_id", ORG_ID)
       .order("display_order", { ascending: true })
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: false });
 
     if (error) {
       console.error("[getProjects] Supabase error:", error.message);
@@ -60,6 +61,7 @@ export async function getProducts(): Promise<ProductItem[]> {
       .select("id, name, description, price, category, photo_urls, is_active, is_published_to_web, sku")
       .eq("is_active", true)
       .eq("is_published_to_web", true)
+      .eq("organization_id", ORG_ID)
       .order("name", { ascending: true });
 
     if (error) {
@@ -93,8 +95,9 @@ export async function getServices(): Promise<ServiceItem[]> {
   try {
     const { data, error } = await getSupabaseAdmin()
       .from("service_catalog")
-      .select("id, name, description, rate, rate_unit, category, is_active")
+      .select("id, name, description, category, is_active")
       .eq("is_active", true)
+      .eq("organization_id", ORG_ID)
       .order("name", { ascending: true });
 
     if (error) {
@@ -102,7 +105,7 @@ export async function getServices(): Promise<ServiceItem[]> {
       return [];
     }
 
-    return (data ?? []).map((row) => ({
+    return (data ?? []).filter((row) => !isInternalService(row.name, row.description)).map((row) => ({
       id: row.id,
       slug: row.id,
       nameEs: row.name ?? "",
@@ -115,6 +118,16 @@ export async function getServices(): Promise<ServiceItem[]> {
     console.error("[getServices] Unexpected error:", err);
     return [];
   }
+}
+
+/**
+ * `service_catalog` aún no tiene `show_on_web`: se excluyen las filas internas
+ * (tarifas de destajo / take off para pagar a piece workers), que no son públicas.
+ * Cuando exista la columna `show_on_web`, filtrar por ella y quitar esta función.
+ */
+function isInternalService(name: string | null, description: string | null) {
+  const text = `${name ?? ""} ${description ?? ""}`.toLowerCase();
+  return /\bpi[e]?ce\s*-?\s*work|\btake\s*-?\s*off\b|destajo/.test(text);
 }
 
 // ─── Settings ─────────────────────────────────────────────────────────────────

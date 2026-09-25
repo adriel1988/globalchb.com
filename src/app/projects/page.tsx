@@ -10,7 +10,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/projects" },
 };
 
-export const dynamic = "force-dynamic";
+// Lee Supabase en el servidor y cachea 5 minutos (los cambios del CRM aparecen en ≤ 5 min)
+export const revalidate = 300;
 
 export default async function ProjectsPage() {
   // Proyectos, fotos y descripciones publicados desde el CRM (Supabase portfolio_gallery)

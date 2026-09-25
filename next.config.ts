@@ -36,17 +36,6 @@ const nextConfig: NextConfig = {
       { source: "/contacto", destination: "/request-a-proposal", permanent: true },
     ];
   },
-  async headers() {
-    return [
-      {
-        // Evita que navegadores/vistas previas guarden versiones antiguas de la página en caché
-        source: "/",
-        headers: [
-          { key: "Cache-Control", value: "no-store, no-cache, must-revalidate" },
-        ],
-      },
-    ];
-  },
 };
 
 export default nextConfig;

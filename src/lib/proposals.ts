@@ -1,11 +1,13 @@
 /**
  * proposals.ts — constantes compartidas del formulario "Request a Proposal".
+ * Esquema: ver CONTEXTO de tablas del CRM (leads, lead_documents, notifications).
  * Los planos se suben DIRECTAMENTE del navegador a Supabase Storage con URLs
  * firmadas de un solo uso (evita el límite de tamaño de cuerpo de las funciones).
  */
 
 export const PROPOSAL_BUCKET = "project-documents";
-export const PROPOSAL_FOLDER = "web_proposals";
+/** Carpeta privada por lead: project-documents/leads/{lead_id}/… */
+export const PROPOSAL_FOLDER = "leads";
 export const MAX_FILE_BYTES = 50 * 1024 * 1024;
 export const MAX_FILES = 15;
 

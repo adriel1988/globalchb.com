@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { sendLeadAlertEmail } from "@/lib/lead-alert";
 import {
   DOCUMENT_KINDS,
   MAX_FILE_BYTES,
@@ -16,14 +17,30 @@ const ORG_ID = process.env.NEXT_PUBLIC_ORG_ID ?? "a1b2c3d4-e5f6-7890-abcd-ef1234
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const str = (v: unknown, max = 200) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+const digits = (v: string) => v.replace(/\D/g, "").slice(-10);
+
+// Límite por IP (por instancia del servidor): 5 envíos cada 10 minutos.
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const RATE_MAX = 5;
+const hits = new Map<string, number[]>();
+function rateLimited(ip: string) {
+  const now = Date.now();
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
+  recent.push(now);
+  hits.set(ip, recent);
+  if (hits.size > 5000) hits.clear();
+  return recent.length > RATE_MAX;
+}
 
 /**
- * POST /api/proposals
- * 1) Crea el lead en el CRM (tabla `leads`, source = "website").
- * 2) Devuelve URLs firmadas para que el navegador suba los planos a
- *    `project-documents/web_proposals/<leadId>/…`.
- * Los registros de `lead_documents` se crean en /api/proposals/complete
- * una vez verificado que cada archivo existe en Storage.
+ * POST /api/proposals — formulario "Request a Proposal".
+ * 1) Valida, aplica honeypot y límite por IP.
+ * 2) Si ya hay un lead abierto (mismo email o teléfono, status ≠ won/lost),
+ *    añade la solicitud a sus `notes`; si no, inserta un lead nuevo
+ *    (source "website", status "new", temperature "warm").
+ * 3) Devuelve URLs firmadas para subir los planos a
+ *    `project-documents/leads/<leadId>/…` (bucket privado).
+ * 4) Envía el email de aviso al equipo con `send-alert-email`.
  */
 export async function POST(req: NextRequest) {
   let body: Record<string, unknown>;
@@ -36,10 +53,13 @@ export async function POST(req: NextRequest) {
   // Honeypot anti-spam: los humanos no ven este campo.
   if (str(body.website)) return NextResponse.json({ ok: true, leadId: null, uploads: [] });
 
+  const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
+  if (rateLimited(ip)) return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+
   const f = {
     company: str(body.company),
     name: str(body.name),
-    email: str(body.email),
+    email: str(body.email).toLowerCase(),
     phone: str(body.phone, 50),
     projectName: str(body.projectName),
     projectLocation: str(body.projectLocation),
@@ -48,6 +68,9 @@ export async function POST(req: NextRequest) {
     bidDue: str(body.bidDue, 20),
     scope: Array.isArray(body.scope) ? body.scope.map((s) => str(s, 80)).filter(Boolean).slice(0, 12) : [],
     notes: str(body.notes, 4000),
+    smsConsent: body.smsConsent === true,
+    page: str(body.page, 300),
+    utm: str(body.utm, 500),
     locale: body.locale === "es" ? "es" : "en",
   };
 
@@ -70,8 +93,10 @@ export async function POST(req: NextRequest) {
     files.push({ kind, name: str(r.name, 200), size, type: str(r.type, 120) });
   }
 
-  const notes = [
-    "Request a Proposal — website",
+  const stampText = new Date().toISOString().slice(0, 16).replace("T", " ");
+  const request = [
+    `Request a Proposal — website (${stampText} UTC)`,
+    `Company: ${f.company}`,
     `Project: ${f.projectName}`,
     `Location: ${f.projectLocation}`,
     f.projectType && `Project type: ${f.projectType}`,
@@ -80,6 +105,8 @@ export async function POST(req: NextRequest) {
     f.scope.length > 0 && `Scope requested: ${f.scope.join(", ")}`,
     files.length > 0 && `Documents: ${files.length}`,
     `Language: ${f.locale.toUpperCase()}`,
+    f.page && `Page: ${f.page}`,
+    f.utm && `UTM: ${f.utm}`,
     f.notes && `\nNotes:\n${f.notes}`,
   ]
     .filter(Boolean)
@@ -87,32 +114,69 @@ export async function POST(req: NextRequest) {
 
   try {
     const supabase = getSupabaseAdmin();
-    const { data: lead, error } = await supabase
-      .from("leads")
-      .insert({
-        organization_id: ORG_ID,
-        name: f.name,
-        company: f.company,
-        email: f.email,
-        phone: f.phone,
-        city: f.projectLocation,
-        source: "website",
-        status: "new",
-        project_type: f.projectType ? `${f.projectType} — ${f.projectName}` : f.projectName,
-        notes,
-      })
-      .select("id")
-      .single();
 
-    if (error || !lead) {
-      console.error("[proposals] lead insert error:", error?.message);
-      return NextResponse.json({ error: "lead_failed" }, { status: 500 });
+    // ¿Lead abierto con el mismo email o teléfono?
+    const phoneDigits = digits(f.phone);
+    const { data: candidates } = await supabase
+      .from("leads")
+      .select("id, email, phone, notes, status")
+      .eq("organization_id", ORG_ID)
+      .not("status", "in", "(won,lost)")
+      .or(`email.ilike.${f.email.replace(/[,()]/g, "")}${phoneDigits.length >= 7 ? `,phone.ilike.%${phoneDigits.slice(-7)}%` : ""}`)
+      .order("created_at", { ascending: false })
+      .limit(10);
+    const existing = (candidates ?? []).find(
+      (l) => (l.email ?? "").toLowerCase() === f.email || (phoneDigits.length >= 7 && digits(l.phone ?? "") === phoneDigits),
+    );
+
+    let leadId: string;
+    if (existing) {
+      const { error } = await supabase
+        .from("leads")
+        .update({
+          notes: [existing.notes, request].filter(Boolean).join("\n\n────────\n\n"),
+          ...(f.smsConsent ? { sms_consent: true, sms_consent_at: new Date().toISOString() } : {}),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", existing.id);
+      if (error) {
+        console.error("[proposals] lead update error:", error.message);
+        return NextResponse.json({ error: "lead_failed" }, { status: 500 });
+      }
+      leadId = existing.id;
+    } else {
+      const { data: lead, error } = await supabase
+        .from("leads")
+        .insert({
+          organization_id: ORG_ID,
+          name: f.name,
+          company: f.company,
+          email: f.email,
+          phone: f.phone,
+          city: f.projectLocation,
+          source: "website",
+          status: "new",
+          temperature: "warm",
+          estimated_value: 0,
+          project_type: f.projectType ? `${f.projectType} — ${f.projectName}` : f.projectName,
+          notes: request,
+          sms_consent: f.smsConsent,
+          sms_consent_at: f.smsConsent ? new Date().toISOString() : null,
+          is_test_data: false,
+        })
+        .select("id")
+        .single();
+      if (error || !lead) {
+        console.error("[proposals] lead insert error:", error?.message);
+        return NextResponse.json({ error: "lead_failed" }, { status: 500 });
+      }
+      leadId = lead.id;
     }
 
     const stamp = Date.now();
     const uploads = await Promise.all(
       files.map(async (file, index) => {
-        const path = `${PROPOSAL_FOLDER}/${lead.id}/${file.kind}/${stamp}_${index}_${safeFileName(file.name)}`;
+        const path = `${PROPOSAL_FOLDER}/${leadId}/${file.kind}/${stamp}_${index}_${safeFileName(file.name)}`;
         const { data, error: signError } = await supabase.storage.from(PROPOSAL_BUCKET).createSignedUploadUrl(path);
         if (signError || !data) {
           console.error("[proposals] signed upload url error:", signError?.message);
@@ -122,7 +186,23 @@ export async function POST(req: NextRequest) {
       }),
     );
 
-    return NextResponse.json({ ok: true, leadId: lead.id, uploads }, { status: 201 });
+    await sendLeadAlertEmail(
+      supabase,
+      ORG_ID,
+      {
+        id: leadId,
+        name: f.name,
+        company: f.company,
+        email: f.email,
+        phone: f.phone,
+        projectType: f.projectType,
+        projectName: f.projectName,
+        isUpdate: Boolean(existing),
+      },
+      request,
+    );
+
+    return NextResponse.json({ ok: true, leadId, uploads }, { status: 201 });
   } catch (err) {
     console.error("[proposals] unexpected error:", err);
     return NextResponse.json({ error: "server_error" }, { status: 500 });

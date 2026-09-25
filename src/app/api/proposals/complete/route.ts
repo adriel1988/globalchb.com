@@ -33,15 +33,14 @@ export async function POST(req: NextRequest) {
     const supabase = getSupabaseAdmin();
     const { data: lead } = await supabase
       .from("leads")
-      .select("id, created_at, source, organization_id")
+      .select("id, created_at, updated_at, organization_id")
       .eq("id", leadId)
       .maybeSingle();
 
     if (
       !lead ||
-      lead.source !== "website" ||
       lead.organization_id !== ORG_ID ||
-      Date.now() - new Date(lead.created_at).getTime() > WINDOW_MS
+      Date.now() - new Date(lead.updated_at ?? lead.created_at).getTime() > WINDOW_MS
     ) {
       return NextResponse.json({ error: "invalid_lead" }, { status: 400 });
     }

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Images } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Images, X } from "lucide-react";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { useGc } from "@/components/language-provider";
 import { SectionHeading } from "@/components/gc/section-heading";
 import type { ProjectAlbum } from "@/lib/supabase-data";
@@ -61,9 +61,25 @@ function AlbumCard({ album, index, large, onOpen }: { album: ProjectAlbum; index
 function AlbumViewer({ album, onClose }: { album: ProjectAlbum | null; onClose: () => void }) {
   const g = useGc();
   const [i, setI] = useState(0);
+  const [touchX, setTouchX] = useState<number | null>(null);
   const photos = album?.photos ?? [];
   const n = photos.length;
-  const go = (d: number) => setI((prev) => (prev + d + n) % n);
+  const go = (d: number) => n > 1 && setI((prev) => (prev + d + n) % n);
+  const desc = album ? descOf(album) : null;
+
+  // Precarga la foto siguiente y la anterior
+  useEffect(() => {
+    if (n < 2) return;
+    for (const k of [i + 1, i - 1 + n]) {
+      const img = new window.Image();
+      img.src = photos[k % n];
+    }
+  }, [i, n, photos]);
+
+  // Mantiene visible la miniatura activa
+  useEffect(() => {
+    document.getElementById(`album-thumb-${i}`)?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+  }, [i]);
 
   return (
     <Dialog
@@ -75,63 +91,110 @@ function AlbumViewer({ album, onClose }: { album: ProjectAlbum | null; onClose: 
         }
       }}
     >
-      <DialogContent className="max-h-[94vh] overflow-y-auto sm:max-w-5xl">
+      <DialogContent
+        showCloseButton={false}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft") go(-1);
+          if (e.key === "ArrowRight") go(1);
+        }}
+        className="top-0 left-0 flex h-[100dvh] w-screen max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden rounded-none border-0 bg-navy p-0 text-white shadow-none sm:max-w-none"
+      >
         {album && (
           <>
-            <DialogTitle className="font-display pr-8 text-3xl text-navy">{album.title}</DialogTitle>
-            <DialogDescription className={descOf(album) ? "text-base text-slate-600" : "sr-only"}>
-              {descOf(album) ?? album.title}
-            </DialogDescription>
+            {/* Barra superior */}
+            <div className="relative z-10 flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-8 sm:py-4">
+              <div className="min-w-0">
+                <p className="eyebrow text-gold">{g.featured.kicker}</p>
+                <DialogTitle className="font-display mt-1 truncate text-2xl text-white sm:text-4xl">{album.title}</DialogTitle>
+              </div>
+              <div className="flex shrink-0 items-center gap-4">
+                {n > 1 && (
+                  <span className="stat-number text-lg text-white/70 sm:text-xl">
+                    <span className="text-white">{String(i + 1).padStart(2, "0")}</span> / {String(n).padStart(2, "0")}
+                  </span>
+                )}
+                <DialogClose
+                  className="flex h-11 w-11 items-center justify-center border border-white/25 text-white transition-colors hover:border-gold hover:bg-gold hover:text-navy focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                  aria-label={g.featured.close}
+                >
+                  <X className="h-5 w-5" aria-hidden="true" />
+                </DialogClose>
+              </div>
+            </div>
+
+            {/* Escenario */}
             <div
-              className="relative flex items-center justify-center bg-navy"
-              onKeyDown={(e) => {
-                if (e.key === "ArrowLeft") go(-1);
-                if (e.key === "ArrowRight") go(1);
+              className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden"
+              onTouchStart={(e) => setTouchX(e.touches[0].clientX)}
+              onTouchEnd={(e) => {
+                if (touchX === null) return;
+                const dx = e.changedTouches[0].clientX - touchX;
+                if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+                setTouchX(null);
               }}
             >
+              {/* Fondo difuminado de la misma foto */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={photos[i]} alt={`${album.title} (${i + 1}/${n})`} className="max-h-[68vh] w-auto max-w-full object-contain" />
+              <img src={photos[i]} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-30 blur-2xl" />
+              <div className="tech-grid absolute inset-0" aria-hidden="true" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                key={photos[i]}
+                src={photos[i]}
+                alt={`${album.title} (${i + 1}/${n})`}
+                className="relative max-h-full max-w-full object-contain p-3 shadow-2xl animate-in fade-in-0 duration-300 sm:p-8"
+              />
               {n > 1 && (
                 <>
                   <button
                     type="button"
                     onClick={() => go(-1)}
                     aria-label={g.featured.prev}
-                    className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center bg-navy/60 text-white hover:bg-gold hover:text-navy"
+                    className="absolute left-3 top-1/2 hidden h-14 w-14 -translate-y-1/2 items-center justify-center border border-white/25 bg-navy/60 text-white backdrop-blur-sm transition-colors hover:border-gold hover:bg-gold hover:text-navy sm:flex lg:left-8"
                   >
-                    <ChevronLeft className="h-6 w-6" aria-hidden="true" />
+                    <ChevronLeft className="h-7 w-7" aria-hidden="true" />
                   </button>
                   <button
                     type="button"
                     onClick={() => go(1)}
                     aria-label={g.featured.next}
-                    className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center bg-navy/60 text-white hover:bg-gold hover:text-navy"
+                    className="absolute right-3 top-1/2 hidden h-14 w-14 -translate-y-1/2 items-center justify-center border border-white/25 bg-navy/60 text-white backdrop-blur-sm transition-colors hover:border-gold hover:bg-gold hover:text-navy sm:flex lg:right-8"
                   >
-                    <ChevronRight className="h-6 w-6" aria-hidden="true" />
+                    <ChevronRight className="h-7 w-7" aria-hidden="true" />
                   </button>
-                  <span className="stat-number absolute bottom-3 right-3 bg-navy/70 px-2 py-1 text-sm text-white">
-                    {i + 1} / {n}
-                  </span>
                 </>
               )}
             </div>
-            {n > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-1">
-                {photos.map((src, j) => (
-                  <button
-                    key={`${src}-${j}`}
-                    type="button"
-                    onClick={() => setI(j)}
-                    aria-label={`${j + 1} / ${n}`}
-                    aria-current={j === i}
-                    className={cn("h-16 w-24 shrink-0 overflow-hidden border-2", j === i ? "border-gold" : "border-transparent opacity-70 hover:opacity-100")}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
-                  </button>
-                ))}
+
+            {/* Descripción + miniaturas */}
+            <div className="relative z-10 border-t border-white/10 bg-navy px-4 py-4 sm:px-8">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+                <DialogDescription className={desc ? "max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base" : "sr-only"}>
+                  {desc ?? album.title}
+                </DialogDescription>
+                {n > 1 && (
+                  <div className="flex gap-2 overflow-x-auto pb-1 lg:max-w-[55%]">
+                    {photos.map((src, j) => (
+                      <button
+                        id={`album-thumb-${j}`}
+                        key={`${src}-${j}`}
+                        type="button"
+                        onClick={() => setI(j)}
+                        aria-label={`${j + 1} / ${n}`}
+                        aria-current={j === i}
+                        className={cn(
+                          "relative h-14 w-20 shrink-0 overflow-hidden border-2 transition-opacity sm:h-16 sm:w-24",
+                          j === i ? "border-gold" : "border-transparent opacity-50 hover:opacity-100",
+                        )}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </>
         )}
       </DialogContent>
