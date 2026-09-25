@@ -5,7 +5,7 @@
 
 La web **no crea tablas nuevas**. Escribe en el servidor (ruta API de Next.js con la clave secreta) en las tablas que ya existen: `leads`, `lead_documents` y Storage `project-documents`. No usa la anon key ni políticas `anon`.
 
-La web tiene dos formularios. Los dos acaban como **lead** en `leads` con `source = 'website'`.
+La web tiene dos formularios: "Request a proposal" → `leads` (`web_form = 'proposal'`) y "Order request" → `product_orders`.
 
 ---
 
@@ -78,40 +78,29 @@ Para abrir un archivo desde el CRM hay que generar una URL firmada con `storage.
 
 ---
 
-## 2. "Order request" (botón **Order / Pedir** en el Catálogo `/catalogo`)
+## 2. "Order request" (botón **Order / Pedir** en el Catálogo `/catalogo`) → `product_orders`
 
-Formulario corto para pedir un producto de `product_catalog`: cantidad, nombre, email, teléfono, ciudad, tipo de propiedad (residencial/comercial) y notas.
+Desde el 25/09 los pedidos del catálogo **ya no van a `leads`**: cada envío crea una fila en **`product_orders`** (sin fusionar duplicados) y se gestiona en Catálogo de Productos › pestaña Pedidos.
 
-**Endpoint:** `POST /api/orders` (antes guardaba en una SQLite local que en Vercel no funcionaba; ya escribe en el CRM).
+**Endpoint:** `POST /api/orders`
 
-### Qué se guarda en `leads`
-
-| Campo | Columna |
+| Campo del formulario | Columna de `product_orders` |
 |---|---|
-| Full name * | `name` |
-| Email * | `email` |
-| Phone / WhatsApp | `phone` |
-| Project city / address | `city` |
-| Producto + cantidad | `project_type` = `"Pedido de producto: <nombre del producto>"` (+ ` (xN)` si pide más de 1) |
-| Todo el detalle | `notes` |
+| (producto elegido) | `product_id` (verificado en `product_catalog`: activo y publicado) |
+| (producto elegido) | `product_name` = nombre de `product_catalog` en el idioma de la página (`name_en` en inglés) |
+| (producto elegido) | `unit_price` = `product_catalog.price` en ese momento (0 = "Consultar precio") |
+| Quantity | `quantity` |
+| Full name * | `customer_name` |
+| Email address * | `customer_email` |
+| Phone / WhatsApp (selector de país) | `customer_phone` en **E.164** |
+| Project city / address | `city_address` |
+| Property type | `property_type` (`residential` / `commercial`) |
+| Additional notes | `notes` |
 
-Valores fijos: los mismos que arriba, con `web_form = 'order'` (`source='website'`, `status='new'`, `temperature='warm'`, `sms_consent=false`). También evita duplicados igual que el formulario 1.
+Valores fijos: `organization_id`, `source = 'website'`, `language` (`en`/`es`), `page` (ruta), `utm` (jsonb con las claves `utm_*`), `is_test_data = true` si el nombre lleva `[TEST]`. **No** se envía `order_number`: lo genera la BD (`ORD-0001`…) y la web se lo muestra al cliente ("Tu número de pedido: ORD-0001").
 
-**Formato de `notes`:**
-
-```
-Pedido de producto — website catálogo (2026-09-25 16:40 UTC)
-Producto: Load Center (Subpanel)
-ID product_catalog: <uuid del producto>
-Cantidad: 2
-Tipo de propiedad: Residencial
-Ciudad / dirección: Aventura
-
-Notas:
-<mensaje libre>
-```
-
-La web muestra al cliente una referencia `GTE-XXXXXXXX` = los 8 primeros caracteres del `lead.id` en mayúsculas, para poder buscarlo.
+- **Aviso:** lo crea el trigger de la tabla ("🛒 Nuevo pedido web: ORD-…"); la web no inserta en `notifications`.
+- **Email:** `send-alert-email` a los usuarios con acceso `full`, asunto `Nuevo pedido web ORD-0001: <producto> (xN)` y enlace `https://gtech.globalchb.com/dashboard/catalog?tab=orders&id=<id>`.
 
 ---
 

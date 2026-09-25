@@ -377,7 +377,7 @@ export const dict = {
       submit: "Enviar pedido",
       submitting: "Enviando…",
       success: "¡Pedido recibido! Un asesor confirmará disponibilidad y precio final a tu correo.",
-      successRef: "Tu número de referencia es",
+      successRef: "Tu número de pedido",
       error: "No pudimos registrar tu pedido. Inténtalo de nuevo.",
     },
     contact: {
@@ -747,7 +747,7 @@ export const dict = {
       submit: "Submit order",
       submitting: "Submitting…",
       success: "Order received! An advisor will confirm availability and final pricing to your email.",
-      successRef: "Your reference number is",
+      successRef: "Your order number",
       error: "We couldn't register your order. Please try again.",
     },
     contact: {

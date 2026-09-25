@@ -79,6 +79,11 @@ export function OrderDialog({
           message: fd.get("message"),
           website: fd.get("website"),
           captchaToken,
+          locale,
+          page: window.location.pathname,
+          utm: Object.fromEntries(
+            [...new URLSearchParams(window.location.search)].filter(([k]) => k.startsWith("utm_")),
+          ),
         }),
       });
       const data = await res.json();
