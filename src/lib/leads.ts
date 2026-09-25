@@ -3,8 +3,10 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 /**
  * leads.ts — escritura de leads desde la web (servidor, clave secreta).
  * Esquema: ver CONTEXTO de tablas del CRM (tabla `leads`).
- *  - Si hay un lead abierto (status ≠ won/lost) con el mismo email o teléfono,
- *    se añade la solicitud a sus `notes` en vez de duplicar.
+ *  - Si hay un lead abierto (status ≠ won/lost) del MISMO `web_form` con el mismo
+ *    email o teléfono (últimos 10 dígitos), se añade la solicitud a sus `notes`.
+ *    Si el lead abierto es de otro formulario, se crea uno nuevo.
+ *  - Teléfonos en formato E.164 (ver src/lib/phone.ts).
  *  - Si no, se inserta con source "website", status "new", temperature "warm".
  *  - `web_form` = formulario del último envío ('proposal' | 'order').
  * Avisos: al INSERTAR, el trigger `notify_lead_created` crea "🎯 New Lead";
@@ -65,6 +67,9 @@ export async function upsertWebLead(supabase: SupabaseClient, lead: WebLeadInput
     .from("leads")
     .select("id, email, phone, notes")
     .eq("organization_id", ORG_ID)
+    // Solo se fusiona con un lead abierto del MISMO formulario: un pedido no se
+    // mezcla con una solicitud de propuesta (ni con leads de otros orígenes).
+    .eq("web_form", lead.webForm)
     .not("status", "in", "(won,lost)")
     .or(`email.ilike.${email.replace(/[,()]/g, "")}${phoneDigits.length >= 7 ? `,phone.ilike.%${phoneDigits.slice(-7)}%` : ""}`)
     .order("created_at", { ascending: false })

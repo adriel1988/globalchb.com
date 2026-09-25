@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, type FormEvent, type ReactNode } from "react";
+import { PhoneInput } from "@/components/phone-input";
 import { TurnstileWidget, captchaEnabled, type TurnstileHandle } from "@/components/turnstile-widget";
 import { createClient } from "@supabase/supabase-js";
 import { CheckCircle2, FileUp, Loader2, Mail, Phone, X } from "lucide-react";
@@ -85,6 +86,10 @@ export function ProposalForm() {
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
       setError(c.errors.email);
+      return;
+    }
+    if (!/^\+\d{8,15}$/.test(payload.phone)) {
+      setError(c.errors.phone);
       return;
     }
     if (captchaEnabled && !captchaToken) {
@@ -205,7 +210,14 @@ export function ProposalForm() {
             <input name="email" type="email" required autoComplete="email" className={inputCls} />
           </Field>
           <Field label={c.fields.phone} required reqLabel={c.required}>
-            <input name="phone" type="tel" required autoComplete="tel" className={inputCls} />
+            <PhoneInput
+              name="phone"
+              required
+              ariaLabelCountry={c.fields.country}
+              placeholder={c.fields.phonePh}
+              className={inputCls}
+              selectClassName={`${inputCls} w-28 px-2`}
+            />
           </Field>
         </div>
       </fieldset>

@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from "@/lib/supabase";
 import { sendLeadAlertEmail } from "@/lib/lead-alert";
 import { EMAIL_RE, ORG_ID, clientIp, rateLimited, str, upsertWebLead } from "@/lib/leads";
 import { verifyTurnstile } from "@/lib/turnstile";
+import { toE164 } from "@/lib/phone";
 import {
   DOCUMENT_KINDS,
   MAX_FILE_BYTES,
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
     company: str(body.company),
     name: str(body.name),
     email: str(body.email).toLowerCase(),
-    phone: str(body.phone, 50),
+    phone: toE164(str(body.phone, 50)) ?? "",
     projectName: str(body.projectName),
     projectLocation: str(body.projectLocation),
     projectType: str(body.projectType, 80),
@@ -57,10 +58,11 @@ export async function POST(req: NextRequest) {
     locale: body.locale === "es" ? "es" : "en",
   };
 
-  if (!f.company || !f.name || !f.email || !f.phone || !f.projectName || !f.projectLocation) {
+  if (!f.company || !f.name || !f.email || !str(body.phone) || !f.projectName || !f.projectLocation) {
     return NextResponse.json({ error: "missing_fields" }, { status: 400 });
   }
   if (!EMAIL_RE.test(f.email)) return NextResponse.json({ error: "invalid_email" }, { status: 400 });
+  if (!f.phone) return NextResponse.json({ error: "invalid_phone" }, { status: 400 });
 
   const rawFiles = Array.isArray(body.files) ? body.files : [];
   if (rawFiles.length > MAX_FILES) return NextResponse.json({ error: "too_many_files" }, { status: 400 });

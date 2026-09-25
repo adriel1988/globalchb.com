@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { PhoneInput } from "@/components/phone-input";
 import { TurnstileWidget, captchaEnabled, type TurnstileHandle } from "@/components/turnstile-widget";
 import {
   Dialog,
@@ -168,11 +169,18 @@ export function OrderDialog({
                   <Label htmlFor="order-email">{t.order.customerEmail} *</Label>
                   <Input id="order-email" name="customerEmail" type="email" required placeholder={t.order.emailPh} />
                 </div>
-                <div className="grid gap-2">
+                <div className="grid gap-2 sm:col-span-2">
                   <Label htmlFor="order-phone">{t.order.customerPhone}</Label>
-                  <Input id="order-phone" name="customerPhone" type="tel" placeholder={t.order.phonePh} />
+                  <PhoneInput
+                    id="order-phone"
+                    name="customerPhone"
+                    ariaLabelCountry={locale === "es" ? "Código de país" : "Country code"}
+                    placeholder={t.order.phonePh}
+                    className="h-9 rounded-md border border-input bg-transparent px-3 text-base shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 md:text-sm"
+                    selectClassName="h-9 w-24 rounded-md border border-input bg-transparent px-1.5 text-sm"
+                  />
                 </div>
-                <div className="grid gap-2">
+                <div className="grid gap-2 sm:col-span-2">
                   <Label htmlFor="order-city">{t.order.serviceCity}</Label>
                   <Input id="order-city" name="serviceCity" placeholder={t.order.serviceCityPh} />
                 </div>

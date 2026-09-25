@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from "@/lib/supabase";
 import { sendLeadAlertEmail } from "@/lib/lead-alert";
 import { EMAIL_RE, ORG_ID, clientIp, rateLimited, str, upsertWebLead } from "@/lib/leads";
 import { verifyTurnstile } from "@/lib/turnstile";
+import { toE164 } from "@/lib/phone";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +32,8 @@ export async function POST(req: NextRequest) {
     quantity: Math.min(9999, Math.max(1, parseInt(String(body.quantity)) || 1)),
     name: str(body.customerName),
     email: str(body.customerEmail).toLowerCase(),
-    phone: str(body.customerPhone, 50),
+    phoneRaw: str(body.customerPhone, 50),
+    phone: toE164(str(body.customerPhone, 50)) ?? "",
     propertyType: body.propertyType === "commercial" ? "commercial" : body.propertyType === "residential" ? "residential" : "",
     city: str(body.serviceCity),
     message: str(body.message, 2000),
@@ -41,6 +43,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "itemName, customerName and customerEmail are required" }, { status: 400 });
   }
   if (!EMAIL_RE.test(f.email)) return NextResponse.json({ error: "invalid_email" }, { status: 400 });
+  if (f.phoneRaw && !f.phone) return NextResponse.json({ error: "invalid_phone" }, { status: 400 });
 
   if (!(await verifyTurnstile(body.captchaToken, ip))) {
     return NextResponse.json({ error: "captcha_failed" }, { status: 403 });
