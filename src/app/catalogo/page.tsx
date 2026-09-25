@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
-import { PageHeader } from "@/components/page-header";
+import { GcPageHeader } from "@/components/gc/gc-page-header";
 import { CatalogSection } from "@/components/catalog-section";
 import { getProducts } from "@/lib/supabase-data";
 
 export const metadata: Metadata = {
-  title: "Catálogo de Productos Eléctricos — Paneles, Cargadores EV y Más",
+  title: "Product Catalog — Electrical Equipment & Materials",
   description:
-    "Catálogo de productos eléctricos para pedir directamente: paneles de 150A, 200A y trifásicos, estaciones de carga EV/RV, iluminación LED y protección. Disponibilidad en tiempo real en el sur de Florida.",
+    "Electrical equipment and materials available through Global Technology & Electrical Services: panels, EV charging, lighting and protection.",
   alternates: { canonical: "/catalogo" },
   openGraph: {
-    title: "Catálogo | Global Technology & Electrical Services",
-    description:
-      "Productos eléctricos listos para pedir: paneles, cargadores EV/RV, iluminación y protección eléctrica.",
+    title: "Product Catalog | Global Technology & Electrical Services",
+    description: "Electrical equipment and materials available through our team.",
   },
 };
 
@@ -22,20 +21,7 @@ export default async function CatalogoPage() {
 
   return (
     <>
-      <PageHeader
-        es={{
-          kicker: "Catálogo",
-          title: "Productos eléctricos listos para pedir",
-          subtitle:
-            "Explora nuestro catálogo y solicita tus productos directamente: paneles, estaciones de carga EV/RV, iluminación y protección eléctrica con entrega en el sur de Florida.",
-        }}
-        en={{
-          kicker: "Catalog",
-          title: "Electrical products ready to order",
-          subtitle:
-            "Browse our catalog and request products directly: panels, EV/RV charging stations, lighting and electrical protection with delivery across South Florida.",
-        }}
-      />
+      <GcPageHeader page="catalog" />
       <CatalogSection products={products} />
     </>
   );

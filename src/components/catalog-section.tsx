@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Package,
@@ -73,8 +72,8 @@ function ProductImageGallery({
 
   if (photos.length === 0) {
     return (
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/30 via-primary/12 to-transparent text-primary ring-1 ring-inset ring-primary/35">
-        <FallbackIcon className="h-5 w-5" aria-hidden="true" />
+      <div className="tech-grid flex aspect-[4/3] w-full items-center justify-center bg-navy text-gold">
+        <FallbackIcon className="h-8 w-8" aria-hidden="true" />
       </div>
     );
   }
@@ -94,7 +93,7 @@ function ProductImageGallery({
   };
 
   return (
-    <div className="group/gallery relative h-40 w-full overflow-hidden rounded-xl bg-slate-900 select-none">
+    <div className="group/gallery relative aspect-[4/3] w-full overflow-hidden bg-navy select-none">
       <img
         src={photos[currentIndex]}
         alt={`${alt} (${currentIndex + 1}/${photos.length})`}
@@ -129,7 +128,7 @@ function ProductImageGallery({
               <span
                 key={idx}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
-                  idx === currentIndex ? "w-3.5 bg-primary shadow-xs" : "w-1.5 bg-white/60"
+                  idx === currentIndex ? "w-3.5 bg-gold shadow-xs" : "w-1.5 bg-white/60"
                 }`}
               />
             ))}
@@ -179,133 +178,85 @@ export function CatalogSection({ products }: { products: ProductItem[] }) {
 
   if (products.length === 0) {
     return (
-      <section id="catalog" className="relative overflow-hidden bg-slate-950 py-20 text-white sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <p className="text-sm font-medium uppercase tracking-widest text-primary">{t.catalog.kicker}</p>
-          <h2 className="mt-2 text-3xl font-normal tracking-tight sm:text-4xl">{t.catalog.title}</h2>
-          <div className="mx-auto mt-10 flex max-w-md flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-10 text-slate-400">
-            <PackageOpen className="h-10 w-10 text-primary/60" aria-hidden="true" />
-            <p className="text-sm">{t.catalog.empty}</p>
-          </div>
+      <section id="catalog" className="bg-offwhite py-20 sm:py-24">
+        <div className="mx-auto flex max-w-md flex-col items-center gap-3 border border-navy/15 bg-white p-10 text-center text-slate-500">
+          <PackageOpen className="h-10 w-10 text-gold" aria-hidden="true" />
+          <p className="text-sm">{t.catalog.empty}</p>
         </div>
       </section>
     );
   }
 
-  return (
-    <section id="catalog" className="relative overflow-hidden bg-slate-950 py-20 text-white sm:py-24">
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 opacity-[0.12]"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse 55% 45% at 15% -10%, oklch(0.695 0.133 85) 0, transparent 60%)",
-        }}
-      />
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-medium uppercase tracking-widest text-primary">{t.catalog.kicker}</p>
-          <h2 className="mt-2 text-3xl font-normal tracking-tight sm:text-4xl">{t.catalog.title}</h2>
-          <p className="mt-4 text-base leading-relaxed text-slate-400">{t.catalog.subtitle}</p>
-          <span
-            aria-hidden="true"
-            className="mx-auto mt-6 block h-px w-24 bg-gradient-to-r from-transparent via-primary to-transparent"
-          />
-        </div>
+  const filterCls = (on: boolean) =>
+    `border px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition-colors ${
+      on ? "border-navy bg-navy text-white" : "border-navy/20 text-navy hover:border-navy"
+    }`;
 
-        <div className="mt-10 flex flex-wrap justify-center gap-2" role="tablist" aria-label={t.catalog.kicker}>
-          <button
-            role="tab"
-            aria-selected={category === "all"}
-            onClick={() => setCategory("all")}
-            className={`rounded-full border px-4 py-2 text-sm transition-colors ${
-              category === "all"
-                ? "border-primary bg-primary text-primary-foreground shadow-[0_8px_20px_-8px_rgba(212,160,23,0.7)]"
-                : "border-white/15 bg-white/5 text-slate-300 hover:border-primary/50 hover:text-white"
-            }`}
-          >
+  return (
+    <section id="catalog" className="bg-offwhite py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap gap-2" role="tablist" aria-label={t.catalog.kicker}>
+          <button role="tab" aria-selected={category === "all"} onClick={() => setCategory("all")} className={filterCls(category === "all")}>
             {t.catalog.all} ({products.length})
           </button>
           {categories.map(([cat, count]) => (
-            <button
-              key={cat}
-              role="tab"
-              aria-selected={category === cat}
-              onClick={() => setCategory(cat)}
-              className={`rounded-full border px-4 py-2 text-sm transition-colors ${
-                category === cat
-                  ? "border-primary bg-primary text-primary-foreground shadow-[0_8px_20px_-8px_rgba(212,160,23,0.7)]"
-                  : "border-white/15 bg-white/5 text-slate-300 hover:border-primary/50 hover:text-white"
-              }`}
-            >
+            <button key={cat} role="tab" aria-selected={category === cat} onClick={() => setCategory(cat)} className={filterCls(category === cat)}>
               {categoryLabels[cat] ?? cat} ({count})
             </button>
           ))}
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((p) => {
             const CatIcon = categoryIcons[p.category] ?? Package;
+            const name = locale === "es" ? p.nameEs : p.nameEn;
+            const desc = locale === "es" ? p.descEs : p.descEn;
             return (
               <article
                 key={p.id}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.02] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:bg-white/[0.09] hover:shadow-[0_24px_48px_-24px_rgba(212,160,23,0.45)]"
+                className="group flex flex-col border border-navy/15 bg-white transition-colors hover:border-navy"
               >
-                {/* Foto(s) del producto con visor y flechas transparentes o icono de categoría */}
-                <ProductImageGallery
-                  photoUrls={p.photoUrls}
-                  alt={locale === "es" ? p.nameEs : p.nameEn}
-                  fallbackIcon={CatIcon}
-                />
+                {/* Foto(s) del producto con visor y flechas, o icono de categoría */}
+                <ProductImageGallery photoUrls={p.photoUrls} alt={name} fallbackIcon={CatIcon} />
 
-                {/* Disponibilidad */}
-                <span className="mt-4 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
-                  <span
-                    aria-hidden="true"
-                    className={`h-1.5 w-1.5 rounded-full ${p.inStock ? "bg-emerald-400" : "bg-slate-500"}`}
-                  />
-                  <span className={p.inStock ? "text-emerald-400" : "text-slate-400"}>
-                    {p.inStock ? t.catalog.inStock : t.catalog.outOfStock}
+                <div className="flex flex-1 flex-col p-5">
+                  {/* Disponibilidad */}
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em]">
+                    <span aria-hidden="true" className={`h-1.5 w-1.5 ${p.inStock ? "bg-emerald-500" : "bg-slate-400"}`} />
+                    <span className={p.inStock ? "text-emerald-700" : "text-slate-500"}>
+                      {p.inStock ? t.catalog.inStock : t.catalog.outOfStock}
+                    </span>
                   </span>
-                </span>
 
-                <h3 className="mt-2 text-base font-normal leading-snug text-white">
-                  {locale === "es" ? p.nameEs : p.nameEn}
-                </h3>
-                <p className="mt-1 flex-1 text-xs leading-relaxed text-slate-400 line-clamp-3">
-                  {locale === "es" ? p.descEs : p.descEn}
-                </p>
+                  <h3 className="font-display mb-4 mt-3 text-2xl text-navy">{name}</h3>
+                  {desc && <p className="mt-1 flex-1 text-sm leading-relaxed text-slate-600 line-clamp-3">{desc}</p>}
 
-                {/* Precio + pedir */}
-                <div className="mt-5 border-t border-white/10 pt-4">
-                  <p className="text-[10px] uppercase tracking-widest text-slate-500">{t.catalog.from}</p>
-                  <div className="mt-1 flex items-end justify-between gap-2">
-                    <p className="text-xl font-normal leading-none text-primary">
-                      {formatPrice(p)}
-                      {p.unit && <span className="text-xs text-slate-400"> / {p.unit}</span>}
-                    </p>
-                    <Button
-                      size="sm"
-                      className="gap-1.5"
+                  {/* Precio + pedir */}
+                  <div className="mt-auto flex items-end justify-between gap-3 border-t border-navy/15 pt-4">
+                    <div>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">{t.catalog.from}</p>
+                      <p className="stat-number mt-1 text-3xl text-navy">
+                        {formatPrice(p)}
+                        {p.unit && <span className="font-sans text-xs font-normal text-slate-500"> / {p.unit}</span>}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
                       onClick={() => onOrder(p)}
-                      aria-label={`${t.catalog.order}: ${locale === "es" ? p.nameEs : p.nameEn}`}
+                      aria-label={`${t.catalog.order}: ${name}`}
+                      className="inline-flex h-10 items-center gap-1.5 bg-gold px-4 text-xs font-semibold uppercase tracking-[0.14em] text-navy transition-colors hover:bg-gold-bright"
                     >
                       <ShoppingCart className="h-3.5 w-3.5" aria-hidden="true" />
                       {t.catalog.order}
-                    </Button>
+                    </button>
                   </div>
                 </div>
-
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                />
               </article>
             );
           })}
         </div>
 
-        <p className="mt-8 text-center text-xs text-slate-500">{t.catalog.note}</p>
+        <p className="mt-8 text-xs text-slate-500">{t.catalog.note}</p>
       </div>
     </section>
   );

@@ -15,6 +15,7 @@ const NAV = [
   { id: "technology", href: "/technology" },
   { id: "about", href: "/about" },
   { id: "resources", href: "/resources" },
+  { id: "catalog", href: "/catalogo" },
 ] as const;
 
 function BrandLogo() {
@@ -30,8 +31,8 @@ function BrandLogo() {
         />
       </span>
       <span className="leading-none">
-        <span className="font-display block text-lg tracking-wide text-white">Global Technology</span>
-        <span className="mt-1 block text-[10px] font-semibold uppercase tracking-[0.2em] text-gold">&amp; Electrical Services</span>
+        <span className="font-display block whitespace-nowrap text-lg tracking-wide text-white">Global Technology</span>
+        <span className="mt-1 block whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.2em] text-gold">&amp; Electrical Services</span>
       </span>
     </span>
   );
@@ -65,13 +66,13 @@ export function SiteHeader() {
         </Link>
 
         <div className="flex items-center gap-1">
-          <nav className="mr-3 hidden items-center xl:flex" aria-label={g.nav.main}>
+          <nav className="mr-2 hidden items-center xl:flex" aria-label={g.nav.main}>
             {NAV.map(({ id, href }) => (
               <Link
                 key={id}
                 href={href}
                 aria-current={isActive(href) ? "page" : undefined}
-                className={`px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition-colors ${
+                className={`whitespace-nowrap px-2 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors 2xl:px-3 2xl:text-xs 2xl:tracking-[0.16em] ${
                   isActive(href) ? "text-gold" : "text-white/80 hover:text-white"
                 }`}
               >
@@ -93,7 +94,7 @@ export function SiteHeader() {
 
           <Link
             href="/request-a-proposal"
-            className="ml-2 hidden h-11 items-center bg-gold px-5 text-xs font-semibold uppercase tracking-[0.16em] text-navy transition-colors hover:bg-gold-bright sm:inline-flex"
+            className="ml-2 hidden h-11 items-center whitespace-nowrap bg-gold px-4 text-xs font-semibold uppercase tracking-[0.16em] text-navy transition-colors hover:bg-gold-bright sm:inline-flex"
           >
             {g.nav.rfp}
           </Link>

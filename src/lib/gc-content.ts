@@ -18,6 +18,7 @@ const en = {
     technology: "Technology",
     about: "About",
     resources: "Resources",
+    catalog: "Catalog",
     rfp: "Request a Proposal",
     menu: "Menu",
     openMenu: "Open menu",
@@ -388,6 +389,7 @@ const en = {
     technology: { kicker: "Technology", title: "Technology driven construction.", subtitle: "Precision before installation. Coordination before conflict." },
     about: { kicker: "About", title: "Built to execute.", subtitle: "The organization behind the work." },
     resources: { kicker: "Resources", title: "Resources.", subtitle: "Prequalification, service work and product solutions." },
+    catalog: { kicker: "Catalog", title: "Product catalog.", subtitle: "Electrical equipment and materials available through our team. Select a product to request it." },
     proposal: { kicker: "Estimating", title: "Request a proposal.", subtitle: "Send your plans and specifications to our estimating team." },
   },
 
@@ -404,6 +406,7 @@ const es: GcContent = {
     technology: "Tecnología",
     about: "Nosotros",
     resources: "Recursos",
+    catalog: "Catálogo",
     rfp: "Solicitar Propuesta",
     menu: "Menú",
     openMenu: "Abrir menú",
@@ -774,6 +777,7 @@ const es: GcContent = {
     technology: { kicker: "Tecnología", title: "Construcción impulsada por tecnología.", subtitle: "Precisión antes de instalar. Coordinación antes del conflicto." },
     about: { kicker: "Nosotros", title: "Hechos para ejecutar.", subtitle: "La organización detrás de cada obra." },
     resources: { kicker: "Recursos", title: "Recursos.", subtitle: "Precalificación, servicio y soluciones de producto." },
+    catalog: { kicker: "Catálogo", title: "Catálogo de productos.", subtitle: "Equipos y materiales eléctricos disponibles a través de nuestro equipo. Seleccione un producto para solicitarlo." },
     proposal: { kicker: "Estimación", title: "Solicitar propuesta.", subtitle: "Envíe sus planos y especificaciones a nuestro equipo de estimación." },
   },
 

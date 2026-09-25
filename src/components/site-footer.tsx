@@ -74,6 +74,7 @@ const FOOTER_NAV = [
   { id: "technology", href: "/technology" },
   { id: "about", href: "/about" },
   { id: "resources", href: "/resources" },
+  { id: "catalog", href: "/catalogo" },
 ] as const;
 
 export function SiteFooter() {
