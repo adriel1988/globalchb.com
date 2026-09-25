@@ -22,6 +22,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Rutas antiguas (ES) → nueva arquitectura orientada a GCs / developers
+  async redirects() {
+    return [
+      { source: "/proyectos", destination: "/projects", permanent: true },
+      { source: "/nosotros", destination: "/about", permanent: true },
+      { source: "/equipo", destination: "/about#team", permanent: true },
+      { source: "/servicios", destination: "/capabilities", permanent: true },
+      { source: "/contacto", destination: "/request-a-proposal", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

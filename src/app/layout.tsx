@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { SiteShell } from "@/components/site-shell";
@@ -10,13 +10,20 @@ const inter = Inter({
   display: "swap",
 });
 
+const barlowCondensed = Barlow_Condensed({
+  variable: "--font-barlow-condensed",
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: {
-    default: "Global Technology & Electrical Services | Contratista Eléctrico Certificado en Florida",
+    default: "Global Technology & Electrical Services | Electrical Construction Subcontractor in Florida",
     template: "%s | Global Technology & Electrical Services",
   },
   description:
-    "Contratista eléctrico certificado por el estado con más de 7 años de experiencia combinada. Paneles residenciales y comerciales, trifásicos, trazado Trimble, carga EV/RV e iluminación en el sur de Florida.",
+    "State-certified electrical construction subcontractor for multifamily, mixed-use and commercial projects in Florida: electrical, fire alarm, low voltage, BDA/ERCS, EV infrastructure and emergency power.",
   metadataBase: new URL("https://globalchb.com"),
   icons: {
     icon: "/favicon.svg",
@@ -29,9 +36,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body
-        className={`${inter.variable} font-sans antialiased bg-background text-foreground`}
+        className={`${inter.variable} ${barlowCondensed.variable} font-sans antialiased bg-background text-foreground`}
       >
         <SiteShell>{children}</SiteShell>
         <Toaster />

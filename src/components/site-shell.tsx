@@ -5,7 +5,7 @@ import { LanguageProvider } from "@/components/language-provider";
 import { OrderProvider } from "@/components/order-context";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { WhatsAppButton } from "@/components/whatsapp-button";
+import { FloatingCta } from "@/components/gc/floating-cta";
 
 export function SiteShell({ children }: { children: ReactNode }) {
   return (
@@ -15,7 +15,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           <SiteHeader />
           <main className="flex-1">{children}</main>
           <SiteFooter />
-          <WhatsAppButton />
+          <FloatingCta />
         </div>
       </OrderProvider>
     </LanguageProvider>

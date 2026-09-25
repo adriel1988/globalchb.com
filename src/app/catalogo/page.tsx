@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/page-header";
 import { CatalogSection } from "@/components/catalog-section";
-import { NewsletterSection } from "@/components/newsletter-section";
 import { getProducts } from "@/lib/supabase-data";
 
 export const metadata: Metadata = {
@@ -38,7 +37,6 @@ export default async function CatalogoPage() {
         }}
       />
       <CatalogSection products={products} />
-      <NewsletterSection />
     </>
   );
 }

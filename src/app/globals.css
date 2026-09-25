@@ -8,6 +8,16 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-inter);
+
+  /* Marca: Deep Navy / Charcoal / Off-white + Global Gold. Electric Blue SOLO para tecnología/datos/interacción. */
+  --color-navy: #0a1628;
+  --color-navy-800: #0f2038;
+  --color-navy-700: #172b48;
+  --color-charcoal: #1f2328;
+  --color-offwhite: #f6f5f1;
+  --color-gold: #c9a227;
+  --color-gold-bright: #d4a017;
+  --color-tech: #2f7bf6;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -46,11 +56,11 @@
 :root {
   --radius: 0.5rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.205 0.006 285.885);
+  --foreground: oklch(0.2 0.03 255);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.205 0.006 285.885);
+  --card-foreground: oklch(0.2 0.03 255);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.205 0.006 285.885);
+  --popover-foreground: oklch(0.2 0.03 255);
   --primary: oklch(0.695 0.133 85);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.967 0.001 286.375);
@@ -138,6 +148,54 @@
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: oklch(0.695 0.133 85);
+}
+
+/* ─── Tipografía de construcción: titulares condensados y pesados ─────────── */
+.font-display {
+  font-family: var(--font-barlow-condensed), var(--font-inter), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+/* Números como fotografías */
+.stat-number {
+  font-family: var(--font-barlow-condensed), var(--font-inter), sans-serif;
+  font-weight: 700;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Retícula técnica de líneas finas (planos) */
+.tech-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+.tech-grid-light {
+  background-image:
+    linear-gradient(to right, rgb(10 22 40 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(10 22 40 / 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+@keyframes hero-kenburns {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+.animate-kenburns {
+  animation: hero-kenburns 7s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-kenburns { animation: none; }
 }
 
 @keyframes float-slow {

@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useLanguage } from "@/components/language-provider";
+import Link from "next/link";
+import { useGc, useLanguage } from "@/components/language-provider";
 import { COMPANY } from "@/lib/i18n";
 import { privacyPolicy, termsOfService, type PolicySection } from "@/lib/policies";
 import { ShieldCheck, FileText } from "lucide-react";
@@ -66,74 +67,87 @@ function PolicyDialog({
   );
 }
 
+const FOOTER_NAV = [
+  { id: "projects", href: "/projects" },
+  { id: "capabilities", href: "/capabilities" },
+  { id: "newConstruction", href: "/new-construction" },
+  { id: "technology", href: "/technology" },
+  { id: "about", href: "/about" },
+  { id: "resources", href: "/resources" },
+] as const;
+
 export function SiteFooter() {
   const { t, locale } = useLanguage();
+  const g = useGc();
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
 
   return (
-    <footer className="mt-auto bg-slate-950 text-slate-300">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
-          <div>
-            <p className="mt-2 text-sm leading-relaxed text-slate-400">{t.footer.about}</p>
-            <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1 text-xs text-slate-400">
-              <ShieldCheck className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-              {COMPANY.legalName}
-            </p>
+    <footer className="mt-auto bg-navy text-slate-300">
+      <div className="mx-auto max-w-7xl px-4 pb-8 pt-16 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
+          <div className="md:col-span-5">
+            <p className="font-display text-3xl text-white">Global Technology</p>
+            <p className="mt-1 text-xs font-semibold uppercase tracking-[0.2em] text-gold">&amp; Electrical Services</p>
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-slate-400">{g.footer.tagline}</p>
+            <Link
+              href="/request-a-proposal"
+              className="mt-6 inline-flex h-11 items-center bg-gold px-5 text-xs font-semibold uppercase tracking-[0.16em] text-navy hover:bg-gold-bright"
+            >
+              {g.nav.rfp}
+            </Link>
           </div>
 
-          <div id="contacto" className="scroll-mt-24">
-            <h3 className="text-sm font-normal uppercase tracking-wider text-white">{t.footer.contactTitle}</h3>
+          <nav className="md:col-span-3" aria-label={g.footer.company}>
+            <h3 className="eyebrow text-white">{g.footer.company}</h3>
+            <ul className="mt-4 space-y-2.5 text-sm">
+              {FOOTER_NAV.map(({ id, href }) => (
+                <li key={id}>
+                  <Link href={href} className="text-slate-400 transition-colors hover:text-gold">
+                    {g.nav[id]}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div id="contacto" className="scroll-mt-24 md:col-span-4">
+            <h3 className="eyebrow text-white">{g.footer.contact}</h3>
             <ul className="mt-4 space-y-2.5 text-sm text-slate-400">
-              <li className="font-medium text-slate-300">{t.footer.businessName}</li>
               <li className="leading-relaxed">{COMPANY.address}</li>
               <li>
-                <a href={`mailto:${COMPANY.email}`} className="break-all transition-colors hover:text-primary">
+                <a href={`mailto:${COMPANY.email}`} className="break-all transition-colors hover:text-gold">
                   {COMPANY.email}
                 </a>
               </li>
               <li>
-                <a
-                  href={COMPANY.whatsapp}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-colors hover:text-primary"
-                >
+                <a href="tel:+17869527504" className="transition-colors hover:text-gold">
                   {COMPANY.phone}
                 </a>
+                <span className="mx-2 text-slate-600">·</span>
+                <a href={COMPANY.whatsapp} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-gold">
+                  WhatsApp
+                </a>
               </li>
-              <li className="leading-relaxed">{COMPANY.area[locale]}</li>
-              <li className="leading-relaxed">{COMPANY.hours[locale]}</li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-normal uppercase tracking-wider text-white">{t.footer.legalTitle}</h3>
-            <ul className="mt-4 space-y-2.5 text-sm">
-              <li>
-                <button
-                  onClick={() => setPrivacyOpen(true)}
-                  className="text-slate-400 transition-colors hover:text-primary"
-                >
-                  {t.footer.privacy}
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => setTermsOpen(true)}
-                  className="text-slate-400 transition-colors hover:text-primary"
-                >
-                  {t.footer.terms}
-                </button>
-              </li>
+              <li>{g.footer.hours}</li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 py-6 pl-0 pr-20 text-xs text-slate-500 sm:flex-row sm:pr-28">
-          <p>{t.footer.copyright}</p>
-          <p>{COMPANY.office[locale]}</p>
+        <div className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-6 pr-0 text-xs text-slate-500 sm:pr-56 md:flex-row md:items-center md:justify-between">
+          <p>
+            © {new Date().getFullYear()} {COMPANY.legalName}. {g.footer.rights}
+          </p>
+          <div className="flex items-center gap-2 text-slate-500">
+            <ShieldCheck className="h-3.5 w-3.5 text-gold" aria-hidden="true" />
+            <button onClick={() => setPrivacyOpen(true)} className="transition-colors hover:text-gold">
+              {g.footer.privacy}
+            </button>
+            <span aria-hidden="true">·</span>
+            <button onClick={() => setTermsOpen(true)} className="transition-colors hover:text-gold">
+              {g.footer.terms}
+            </button>
+          </div>
         </div>
       </div>
 

@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { dict, type Dict, type Locale } from "@/lib/i18n";
+import { dict, type Locale } from "@/lib/i18n";
+import { gc } from "@/lib/gc-content";
 
 type LanguageContextType = {
   locale: Locale;
@@ -11,15 +12,16 @@ type LanguageContextType = {
 };
 
 const LanguageContext = createContext<LanguageContextType>({
-  locale: "es",
-  t: dict.es,
+  locale: "en",
+  t: dict.en,
   setLocale: () => {},
   toggleLocale: () => {},
 });
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  // Siempre hidrata con "es" para que SSR y cliente coincidan 100% (sin mismatch de Radix/useId)
-  const [locale, setLocaleState] = useState<Locale>("es");
+  // Inglés por defecto (mercado de developers / GCs). Siempre hidrata con "en" para que
+  // SSR y cliente coincidan 100% (sin mismatch de Radix/useId); luego aplica la preferencia guardada.
+  const [locale, setLocaleState] = useState<Locale>("en");
 
   // Lee la preferencia guardada después de montar, diferido para evitar renders en cascada
   useEffect(() => {
@@ -50,4 +52,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
 export function useLanguage() {
   return useContext(LanguageContext);
+}
+
+/** Contenido del sitio para developers / GCs en el idioma activo. */
+export function useGc() {
+  const { locale } = useContext(LanguageContext);
+  return gc[locale];
 }
