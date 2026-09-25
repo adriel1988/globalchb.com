@@ -65,7 +65,10 @@ function AlbumViewer({ album, onClose }: { album: ProjectAlbum | null; onClose: 
   const photos = album?.photos ?? [];
   const n = photos.length;
   const go = (d: number) => n > 1 && setI((prev) => (prev + d + n) % n);
-  const desc = album ? descOf(album) : null;
+  // Descripción de la foto actual; si no tiene, la del proyecto
+  const caption = album?.captions[i];
+  const desc =
+    album && caption && caption.toLowerCase() !== album.title.toLowerCase() ? caption : album ? descOf(album) : null;
 
   // Precarga la foto siguiente y la anterior
   useEffect(() => {

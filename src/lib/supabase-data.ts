@@ -245,24 +245,32 @@ export type ProjectAlbum = {
   title: string;
   description: string | null;
   photos: string[];
+  /** Descripción propia de cada foto (misma posición que `photos`). */
+  captions: (string | null)[];
 };
 
 /**
- * Agrupa las fotos publicadas del CRM en proyectos: por `project_id` cuando
- * existe y, si no, por título. Conserva el orden de `display_order`.
+ * Agrupa las fotos publicadas del CRM en proyectos por **título**: cada título
+ * de `portfolio_gallery` es una tarjeta en la web (aunque varias fotos compartan
+ * `project_id`). Conserva el orden de `display_order` / `created_at`.
  */
 export function groupProjectAlbums(items: ProjectItem[]): ProjectAlbum[] {
   const albums = new Map<string, ProjectAlbum>();
   for (const item of items) {
     if (!item.image) continue;
-    const key = item.slug || item.name.trim().toLowerCase();
+    const title = item.name.trim() || "—";
+    const key = title
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
     let album = albums.get(key);
     if (!album) {
-      album = { key, title: item.name.trim(), description: null, photos: [] };
+      album = { key, title, description: null, photos: [], captions: [] };
       albums.set(key, album);
     }
+    const desc = item.descEs?.trim() || null;
     album.photos.push(item.image);
-    const desc = item.descEs?.trim();
+    album.captions.push(desc);
     if (desc && !album.description) album.description = desc;
   }
   return [...albums.values()];
