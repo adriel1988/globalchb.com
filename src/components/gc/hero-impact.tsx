@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
@@ -12,7 +11,7 @@ import { COMPANY_FACTS } from "@/lib/company-facts";
  * edificio → subterráneo → cuarto eléctrico → switchgear → trazado → edificio terminado.
  * Cuando COMPANY_FACTS.heroVideo tenga valor, se reproduce el video (sin audio).
  */
-const FRAMES = [
+const FALLBACK_FRAMES = [
   "/images/Experiencia.webp",
   "/images/about-company.webp",
   "/images/svc-commercial-panel.png",
@@ -22,21 +21,36 @@ const FRAMES = [
 ];
 const FRAME_MS = 4200;
 
-export function HeroImpact() {
+/** `photos`: todas las fotos de proyectos publicadas desde el CRM (Supabase). */
+export function HeroImpact({ photos = [] }: { photos?: string[] }) {
   const c = useGc().hero;
+  const frames = photos.length > 0 ? photos : FALLBACK_FRAMES;
   const [frame, setFrame] = useState(0);
+  const [started, setStarted] = useState(false);
+  // La foto anterior queda encima y se desvanece, revelando la nueva.
+  const prev = started ? (frame - 1 + frames.length) % frames.length : null;
   const video = COMPANY_FACTS.heroVideo;
 
   useEffect(() => {
-    if (video) return;
+    if (video || frames.length < 2) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = window.setInterval(() => setFrame((f) => (f + 1) % FRAMES.length), FRAME_MS);
+    const id = window.setInterval(() => {
+      setStarted(true);
+      setFrame((f) => (f + 1) % frames.length);
+    }, FRAME_MS);
     return () => window.clearInterval(id);
-  }, [video]);
+  }, [video, frames.length]);
+
+  // Precarga la siguiente foto para que el fundido no muestre huecos
+  useEffect(() => {
+    if (frames.length < 2) return;
+    const img = new window.Image();
+    img.src = frames[(frame + 1) % frames.length];
+  }, [frame, frames]);
 
   return (
     <section id="home" className="relative flex min-h-[100svh] flex-col overflow-hidden bg-navy text-white">
-      <div className="absolute inset-0" aria-hidden="true">
+      <div className="absolute inset-0 z-0" aria-hidden="true">
         {video ? (
           <video
             className="h-full w-full object-cover"
@@ -48,25 +62,27 @@ export function HeroImpact() {
             playsInline
           />
         ) : (
-          FRAMES.map((src, i) => (
-            <div
-              key={src}
-              className={`absolute inset-0 transition-opacity duration-[1400ms] ease-in-out ${i === frame ? "opacity-100" : "opacity-0"}`}
-            >
-              <Image
-                src={src}
-                alt=""
-                fill
-                priority={i === 0}
-                sizes="100vw"
-                className={`object-cover ${i === frame ? "animate-kenburns" : ""}`}
-              />
-            </div>
-          ))
+          // Solo se montan la foto actual y la anterior (fundido), aunque haya muchas fotos.
+          frames.map((src, i) =>
+            i === frame || i === prev ? (
+              <div
+                key={`${src}-${i}`}
+                className={`absolute inset-0 ${i === prev ? "z-10 animate-hero-fadeout" : ""}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={src}
+                  alt=""
+                  fetchPriority={i === 0 ? "high" : "auto"}
+                  className={`h-full w-full object-cover ${i === frame ? "animate-kenburns" : ""}`}
+                />
+              </div>
+            ) : null,
+          )
         )}
-        <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/80 to-navy/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-navy/60" />
-        <div className="tech-grid absolute inset-0 opacity-60" />
+        <div className="absolute inset-0 z-20 bg-gradient-to-r from-navy via-navy/80 to-navy/30" />
+        <div className="absolute inset-0 z-20 bg-gradient-to-t from-navy via-transparent to-navy/60" />
+        <div className="tech-grid absolute inset-0 z-20 opacity-60" />
       </div>
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-4 pb-10 pt-32 sm:px-6 lg:px-8">

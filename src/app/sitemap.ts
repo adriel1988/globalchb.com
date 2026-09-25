@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next";
-import { PROJECTS } from "@/lib/featured-projects";
 import { SITE_URL } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -13,7 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/request-a-proposal", priority: 0.9, changeFrequency: "monthly" },
     { path: "/resources", priority: 0.5, changeFrequency: "monthly" },
     { path: "/catalogo", priority: 0.3, changeFrequency: "monthly" },
-    ...PROJECTS.map((p) => ({ path: `/projects/${p.slug}`, priority: 0.7, changeFrequency: "monthly" as const })),
   ];
 
   return routes.map(({ path, priority, changeFrequency }) => ({

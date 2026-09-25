@@ -9,6 +9,10 @@
  */
 
 export type CompanyFacts = {
+  /** Unidades multifamiliares entregadas (textos oficiales: Park @ Delray 423 + South Pointe 169 + Oakwood Village 265). */
+  multifamilyUnits: number | null;
+  /** Ciudades de Florida con proyectos (textos oficiales: Miami, Aventura, Coral Gables, Delray Beach, Davie, Fort Myers, Naples, Sarasota, Orlando). */
+  floridaCities: number | null;
   /** Año de fundación de la empresa (p. ej. 2020). */
   establishedYear: number | null;
   /** Años de experiencia COMBINADA del equipo en construcción (cifra del equipo, no de la empresa). */
@@ -30,6 +34,8 @@ export type CompanyFacts = {
 };
 
 export const COMPANY_FACTS: CompanyFacts = {
+  multifamilyUnits: 857,
+  floridaCities: 9,
   establishedYear: null,
   combinedExperienceYears: null,
   personnel: null,

@@ -25,9 +25,10 @@ export async function getProjects(): Promise<ProjectItem[]> {
   try {
     const { data, error } = await getSupabaseAdmin()
       .from("portfolio_gallery")
-      .select("project_id, title, description, photo_url, display_order, is_published_to_web")
+      .select("id, project_id, title, description, photo_url, display_order, is_published_to_web, created_at")
       .eq("is_published_to_web", true)
-      .order("display_order", { ascending: true });
+      .order("display_order", { ascending: true })
+      .order("created_at", { ascending: true });
 
     if (error) {
       console.error("[getProjects] Supabase error:", error.message);
@@ -35,7 +36,7 @@ export async function getProjects(): Promise<ProjectItem[]> {
     }
 
     return (data ?? []).map((row) => ({
-      id: row.project_id ?? String(Math.random()),
+      id: row.id,
       slug: row.project_id ?? "",
       name: row.title ?? "",
       location: null,
@@ -199,4 +200,34 @@ function normalizePhotoUrls(value: unknown): string[] {
     return [trimmed];
   }
   return [];
+}
+
+// ─── Álbumes de proyecto ──────────────────────────────────────────────────────
+
+export type ProjectAlbum = {
+  key: string;
+  title: string;
+  description: string | null;
+  photos: string[];
+};
+
+/**
+ * Agrupa las fotos publicadas del CRM en proyectos: por `project_id` cuando
+ * existe y, si no, por título. Conserva el orden de `display_order`.
+ */
+export function groupProjectAlbums(items: ProjectItem[]): ProjectAlbum[] {
+  const albums = new Map<string, ProjectAlbum>();
+  for (const item of items) {
+    if (!item.image) continue;
+    const key = item.slug || item.name.trim().toLowerCase();
+    let album = albums.get(key);
+    if (!album) {
+      album = { key, title: item.name.trim(), description: null, photos: [] };
+      albums.set(key, album);
+    }
+    album.photos.push(item.image);
+    const desc = item.descEs?.trim();
+    if (desc && !album.description) album.description = desc;
+  }
+  return [...albums.values()];
 }

@@ -26,11 +26,11 @@ export function ResourcesContent({ services }: { services: ServiceItem[] }) {
           </Link>
         </article>
 
-        <article id="residential" className="flex scroll-mt-24 flex-col border border-navy/15 bg-white p-8 lg:row-span-2">
+        <article id="residential" className="flex scroll-mt-24 flex-col border border-navy/15 bg-white p-8">
           <h2 className="font-display text-3xl text-navy">{c.residential.title}</h2>
           <p className="mt-3 text-sm leading-relaxed text-slate-600">{c.residential.desc}</p>
           {services.length > 0 ? (
-            <ul className="mt-6 divide-y divide-slate-200 border-y border-slate-200">
+            <ul className="custom-scrollbar mt-6 max-h-[26rem] divide-y divide-slate-200 overflow-y-auto overscroll-contain border-y border-slate-200 pr-3">
               {services.map((s) => (
                 <li key={s.id}>
                   <a

@@ -3,7 +3,6 @@
 import { useGc } from "@/components/language-provider";
 import { SectionHeading } from "@/components/gc/section-heading";
 import { COMPANY_FACTS } from "@/lib/company-facts";
-import { PORTFOLIO_STATS } from "@/lib/featured-projects";
 
 /** 03 — CAPACIDAD: números enormes. Solo cifras verificables (las null no se muestran). */
 export function CapabilityScale() {
@@ -12,11 +11,8 @@ export function CapabilityScale() {
   const f = COMPANY_FACTS;
 
   const stats: { value: string; label: string }[] = [
-    { value: `${PORTFOLIO_STATS.projects}+`, label: c.projects },
-    PORTFOLIO_STATS.multifamilyUnits > 0
-      ? { value: `${PORTFOLIO_STATS.multifamilyUnits.toLocaleString("en-US")}+`, label: c.units }
-      : null,
-    { value: String(PORTFOLIO_STATS.cities), label: c.cities },
+    f.multifamilyUnits ? { value: `${f.multifamilyUnits.toLocaleString("en-US")}+`, label: c.units } : null,
+    f.floridaCities ? { value: String(f.floridaCities), label: c.cities } : null,
     { value: String(g.capabilities.items.length), label: c.systems },
     f.personnel ? { value: `${f.personnel}+`, label: c.personnel } : null,
     f.bondingCapacityM ? { value: `$${f.bondingCapacityM}M`, label: c.bonding } : null,

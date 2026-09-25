@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { GcPageHeader } from "@/components/gc/gc-page-header";
-import { ProjectsIndex } from "@/components/gc/projects-index";
-import { FloridaMap } from "@/components/gc/florida-map";
-import { FieldGallery } from "@/components/gc/field-gallery";
-import { getProjects } from "@/lib/supabase-data";
+import { ProjectAlbums } from "@/components/gc/project-albums";
+import { getProjects, groupProjectAlbums } from "@/lib/supabase-data";
 
 export const metadata: Metadata = {
   title: "Projects — Multifamily, Mixed-Use & Commercial Electrical Construction",
@@ -15,14 +13,12 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function ProjectsPage() {
-  // Fotografía de campo publicada desde el CRM (Supabase portfolio_gallery)
-  const photos = await getProjects();
+  // Proyectos, fotos y descripciones publicados desde el CRM (Supabase portfolio_gallery)
+  const albums = groupProjectAlbums(await getProjects());
   return (
     <>
       <GcPageHeader page="projects" />
-      <ProjectsIndex />
-      <FloridaMap />
-      <FieldGallery photos={photos} />
+      <ProjectAlbums albums={albums} />
     </>
   );
 }

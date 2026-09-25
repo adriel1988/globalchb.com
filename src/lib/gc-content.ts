@@ -6,8 +6,6 @@
  * English es el idioma por defecto.
  */
 
-import type { ProjectType, ScopeKey, ProjectStatus } from "@/lib/featured-projects";
-
 export type CapabilityKey = "electrical" | "lifeSafety" | "power" | "lowVoltage" | "ev" | "technology";
 
 const en = {
@@ -40,45 +38,18 @@ const en = {
   featured: {
     kicker: "Selected Work",
     title: "Built across Florida.",
-    viewCaseStudy: "View case study",
+    viewCaseStudy: "View project",
     viewAll: "View all projects",
-    units: "units",
-    stories: "stories",
-    sf: "SF",
+    photo: "photo",
+    photos: "photos",
+    prev: "Previous photo",
+    next: "Next photo",
+    empty: "Project gallery coming soon.",
   },
-
-  types: {
-    multifamily: "Multifamily Development",
-    mixedUse: "Mixed-Use Development",
-    commercial: "Commercial",
-    municipal: "Municipal Infrastructure",
-    utility: "Utility Infrastructure",
-    townhomes: "Townhome Community",
-    medical: "Medical / Commercial",
-    amenity: "Amenity Building",
-    residential: "Residential",
-  } satisfies Record<ProjectType, string>,
-
-  scope: {
-    electrical: "Electrical Construction",
-    utility: "FPL / Utility Coordination",
-    lowVoltage: "Low Voltage",
-    fireAlarm: "Fire Alarm",
-    bda: "BDA/ERCS",
-    emergencyPower: "Emergency Power",
-    ev: "EV Infrastructure",
-    lighting: "Lighting",
-  } satisfies Record<ScopeKey, string>,
-
-  status: {
-    completed: "Completed",
-    underConstruction: "Under Construction",
-  } satisfies Record<ProjectStatus, string>,
 
   scale: {
     kicker: "Capability at Scale",
     title: "Can we handle yours? The record says yes.",
-    projects: "Documented projects",
     units: "Multifamily units delivered",
     cities: "Florida cities",
     systems: "Systems under one contract",
@@ -87,7 +58,7 @@ const en = {
     insurance: "Insurance coverage",
     experience: "Years of combined construction experience",
     established: "Established",
-    footnote: "Figures reflect documented portfolio projects only.",
+    footnote: "Figures from documented project experience.",
   },
 
   capabilities: {
@@ -182,44 +153,6 @@ const en = {
       { title: "Closeout", desc: "Testing, inspections, as-builts and turnover documentation." },
     ],
     cta: "Explore our technology",
-  },
-
-  caseStudies: {
-    kicker: "Project Case Studies",
-    title: "Challenge. Solution. Result.",
-    challenge: "Challenge",
-    solution: "Solution",
-    result: "Result",
-    overview: "Project overview",
-    snapshot: "Project snapshot",
-    location: "Location",
-    projectType: "Project type",
-    units: "Units",
-    stories: "Stories",
-    area: "Area",
-    gc: "General contractor / Developer",
-    status: "Status",
-    contractScope: "Contract scope",
-    execution: "Execution",
-    backToProjects: "All projects",
-    nextProject: "Next project",
-    similarCta: "Have a similar project?",
-    similarText: "Send us your plans and our estimating team will review the scope.",
-    read: "Read case study",
-  },
-
-  map: {
-    kicker: "Project Experience",
-    title: "Project experience across Florida.",
-    subtitle: "Select a project to see its details.",
-    hq: "Headquarters — Davie",
-    markets: [
-      { name: "South Florida", cities: "Miami · Aventura · Bay Harbor Islands · Coral Gables · Davie · Delray Beach" },
-      { name: "Southwest Florida", cities: "Fort Myers · Naples · Sarasota" },
-      { name: "Central Florida", cities: "Orlando" },
-    ],
-    viewProject: "View project",
-    otherProjects: "More South Florida projects",
   },
 
   trust: {
@@ -377,10 +310,6 @@ const en = {
     serviceArea: "Serving Florida",
   },
 
-  gallery: {
-    kicker: "Field Photography",
-    title: "From the field.",
-  },
 
   pages: {
     projects: { kicker: "Projects", title: "Project portfolio.", subtitle: "Multifamily, mixed-use, commercial and infrastructure work across Florida." },
@@ -427,45 +356,18 @@ const es: GcContent = {
   featured: {
     kicker: "Obras seleccionadas",
     title: "Construido en toda Florida.",
-    viewCaseStudy: "Ver caso de estudio",
+    viewCaseStudy: "Ver proyecto",
     viewAll: "Ver todos los proyectos",
-    units: "unidades",
-    stories: "pisos",
-    sf: "pies²",
-  },
-
-  types: {
-    multifamily: "Desarrollo multifamiliar",
-    mixedUse: "Desarrollo de uso mixto",
-    commercial: "Comercial",
-    municipal: "Infraestructura municipal",
-    utility: "Infraestructura de servicios",
-    townhomes: "Comunidad de townhomes",
-    medical: "Médico / Comercial",
-    amenity: "Edificio de amenidades",
-    residential: "Residencial",
-  },
-
-  scope: {
-    electrical: "Construcción eléctrica",
-    utility: "Coordinación FPL / servicios",
-    lowVoltage: "Bajo voltaje",
-    fireAlarm: "Alarma de incendio",
-    bda: "BDA/ERCS",
-    emergencyPower: "Energía de emergencia",
-    ev: "Infraestructura EV",
-    lighting: "Iluminación",
-  },
-
-  status: {
-    completed: "Completado",
-    underConstruction: "En construcción",
+    photo: "foto",
+    photos: "fotos",
+    prev: "Foto anterior",
+    next: "Foto siguiente",
+    empty: "Galería de proyectos próximamente.",
   },
 
   scale: {
     kicker: "Capacidad a escala",
     title: "¿Podemos con su proyecto? Nuestro historial lo demuestra.",
-    projects: "Proyectos documentados",
     units: "Unidades multifamiliares entregadas",
     cities: "Ciudades de Florida",
     systems: "Sistemas en un solo contrato",
@@ -474,7 +376,7 @@ const es: GcContent = {
     insurance: "Cobertura de seguro",
     experience: "Años de experiencia combinada en construcción",
     established: "Fundada en",
-    footnote: "Las cifras reflejan únicamente proyectos documentados del portafolio.",
+    footnote: "Cifras basadas en experiencia documentada en proyectos.",
   },
 
   capabilities: {
@@ -569,44 +471,6 @@ const es: GcContent = {
       { title: "Cierre", desc: "Pruebas, inspecciones, planos as-built y documentación de entrega." },
     ],
     cta: "Conocer nuestra tecnología",
-  },
-
-  caseStudies: {
-    kicker: "Casos de estudio",
-    title: "Reto. Solución. Resultado.",
-    challenge: "Reto",
-    solution: "Solución",
-    result: "Resultado",
-    overview: "Descripción del proyecto",
-    snapshot: "Ficha del proyecto",
-    location: "Ubicación",
-    projectType: "Tipo de proyecto",
-    units: "Unidades",
-    stories: "Pisos",
-    area: "Área",
-    gc: "Contratista general / Developer",
-    status: "Estado",
-    contractScope: "Alcance del contrato",
-    execution: "Ejecución",
-    backToProjects: "Todos los proyectos",
-    nextProject: "Siguiente proyecto",
-    similarCta: "¿Tiene un proyecto similar?",
-    similarText: "Envíenos sus planos y nuestro equipo de estimación revisará el alcance.",
-    read: "Leer caso de estudio",
-  },
-
-  map: {
-    kicker: "Experiencia en proyectos",
-    title: "Experiencia en proyectos en toda Florida.",
-    subtitle: "Seleccione un proyecto para ver sus detalles.",
-    hq: "Oficina central — Davie",
-    markets: [
-      { name: "Sur de Florida", cities: "Miami · Aventura · Bay Harbor Islands · Coral Gables · Davie · Delray Beach" },
-      { name: "Suroeste de Florida", cities: "Fort Myers · Naples · Sarasota" },
-      { name: "Centro de Florida", cities: "Orlando" },
-    ],
-    viewProject: "Ver proyecto",
-    otherProjects: "Más proyectos en el sur de Florida",
   },
 
   trust: {
@@ -764,10 +628,6 @@ const es: GcContent = {
     serviceArea: "Trabajamos en Florida",
   },
 
-  gallery: {
-    kicker: "Fotografía de campo",
-    title: "Desde la obra.",
-  },
 
   pages: {
     projects: { kicker: "Proyectos", title: "Portafolio de proyectos.", subtitle: "Obras multifamiliares, de uso mixto, comerciales y de infraestructura en toda Florida." },

@@ -194,6 +194,14 @@
   animation: hero-kenburns 7s ease-out forwards;
 }
 
+@keyframes hero-fadeout {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.animate-hero-fadeout {
+  animation: hero-fadeout 1.4s ease-in-out forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-kenburns { animation: none; }
 }

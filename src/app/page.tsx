@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
 import { HeroImpact } from "@/components/gc/hero-impact";
-import { FeaturedProjects } from "@/components/gc/featured-projects";
+import { ProjectAlbums } from "@/components/gc/project-albums";
 import { CapabilityScale } from "@/components/gc/capability-scale";
 import { CapabilitiesGrid } from "@/components/gc/capabilities-grid";
 import { GroundUpSequence } from "@/components/gc/ground-up-sequence";
 import { BuiltToExecute } from "@/components/gc/built-to-execute";
 import { TechnologySection } from "@/components/gc/technology-section";
-import { CaseStudiesSection } from "@/components/gc/case-studies";
-import { FloridaMap } from "@/components/gc/florida-map";
 import { TrustedExperience } from "@/components/gc/trusted-experience";
 import { ProposalSection } from "@/components/gc/proposal-form";
 import { GcFaqSection } from "@/components/gc/faq-section";
-import { PROJECTS } from "@/lib/featured-projects";
+import { getProjects, groupProjectAlbums } from "@/lib/supabase-data";
 import { COMPANY } from "@/lib/i18n";
 import { SITE_URL, businessJsonLd } from "@/lib/seo";
 
@@ -52,11 +50,16 @@ export const metadata: Metadata = {
 
 /**
  * HOME — IMPACTO → PRUEBA → CAPACIDAD → SERVICIOS → CONFIANZA → CONTACTO
- * 01 Hero · 02 Featured projects · 03 Capability at scale · 04 Capabilities ·
- * 05 Ground-up · 06 Built to execute · 07 Technology · 08 Case studies ·
- * 09 Florida map · 10 Trusted experience · 11 Request a proposal · FAQ · 12 Footer (layout)
+ * 01 Hero · 02 Proyectos (CRM) · 03 Capability at scale · 04 Capabilities ·
+ * 05 Ground-up · 06 Built to execute · 07 Technology · 08 Trusted experience ·
+ * 09 Request a proposal · FAQ · Footer (layout)
  */
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  // Proyectos publicados desde el CRM (Supabase portfolio_gallery)
+  const albums = groupProjectAlbums(await getProjects());
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -72,11 +75,10 @@ export default function Home() {
       {
         "@type": "ItemList",
         name: "Project portfolio — Global Technology & Electrical Services",
-        itemListElement: PROJECTS.map((p, i) => ({
+        itemListElement: albums.map((a, i) => ({
           "@type": "ListItem",
           position: i + 1,
-          url: `${SITE_URL}/projects/${p.slug}`,
-          name: p.name,
+          item: { "@type": "CreativeWork", name: a.title, image: a.photos[0] },
         })),
       },
     ],
@@ -85,15 +87,13 @@ export default function Home() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <HeroImpact />
-      <FeaturedProjects />
+      <HeroImpact photos={albums.flatMap((a) => a.photos)} />
+      <ProjectAlbums albums={albums} limit={6} home />
       <CapabilityScale />
       <CapabilitiesGrid />
       <GroundUpSequence />
       <BuiltToExecute />
       <TechnologySection />
-      <CaseStudiesSection />
-      <FloridaMap />
       <TrustedExperience />
       <ProposalSection />
       <GcFaqSection />
