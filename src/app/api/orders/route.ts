@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { sendLeadAlertEmail } from "@/lib/lead-alert";
 import { EMAIL_RE, ORG_ID, clientIp, rateLimited, str, upsertWebLead } from "@/lib/leads";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,8 @@ export async function POST(req: NextRequest) {
   }
 
   if (str(body.website)) return NextResponse.json({ ok: true, reference: "GTE" }, { status: 201 });
-  if (rateLimited(clientIp(req.headers))) return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+  const ip = clientIp(req.headers);
+  if (rateLimited(ip)) return NextResponse.json({ error: "rate_limited" }, { status: 429 });
 
   const f = {
     itemType: body.itemType === "service" ? "service" : "product",
@@ -39,6 +41,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "itemName, customerName and customerEmail are required" }, { status: 400 });
   }
   if (!EMAIL_RE.test(f.email)) return NextResponse.json({ error: "invalid_email" }, { status: 400 });
+
+  if (!(await verifyTurnstile(body.captchaToken, ip))) {
+    return NextResponse.json({ error: "captcha_failed" }, { status: 403 });
+  }
 
   const label = f.itemType === "service" ? "Solicitud de servicio" : "Pedido de producto";
   const request = [
@@ -64,6 +70,7 @@ export async function POST(req: NextRequest) {
       projectType: `${label}: ${f.itemName}${f.quantity > 1 ? ` (x${f.quantity})` : ""}`,
       request,
       smsConsent: false,
+      webForm: "order",
     });
 
     await sendLeadAlertEmail(

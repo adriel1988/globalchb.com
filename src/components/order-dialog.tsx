@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { TurnstileWidget, captchaEnabled, type TurnstileHandle } from "@/components/turnstile-widget";
 import {
   Dialog,
   DialogContent,
@@ -37,8 +38,10 @@ export function OrderDialog({
   onOpenChange: (v: boolean) => void;
   target: OrderTarget | null;
 }) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [quantity, setQuantity] = useState(1);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const captchaRef = useRef<TurnstileHandle>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
   const [submitted, setSubmitted] = useState<Submitted | null>(null);
@@ -73,6 +76,8 @@ export function OrderDialog({
           propertyType: fd.get("propertyType"),
           serviceCity: fd.get("serviceCity"),
           message: fd.get("message"),
+          website: fd.get("website"),
+          captchaToken,
         }),
       });
       const data = await res.json();
@@ -80,6 +85,7 @@ export function OrderDialog({
       setSubmitted(data);
     } catch {
       setError(true);
+      captchaRef.current?.reset();
     } finally {
       setSubmitting(false);
     }
@@ -120,6 +126,10 @@ export function OrderDialog({
             </DialogHeader>
 
             <form onSubmit={handleSubmit} className="grid gap-4">
+              {/* Honeypot anti-spam */}
+              <div className="hidden" aria-hidden="true">
+                <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+              </div>
               <div className="grid gap-2">
                 <Label htmlFor="order-quantity">{t.order.quantity}</Label>
                 <div className="flex items-center gap-2">
@@ -191,10 +201,12 @@ export function OrderDialog({
                 <Textarea id="order-message" name="message" rows={3} placeholder={t.order.messagePh} />
               </div>
 
+              <TurnstileWidget ref={captchaRef} onToken={setCaptchaToken} locale={locale} />
+
               {error && <p className="text-sm font-medium text-destructive">{t.order.error}</p>}
 
               <DialogFooter>
-                <Button type="submit" disabled={submitting} className="w-fit sm:w-auto">
+                <Button type="submit" disabled={submitting || (captchaEnabled && !captchaToken)} className="w-fit sm:w-auto">
                   {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}
                   {submitting ? t.order.submitting : t.order.submit}
                 </Button>

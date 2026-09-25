@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { sendLeadAlertEmail } from "@/lib/lead-alert";
 import { EMAIL_RE, ORG_ID, clientIp, rateLimited, str, upsertWebLead } from "@/lib/leads";
+import { verifyTurnstile } from "@/lib/turnstile";
 import {
   DOCUMENT_KINDS,
   MAX_FILE_BYTES,
@@ -16,7 +17,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * POST /api/proposals — formulario "Request a Proposal".
- * 1) Valida, aplica honeypot y límite por IP.
+ * 1) Valida, aplica honeypot, límite por IP y captcha (Turnstile).
  * 2) Si ya hay un lead abierto (mismo email o teléfono, status ≠ won/lost),
  *    añade la solicitud a sus `notes`; si no, inserta un lead nuevo
  *    (source "website", status "new", temperature "warm").
@@ -35,7 +36,8 @@ export async function POST(req: NextRequest) {
   // Honeypot anti-spam: los humanos no ven este campo.
   if (str(body.website)) return NextResponse.json({ ok: true, leadId: null, uploads: [] });
 
-  if (rateLimited(clientIp(req.headers))) return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+  const ip = clientIp(req.headers);
+  if (rateLimited(ip)) return NextResponse.json({ error: "rate_limited" }, { status: 429 });
 
   const f = {
     company: str(body.company),
@@ -74,6 +76,11 @@ export async function POST(req: NextRequest) {
     files.push({ kind, name: str(r.name, 200), size, type: str(r.type, 120) });
   }
 
+  // Captcha antes de crear el lead y antes de generar URLs firmadas de subida.
+  if (!(await verifyTurnstile(body.captchaToken, ip))) {
+    return NextResponse.json({ error: "captcha_failed" }, { status: 403 });
+  }
+
   const stampText = new Date().toISOString().slice(0, 16).replace("T", " ");
   const request = [
     `Request a Proposal — website (${stampText} UTC)`,
@@ -105,6 +112,7 @@ export async function POST(req: NextRequest) {
       projectType: f.projectType ? `${f.projectType} — ${f.projectName}` : f.projectName,
       request,
       smsConsent: f.smsConsent,
+      webForm: "proposal",
     });
 
     const stamp = Date.now();

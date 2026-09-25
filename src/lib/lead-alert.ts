@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getServerKey } from "@/lib/supabase";
+import { LEADS_LINK } from "@/lib/leads";
 
 const CRM_URL = "https://gtech.globalchb.com";
 
@@ -45,7 +46,7 @@ export async function sendLeadAlertEmail(
     const html = `<h2>${escapeHtml(title)}</h2>
 <table>${rows.map(([k, v]) => `<tr><td><strong>${escapeHtml(k)}</strong></td><td>${escapeHtml(v)}</td></tr>`).join("")}</table>
 <p style="white-space:pre-wrap">${escapeHtml(details)}</p>
-<p><a href="${CRM_URL}/dashboard/leads">Abrir Leads en el CRM</a></p>`;
+<p><a href="${CRM_URL}${LEADS_LINK}">Abrir Leads en el CRM</a></p>`;
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/send-alert-email`, {
       method: "POST",

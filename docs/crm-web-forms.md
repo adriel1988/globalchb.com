@@ -28,7 +28,7 @@ Es el formulario principal para GCs y developers: datos de la empresa, del proye
 | Casilla SMS | `sms_consent` (true solo si la marca) y `sms_consent_at` = ahora |
 | Todo el detalle | `notes` (ver formato abajo) |
 
-Valores fijos al insertar: `organization_id` (el de arriba), `source = 'website'`, `status = 'new'`, `temperature = 'warm'`, `estimated_value = 0`, `is_test_data = false`. No se toca `assigned_to`, `user_id`, `ai_score`, etc.
+Valores fijos al insertar: `organization_id` (el de arriba), `source = 'website'`, `web_form = 'proposal'`, `status = 'new'`, `temperature = 'warm'`, `estimated_value = 0`, `is_test_data = false` (o `true` en modo de prueba, ver abajo). No se toca `assigned_to`, `user_id`, `ai_score`, etc.
 
 **Formato de `notes`** (texto, una línea por dato):
 
@@ -52,7 +52,7 @@ Notes:
 
 ### Leads duplicados
 Antes de insertar se busca un lead de la misma organización con **el mismo email o el mismo teléfono** (comparando los últimos 10 dígitos) y `status` distinto de `won` / `lost`.
-- Si existe: **no se crea otro**. Se añade la nueva solicitud al final de su `notes`, separada con una línea `────────`, y se actualiza `updated_at` (y `sms_consent` si ahora dio consentimiento).
+- Si existe: **no se crea otro**. Se añade la nueva solicitud al final de su `notes`, separada con una línea `────────`, se pone `web_form` del último envío y se actualiza `updated_at` (y `sms_consent` si ahora dio consentimiento). Además la web inserta el aviso "🔁 Nueva solicitud de lead existente" (ver sección 3).
 - Si no existe: se inserta un lead nuevo.
 
 ### Planos y documentos → `lead_documents` + Storage
@@ -95,7 +95,7 @@ Formulario corto para pedir un producto de `product_catalog`: cantidad, nombre, 
 | Producto + cantidad | `project_type` = `"Pedido de producto: <nombre del producto>"` (+ ` (xN)` si pide más de 1) |
 | Todo el detalle | `notes` |
 
-Valores fijos: los mismos que arriba (`source='website'`, `status='new'`, `temperature='warm'`, `sms_consent=false`). También evita duplicados igual que el formulario 1.
+Valores fijos: los mismos que arriba, con `web_form = 'order'` (`source='website'`, `status='new'`, `temperature='warm'`, `sms_consent=false`). También evita duplicados igual que el formulario 1.
 
 **Formato de `notes`:**
 
@@ -117,14 +117,26 @@ La web muestra al cliente una referencia `GTE-XXXXXXXX` = los 8 primeros caracte
 
 ## 3. Avisos al equipo
 
-- **`notifications`:** la web **no inserta** avisos. Ya lo hace el trigger existente `notify_lead_created` al insertar en `leads` (título "🎯 New Lead", enlace `/dashboard/leads`, `metadata.lead_id`). Si se insertara otro, saldría duplicado.
-  - Ojo: cuando el lead ya existía y solo se añaden `notes` (UPDATE), el trigger **no** salta. El equipo se entera por el email de abajo.
-- **Email:** la web llama a la edge function existente **`send-alert-email`** (no se creó otro sistema de correo) con:
-  - `to`: `alert_email` (o `email` si no tiene) de los miembros activos con `access_scope = 'full'` (hoy Marcos, Adriel, Katy y Yuneidis).
+- **Lead nuevo (INSERT):** el trigger existente `notify_lead_created` crea "🎯 New Lead". La web **no** inserta otro aviso para no duplicarlo.
+- **Lead existente (UPDATE, se añaden `notes`):** el trigger no salta, así que la web inserta en `notifications`:
+  ```json
+  { "organization_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "target_user_id": null, "type": "info",
+    "title": "🔁 Nueva solicitud de lead existente", "message": "<name> — <company>",
+    "link": "/dashboard/leads",
+    "metadata": { "lead_id": "<id>", "source": "website", "web_form": "proposal|order" } }
+  ```
+- **Email:** en los dos casos la web llama a la edge function existente **`send-alert-email`** con:
+  - `to`: `alert_email` (o `email`) de los miembros activos con `access_scope = 'full'`.
   - `subject`: `Nuevo lead desde la web: <nombre>` o `Nueva solicitud de un lead existente: <nombre>`.
-  - `html`: tabla con empresa, contacto, email, teléfono, proyecto/producto y el texto de `notes`, más un enlace a `https://gtech.globalchb.com/dashboard/leads`.
+  - `html`: tabla con los datos y el texto de `notes`, y enlace a `https://gtech.globalchb.com/dashboard/leads`.
+- El enlace (`/dashboard/leads`) está en una sola constante, `LEADS_LINK` en `src/lib/leads.ts`. Cuando el CRM confirme la ruta directa al lead, se cambia ahí.
 
----
+## Anti-spam y modo de prueba
+
+- Los dos formularios tienen: **Cloudflare Turnstile** validado en el servidor, **honeypot** y **límite por IP** (5 envíos cada 10 minutos).
+- El captcha se valida **antes** de crear el lead y antes de generar las URLs firmadas de subida.
+- Variables en Vercel: `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `SUPABASE_SECRET_KEY` (clave `sb_secret_…` propia de la web).
+- **Modo de prueba:** si el nombre o la empresa contienen `[TEST]`, el lead se guarda con `is_test_data = true`.
 
 ## 4. Qué haría falta en el CRM para verlo cómodo (propuesta, decide Marcos)
 

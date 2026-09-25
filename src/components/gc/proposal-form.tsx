@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, type FormEvent, type ReactNode } from "react";
+import { TurnstileWidget, captchaEnabled, type TurnstileHandle } from "@/components/turnstile-widget";
 import { createClient } from "@supabase/supabase-js";
 import { CheckCircle2, FileUp, Loader2, Mail, Phone, X } from "lucide-react";
 import { useGc, useLanguage } from "@/components/language-provider";
@@ -40,6 +41,8 @@ export function ProposalForm() {
   const [scope, setScope] = useState<string[]>([]);
   const [files, setFiles] = useState<Picked[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const captchaRef = useRef<TurnstileHandle>(null);
 
   const addFiles = (kind: DocumentKind, list: FileList | null) => {
     if (!list) return;
@@ -67,6 +70,7 @@ export function ProposalForm() {
       website: get("website"),
       scope,
       locale,
+      captchaToken,
       smsConsent: fd.get("smsConsent") === "on",
       page: window.location.pathname,
       utm: new URLSearchParams(
@@ -83,6 +87,10 @@ export function ProposalForm() {
       setError(c.errors.email);
       return;
     }
+    if (captchaEnabled && !captchaToken) {
+      setError(c.errors.captcha);
+      return;
+    }
 
     setStatus("sending");
     try {
@@ -91,9 +99,10 @@ export function ProposalForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (res.status === 429) {
+      if (res.status === 429 || res.status === 403) {
         setStatus("idle");
-        setError(c.errors.rate);
+        setError(res.status === 429 ? c.errors.rate : c.errors.captcha);
+        captchaRef.current?.reset();
         return;
       }
       if (!res.ok) throw new Error(String(res.status));
@@ -138,6 +147,9 @@ export function ProposalForm() {
     } catch {
       setStatus("idle");
       setError(c.errors.generic);
+    } finally {
+      // Los tokens de Turnstile son de un solo uso
+      captchaRef.current?.reset();
     }
   };
 
@@ -301,6 +313,10 @@ export function ProposalForm() {
           </ul>
         )}
       </fieldset>
+
+      <div className="mt-6">
+        <TurnstileWidget ref={captchaRef} onToken={setCaptchaToken} locale={locale} />
+      </div>
 
       {error && (
         <p className="mt-6 border-l-4 border-red-600 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
