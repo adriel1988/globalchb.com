@@ -103,7 +103,7 @@ export function HeroImpact() {
       </div>
 
       <div className="relative border-t border-white/10 bg-navy/70 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-4 pb-20 pt-4 sm:px-6 sm:pb-4 sm:pr-56 lg:px-8 lg:pr-60">
+        <div className="mx-auto max-w-7xl px-4 pb-20 pt-4 sm:px-6 sm:pb-4 sm:pr-24 lg:px-8 lg:pr-24">
           <ul className="flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">
             {c.microbar.map((m, i) => (
               <li key={m} className="flex items-center gap-6">

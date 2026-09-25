@@ -393,7 +393,6 @@ const en = {
     proposal: { kicker: "Estimating", title: "Request a proposal.", subtitle: "Send your plans and specifications to our estimating team." },
   },
 
-  floatingCta: "Request a Proposal",
 };
 
 export type GcContent = typeof en;
@@ -781,7 +780,6 @@ const es: GcContent = {
     proposal: { kicker: "Estimación", title: "Solicitar propuesta.", subtitle: "Envíe sus planos y especificaciones a nuestro equipo de estimación." },
   },
 
-  floatingCta: "Solicitar Propuesta",
 };
 
 export const gc = { en, es } as const;

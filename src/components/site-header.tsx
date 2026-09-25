@@ -18,21 +18,33 @@ const NAV = [
   { id: "catalog", href: "/catalogo" },
 ] as const;
 
-function BrandLogo() {
+function BrandLogo({ compact = false }: { compact?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-3">
-      <span className="size-11 shrink-0 overflow-hidden border-2 border-gold bg-black">
+    <span
+      className={`inline-flex items-center rounded-2xl border-[2.2px] border-[#D4A017] bg-black/80 shadow-[0_0_25px_rgba(212,160,23,0.3)] ${compact ? "gap-2.5 p-1.5" : "gap-3.5 p-3"
+        }`}
+    >
+      <span
+        className={`shrink-0 overflow-hidden rounded-xl border-2 border-[#D4A017] bg-black ${compact ? "size-10" : "size-12"
+          }`}
+      >
         <img
           src="/brand-logo-hd.png"
-          alt="Global Technology & Electrical Services logo"
-          className="h-full w-full scale-140 object-cover"
-          width={44}
-          height={44}
+          alt="Logotipo de Global Technology & Electrical Services"
+          className="h-full w-full object-cover scale-140"
+          width={compact ? 40 : 48}
+          height={compact ? 40 : 48}
         />
       </span>
-      <span className="leading-none">
-        <span className="font-display block whitespace-nowrap text-lg tracking-wide text-white">Global Technology</span>
-        <span className="mt-1 block whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.2em] text-gold">&amp; Electrical Services</span>
+      <span className="leading-tight">
+        <span className={`block font-normal tracking-wide text-white ${compact ? "text-sm" : "text-base"}`}>
+          GLOBAL TECHNOLOGY
+        </span>
+        <span
+          className={`block font-medium uppercase tracking-wider text-[#D4A017] ${compact ? "text-[10px]" : "text-xs"}`}
+        >
+          &amp; Electrical Services
+        </span>
       </span>
     </span>
   );
@@ -62,7 +74,7 @@ export function SiteHeader() {
     >
       <div className="mx-auto flex h-20 max-w-[90rem] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link href="/" aria-label={COMPANY.name} className="shrink-0">
-          <BrandLogo />
+          <BrandLogo compact />
         </Link>
 
         <div className="flex items-center gap-1">

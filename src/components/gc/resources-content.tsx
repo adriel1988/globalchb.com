@@ -32,11 +32,23 @@ export function ResourcesContent({ services }: { services: ServiceItem[] }) {
           {services.length > 0 ? (
             <ul className="mt-6 divide-y divide-slate-200 border-y border-slate-200">
               {services.map((s) => (
-                <li key={s.id} className="py-3">
-                  <p className="text-sm font-semibold text-navy">{locale === "es" ? s.nameEs : s.nameEn}</p>
-                  {(locale === "es" ? s.descEs : s.descEn) && (
-                    <p className="mt-1 line-clamp-2 text-xs text-slate-500">{locale === "es" ? s.descEs : s.descEn}</p>
-                  )}
+                <li key={s.id}>
+                  <a
+                    href={COMPANY.contactUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-start justify-between gap-4 py-3"
+                  >
+                    <span>
+                      <span className="block text-sm font-semibold text-navy group-hover:text-gold">
+                        {locale === "es" ? s.nameEs : s.nameEn}
+                      </span>
+                      {(locale === "es" ? s.descEs : s.descEn) && (
+                        <span className="mt-1 line-clamp-2 block text-xs text-slate-500">{locale === "es" ? s.descEs : s.descEn}</span>
+                      )}
+                    </span>
+                    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-slate-400 transition-colors group-hover:text-gold" aria-hidden="true" />
+                  </a>
                 </li>
               ))}
             </ul>
