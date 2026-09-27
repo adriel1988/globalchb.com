@@ -8,7 +8,7 @@
  *  - Proyectos  → portfolio_gallery  (is_published_to_web = true, order by display_order)
  *  - Catálogo   → product_catalog    (is_active, is_published_to_web, order by display_order)
  *  - Servicios  → service_catalog    (is_active, show_on_web, order by display_order)
- *  - Settings   → settings           (organization_id fijo)
+ *  - Reseñas    → organizations.google_reviews_url (id = ORG_ID)
  */
 
 import { unstable_cache } from "next/cache";
@@ -28,6 +28,7 @@ export const CACHE_TAGS = {
   portfolio_gallery: "portfolio",
   product_catalog: "products",
   service_catalog: "services",
+  organizations: "organization",
 } as const;
 
 const ORG_ID =
@@ -153,38 +154,50 @@ export async function getServices(): Promise<ServiceItem[]> {
   }
 }
 
-// ─── Settings ─────────────────────────────────────────────────────────────────
+// ─── Enlace de reseñas de Google ─────────────────────────────────────────────
 
-export type SiteSettings = {
-  googleReviewsUrl: string | null;
-  webUrl: string | null;
-  instagramUrl: string | null;
-  whatsappNumber: string | null;
-};
+/**
+ * El CRM guarda el enlace en `organizations.google_reviews_url`
+ * (pantalla "Galería / Portfolio › Enlace de Reseñas de Google").
+ * Solo se usa si es una URL http(s) válida; si no hay enlace guardado, o es un
+ * texto provisional, la web no muestra nada.
+ */
+async function fetchGoogleReviewsUrl(): Promise<string | null> {
+  const { data, error } = await getSupabaseAdmin()
+    .from("organizations")
+    .select("google_reviews_url")
+    .eq("id", ORG_ID)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return validPublicUrl(data?.google_reviews_url);
+}
 
-export async function getSettings(): Promise<SiteSettings> {
-  const empty = { googleReviewsUrl: null, webUrl: null, instagramUrl: null, whatsappNumber: null };
+const cachedGoogleReviewsUrl = unstable_cache(fetchGoogleReviewsUrl, ["getGoogleReviewsUrl"], {
+  revalidate: CACHE_SECONDS,
+  tags: [CACHE_TAGS.organizations],
+});
+
+export async function getGoogleReviewsUrl(): Promise<string | null> {
   try {
-    const { data, error } = await getSupabaseAdmin()
-      .from("settings")
-      .select("google_reviews_url, web_url, instagram_url, whatsapp_number")
-      .eq("organization_id", ORG_ID)
-      .maybeSingle();
-
-    if (error) {
-      console.error("[getSettings] Supabase error:", error.message);
-      return empty;
-    }
-
-    return {
-      googleReviewsUrl: data?.google_reviews_url ?? null,
-      webUrl: data?.web_url ?? null,
-      instagramUrl: data?.instagram_url ?? null,
-      whatsappNumber: data?.whatsapp_number ?? null,
-    };
+    return await cachedGoogleReviewsUrl();
   } catch (err) {
-    console.error("[getSettings] Unexpected error:", err);
-    return empty;
+    console.error("[getGoogleReviewsUrl]", err);
+    return null;
+  }
+}
+
+/** URL pública válida (http/https, sin espacios ni texto añadido) o null. */
+export function validPublicUrl(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const v = value.trim();
+  if (!v || /\s|[()<>"'`]/.test(v)) return null;
+  try {
+    const u = new URL(v);
+    if (u.protocol !== "https:" && u.protocol !== "http:") return null;
+    if (!u.hostname.includes(".")) return null;
+    return u.toString();
+  } catch {
+    return null;
   }
 }
 

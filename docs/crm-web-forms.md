@@ -139,12 +139,12 @@ Valores fijos: `organization_id`, `source = 'website'`, `language` (`en`/`es`), 
 
 ## 5. Actualizar la web al instante cuando cambia el CRM
 
-La web guarda en caché las lecturas de `portfolio_gallery`, `product_catalog` y `service_catalog` durante **1 minuto**. Para que un cambio salga **al momento**, el CRM (o un Database Webhook de Supabase) puede llamar a:
+La web guarda en caché las lecturas de `portfolio_gallery`, `product_catalog`, `service_catalog` y `organizations` (enlace de reseñas de Google) durante **1 minuto**. Para que un cambio salga **al momento**, el CRM (o un Database Webhook de Supabase) puede llamar a:
 
 ```
 POST https://<dominio-de-la-web>/api/revalidate
 Header: x-revalidate-secret: <REVALIDATE_SECRET>
-Body:   { "table": "portfolio_gallery" }   // o "product_catalog" / "service_catalog"
+Body:   { "table": "portfolio_gallery" }   // o "product_catalog" / "service_catalog" / "organizations"
 ```
 
 - Acepta también el cuerpo estándar de los **Database Webhooks** de Supabase (`{ "type": "INSERT", "table": "portfolio_gallery", "record": {...} }`), así que se puede configurar un webhook en INSERT/UPDATE/DELETE de esas 3 tablas apuntando a esa URL con la cabecera `x-revalidate-secret`.

@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
+import { GoogleReviewsLink, useSiteInfo } from "@/components/site-info";
 import { useGc, useLanguage } from "@/components/language-provider";
 import { COMPANY } from "@/lib/i18n";
 import { privacyPolicy, termsOfService, type PolicySection } from "@/lib/policies";
@@ -80,6 +81,7 @@ const FOOTER_NAV = [
 export function SiteFooter() {
   const { t, locale } = useLanguage();
   const g = useGc();
+  const { googleReviewsUrl } = useSiteInfo();
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
 
@@ -131,6 +133,11 @@ export function SiteFooter() {
                 </a>
               </li>
               <li>{g.footer.hours}</li>
+              {googleReviewsUrl && (
+                <li className="pt-1">
+                  <GoogleReviewsLink variant="footer" />
+                </li>
+              )}
             </ul>
           </div>
         </div>

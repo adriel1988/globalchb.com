@@ -6,6 +6,7 @@ import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Images, X } from "
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { useGc } from "@/components/language-provider";
 import { SectionHeading } from "@/components/gc/section-heading";
+import { GoogleReviewsCta } from "@/components/site-info";
 import type { ProjectAlbum } from "@/lib/supabase-data";
 import { cn } from "@/lib/utils";
 
@@ -238,6 +239,9 @@ export function ProjectAlbums({ albums, limit, home = false }: { albums: Project
             ))}
           </div>
         )}
+
+        {/* Reseñas de Google (solo si el CRM tiene un enlace válido guardado) */}
+        <GoogleReviewsCta />
       </div>
       <AlbumViewer album={open} onClose={() => setOpen(null)} />
     </section>

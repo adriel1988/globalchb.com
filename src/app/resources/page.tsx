@@ -6,7 +6,8 @@ import { getServices } from "@/lib/supabase-data";
 
 export const metadata: Metadata = {
   title: "Resources — Prequalification, Service Work & Product Solutions",
-  description: "Prequalification package, residential and service electrical work, and product solutions.",
+  description:
+    "Prequalification package for general contractors, residential and service electrical work in South Florida, and electrical product solutions from Global Technology.",
   alternates: { canonical: "/resources" },
 };
 

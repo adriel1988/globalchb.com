@@ -7,10 +7,12 @@ import { OrderProvider } from "@/components/order-context";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+import { SiteInfoProvider, type SiteInfo } from "@/components/site-info";
 
-export function SiteShell({ children, locale }: { children: ReactNode; locale: Locale }) {
+export function SiteShell({ children, locale, siteInfo }: { children: ReactNode; locale: Locale; siteInfo: SiteInfo }) {
   return (
     <LanguageProvider initialLocale={locale}>
+      <SiteInfoProvider value={siteInfo}>
       <OrderProvider>
         <div className="flex min-h-screen flex-col">
           <SiteHeader />
@@ -19,6 +21,7 @@ export function SiteShell({ children, locale }: { children: ReactNode; locale: L
           <WhatsAppButton />
         </div>
       </OrderProvider>
+      </SiteInfoProvider>
     </LanguageProvider>
   );
 }

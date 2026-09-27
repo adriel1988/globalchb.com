@@ -9,9 +9,9 @@ import { TechnologySection } from "@/components/gc/technology-section";
 import { TrustedExperience } from "@/components/gc/trusted-experience";
 import { ProposalSection } from "@/components/gc/proposal-form";
 import { GcFaqSection } from "@/components/gc/faq-section";
-import { getProjects, groupProjectAlbums } from "@/lib/supabase-data";
+import { getGoogleReviewsUrl, getProjects, groupProjectAlbums } from "@/lib/supabase-data";
 import { COMPANY } from "@/lib/i18n";
-import { SITE_URL, businessJsonLd } from "@/lib/seo";
+import { OG_IMAGE, SITE_URL, businessJsonLd } from "@/lib/seo";
 
 const TITLE = "Global Technology & Electrical Services | Electrical Construction Subcontractor in Florida";
 const DESCRIPTION =
@@ -38,13 +38,15 @@ export const metadata: Metadata = {
     siteName: COMPANY.name,
     title: TITLE,
     description: DESCRIPTION,
-    images: [{ url: "/images/Experiencia.webp", alt: "Electrical construction on a Florida multifamily development" }],
+    type: "website",
+    url: "/",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: TITLE,
     description: DESCRIPTION,
-    images: ["/images/Experiencia.webp"],
+    images: [OG_IMAGE.url],
   },
 };
 
@@ -57,12 +59,13 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   // Proyectos publicados desde el CRM (Supabase portfolio_gallery)
-  const albums = groupProjectAlbums(await getProjects());
+  const [items, googleReviewsUrl] = await Promise.all([getProjects(), getGoogleReviewsUrl()]);
+  const albums = groupProjectAlbums(items);
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
-      businessJsonLd,
+      { ...businessJsonLd, ...(googleReviewsUrl ? { sameAs: [googleReviewsUrl] } : {}) },
       {
         "@type": "WebSite",
         "@id": `${SITE_URL}/#website`,
