@@ -3,7 +3,7 @@ import { GcPageHeader } from "@/components/gc/gc-page-header";
 import { AboutContent } from "@/components/gc/about-content";
 import { TeamStructure } from "@/components/gc/team-structure";
 import { CapabilityScale } from "@/components/gc/capability-scale";
-import { TeamCarousel } from "@/components/gc/team-carousel";
+import { OrgChart } from "@/components/gc/org-chart";
 import { getTeam } from "@/lib/supabase-data";
 import { TrustedExperience } from "@/components/gc/trusted-experience";
 
@@ -22,7 +22,7 @@ export default async function AboutPage() {
       <AboutContent />
       <CapabilityScale />
       <TeamStructure />
-      <TeamCarousel groups={team} />
+      <OrgChart team={team} />
       <TrustedExperience />
     </>
   );
