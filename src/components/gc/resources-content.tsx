@@ -1,9 +1,10 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { useGc, useLanguage } from "@/components/language-provider";
 import type { ServiceItem } from "@/components/services-section";
+import type { ProductItem } from "@/components/catalog-section";
 import { COMPANY } from "@/lib/i18n";
 
 const RATE_UNIT: Record<string, { en: string; es: string }> = {
@@ -14,7 +15,7 @@ const RATE_UNIT: Record<string, { en: string; es: string }> = {
 };
 
 /** Recursos: precalificación, servicio residencial (catálogo de Supabase) y soluciones de producto. */
-export function ResourcesContent({ services }: { services: ServiceItem[] }) {
+export function ResourcesContent({ services, products = [] }: { services: ServiceItem[]; products?: ProductItem[] }) {
   const c = useGc().resources;
   const { locale } = useLanguage();
   const price = (s: ServiceItem) => {
@@ -24,12 +25,34 @@ export function ResourcesContent({ services }: { services: ServiceItem[] }) {
     return `${locale === "es" ? "Desde" : "From"} ${amount}${unit ? ` · ${unit}` : ""}`;
   };
 
+  const getFirstPhoto = (p: ProductItem): string | null => {
+    if (!p.photoUrls) return null;
+    if (Array.isArray(p.photoUrls)) return p.photoUrls[0] || null;
+    return typeof p.photoUrls === "string" ? p.photoUrls : null;
+  };
+
+  // Hasta 4 productos del catálogo del CRM (primero los que tienen foto)
+  const featured = [
+    ...products.filter((p) => Boolean(getFirstPhoto(p))),
+    ...products.filter((p) => !getFirstPhoto(p)),
+  ].slice(0, 4);
+
   return (
     <section className="bg-offwhite py-16 sm:py-20">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 sm:px-6 lg:grid-cols-3 lg:px-8">
         <article className="flex flex-col bg-navy p-8 text-white">
           <h2 className="font-display text-3xl">{c.prequal.title}</h2>
           <p className="mt-3 text-sm leading-relaxed text-slate-300">{c.prequal.desc}</p>
+          <ul className="mt-8 space-y-3 border-t border-white/10 pt-6">
+            {c.prequal.items.map((it) => (
+              <li key={it} className="flex items-center gap-3 text-sm text-white">
+                <span aria-hidden="true" className="flex h-6 w-6 shrink-0 items-center justify-center bg-gold text-navy">
+                  <Check className="h-4 w-4" />
+                </span>
+                {it}
+              </li>
+            ))}
+          </ul>
           <Link
             href="/request-a-proposal"
             className="mt-auto inline-flex items-center gap-2 pt-8 text-xs font-semibold uppercase tracking-[0.16em] text-gold hover:text-white"
@@ -83,6 +106,31 @@ export function ResourcesContent({ services }: { services: ServiceItem[] }) {
         <article className="flex flex-col border border-navy/15 bg-white p-8">
           <h2 className="font-display text-3xl text-navy">{c.products.title}</h2>
           <p className="mt-3 text-sm leading-relaxed text-slate-600">{c.products.desc}</p>
+          {featured.length > 0 && (
+            <ul className="mt-6 grid grid-cols-2 gap-3">
+              {featured.map((p) => (
+                <li key={p.id}>
+                  <Link href="/catalogo" className="group block">
+                    <span className="relative block aspect-square overflow-hidden border border-slate-200 bg-slate-50">
+                      {getFirstPhoto(p) && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={getFirstPhoto(p)!}
+                          alt=""
+                          loading="lazy"
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      )}
+                    </span>
+                    <span className="mt-2 block text-xs font-semibold leading-snug text-navy group-hover:text-gold">
+                      {locale === "es" ? p.nameEs : p.nameEn}
+                    </span>
+                    {p.category && <span className="block text-[11px] text-slate-500">{p.category}</span>}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
           <Link
             href="/catalogo"
             className="mt-auto inline-flex items-center gap-2 pt-8 text-xs font-semibold uppercase tracking-[0.16em] text-navy hover:text-gold"

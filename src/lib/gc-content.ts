@@ -196,6 +196,7 @@ const en = {
     prequal: {
       title: "Prequalification package",
       desc: "License, insurance certificates, safety program and project references for your vendor onboarding.",
+      items: ["State contractor license", "Certificates of insurance", "Safety program", "Project references"],
       cta: "Request prequalification package",
     },
     residential: {
@@ -521,6 +522,7 @@ const es: GcContent = {
     prequal: {
       title: "Paquete de precalificación",
       desc: "Licencia, certificados de seguro, programa de seguridad y referencias de proyectos para su registro de proveedores.",
+      items: ["Licencia estatal de contratista", "Certificados de seguro", "Programa de seguridad", "Referencias de proyectos"],
       cta: "Solicitar paquete de precalificación",
     },
     residential: {

@@ -3,7 +3,6 @@
 import { BadgeCheck, ShieldCheck, Landmark, HardHat, Boxes, ClipboardCheck } from "lucide-react";
 import { useGc } from "@/components/language-provider";
 import { SectionHeading } from "@/components/gc/section-heading";
-import { GoogleReviewsCta } from "@/components/site-info";
 import { CLIENT_EXPERIENCE, COMPANY_FACTS } from "@/lib/company-facts";
 
 const ICONS = [BadgeCheck, ShieldCheck, Landmark, HardHat, Boxes, ClipboardCheck];
@@ -32,9 +31,6 @@ export function TrustedExperience() {
             );
           })}
         </ul>
-
-        {/* Reseñas de Google (solo si el CRM tiene un enlace válido guardado) */}
-        <GoogleReviewsCta />
 
         {partners.length > 0 && (
           <div className="mt-14 border-y border-slate-200 py-8 text-center">

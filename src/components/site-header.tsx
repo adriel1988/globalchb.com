@@ -10,12 +10,11 @@ import { COMPANY } from "@/lib/i18n";
 
 const NAV = [
   { id: "projects", href: "/projects" },
-  { id: "capabilities", href: "/capabilities" },
   { id: "newConstruction", href: "/new-construction" },
-  { id: "technology", href: "/technology" },
-  { id: "about", href: "/about" },
+  { id: "capabilities", href: "/capabilities" },
   { id: "resources", href: "/resources" },
   { id: "catalog", href: "/catalogo" },
+  { id: "about", href: "/about" },
 ] as const;
 
 function BrandLogo({ compact = false }: { compact?: boolean }) {
@@ -72,27 +71,27 @@ export function SiteHeader() {
         scrolled || open ? "border-b border-white/10 bg-navy/95 backdrop-blur" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-20 max-w-[90rem] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="relative flex h-20 w-full items-center justify-between gap-4 px-3 sm:px-4">
         <Link href="/" aria-label={COMPANY.name} className="shrink-0">
           <BrandLogo compact />
         </Link>
 
-        <div className="flex items-center gap-1">
-          <nav className="mr-2 hidden items-center xl:flex" aria-label={g.nav.main}>
-            {NAV.map(({ id, href }) => (
-              <Link
-                key={id}
-                href={href}
-                aria-current={isActive(href) ? "page" : undefined}
-                className={`whitespace-nowrap px-2 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors 2xl:px-3 2xl:text-xs 2xl:tracking-[0.16em] ${
-                  isActive(href) ? "text-gold" : "text-white/80 hover:text-white"
-                }`}
-              >
-                {g.nav[id]}
-              </Link>
-            ))}
-          </nav>
+        <nav className="hidden items-center xl:absolute xl:left-1/2 xl:flex xl:-translate-x-1/2" aria-label={g.nav.main}>
+          {NAV.map(({ id, href }) => (
+            <Link
+              key={id}
+              href={href}
+              aria-current={isActive(href) ? "page" : undefined}
+              className={`whitespace-nowrap px-2 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] transition-colors 2xl:px-3 2xl:text-xs 2xl:tracking-[0.16em] ${
+                isActive(href) ? "text-gold" : "text-white/80 hover:text-white"
+              }`}
+            >
+              {g.nav[id]}
+            </Link>
+          ))}
+        </nav>
 
+        <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={toggleLocale}

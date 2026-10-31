@@ -342,7 +342,12 @@ export function ProposalForm() {
       </label>
 
       <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-slate-500">{c.consent}</p>
+        <p className="text-xs text-slate-500">
+          {c.consent}{" "}
+          <a href="/privacy" className="underline hover:text-navy">{locale === "es" ? "Política de privacidad" : "Privacy Policy"}</a>
+          {" · "}
+          <a href="/terms" className="underline hover:text-navy">{locale === "es" ? "Términos" : "Terms"}</a>
+        </p>
         <button
           type="submit"
           disabled={busy}

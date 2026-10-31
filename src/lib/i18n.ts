@@ -410,9 +410,9 @@ export const dict = {
     },
     policies: {
       privacyTitle: "Política de Privacidad",
-      privacyUpdated: "Última actualización: julio de 2026",
+      privacyUpdated: "Última actualización: 31 de octubre de 2026",
       termsTitle: "Términos de Servicio",
-      termsUpdated: "Última actualización: julio de 2026",
+      termsUpdated: "Última actualización: 31 de octubre de 2026",
       close: "Cerrar",
     },
   },
@@ -780,9 +780,9 @@ export const dict = {
     },
     policies: {
       privacyTitle: "Privacy Policy",
-      privacyUpdated: "Last updated: July 2026",
+      privacyUpdated: "Last updated: October 31, 2026",
       termsTitle: "Terms of Service",
-      termsUpdated: "Last updated: July 2026",
+      termsUpdated: "Last updated: October 31, 2026",
       close: "Close",
     },
   },

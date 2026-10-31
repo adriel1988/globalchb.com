@@ -6,7 +6,6 @@ import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Images, X } from "
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { useGc } from "@/components/language-provider";
 import { SectionHeading } from "@/components/gc/section-heading";
-import { GoogleReviewsCta } from "@/components/site-info";
 import type { ProjectAlbum } from "@/lib/supabase-data";
 import { cn } from "@/lib/utils";
 
@@ -14,7 +13,7 @@ import { cn } from "@/lib/utils";
 const descOf = (a: ProjectAlbum) =>
   a.description && a.description.toLowerCase() !== a.title.toLowerCase() ? a.description : null;
 
-function AlbumCard({ album, index, large, onOpen }: { album: ProjectAlbum; index: number; large: boolean; onOpen: () => void }) {
+function AlbumCard({ album, index, large, onOpen, fullDesc = false }: { album: ProjectAlbum; index: number; large: boolean; onOpen: () => void; fullDesc?: boolean }) {
   const g = useGc();
   const desc = descOf(album);
   return (
@@ -27,13 +26,15 @@ function AlbumCard({ album, index, large, onOpen }: { album: ProjectAlbum; index
       )}
       aria-label={`${g.featured.viewCaseStudy}: ${album.title}`}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={album.photos[0]}
-        alt={album.title}
-        loading={index < 3 ? "eager" : "lazy"}
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-      />
+      {album.photos[0] && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={album.photos[0]}
+          alt={album.title}
+          loading={index < 3 ? "eager" : "lazy"}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/30 to-transparent" aria-hidden="true" />
       <span aria-hidden="true" className="stat-number absolute left-5 top-5 text-lg text-white/80">
         {String(index + 1).padStart(2, "0")}
@@ -46,14 +47,16 @@ function AlbumCard({ album, index, large, onOpen }: { album: ProjectAlbum; index
       </span>
       <div className="relative mt-auto w-full p-6 sm:p-8">
         <h3 className={cn("font-display", large ? "text-4xl sm:text-5xl" : "text-3xl")}>{album.title}</h3>
-        {desc && <p className="mt-2 line-clamp-2 text-sm text-slate-300">{desc}</p>}
-        <p className="mt-4 flex items-center gap-4 text-xs font-semibold uppercase tracking-[0.16em]">
-          <span className="inline-flex items-center gap-1.5 text-gold">
-            <Images className="h-4 w-4" aria-hidden="true" />
-            {album.photos.length} {album.photos.length === 1 ? g.featured.photo : g.featured.photos}
-          </span>
-          <span className="text-white group-hover:text-gold">{g.featured.viewCaseStudy} →</span>
-        </p>
+        {desc && <p className={cn("mt-2 text-sm text-slate-300", !fullDesc && "line-clamp-2")}>{desc}</p>}
+        {album.photos.length > 0 && (
+          <p className="mt-4 flex items-center gap-4 text-xs font-semibold uppercase tracking-[0.16em]">
+            <span className="inline-flex items-center gap-1.5 text-gold">
+              <Images className="h-4 w-4" aria-hidden="true" />
+              {album.photos.length} {album.photos.length === 1 ? g.featured.photo : g.featured.photos}
+            </span>
+            <span className="text-white group-hover:text-gold">{g.featured.viewCaseStudy} →</span>
+          </p>
+        )}
       </div>
     </button>
   );
@@ -207,14 +210,28 @@ function AlbumViewer({ album, onClose }: { album: ProjectAlbum | null; onClose: 
 }
 
 /** Proyectos publicados desde el CRM (Supabase `portfolio_gallery`). */
-export function ProjectAlbums({ albums, limit, home = false }: { albums: ProjectAlbum[]; limit?: number; home?: boolean }) {
+export function ProjectAlbums({
+  albums,
+  limit,
+  home = false,
+  embedded = false,
+}: {
+  albums: ProjectAlbum[];
+  limit?: number;
+  home?: boolean;
+  /** Bloque dentro de otra página (Obra nueva): sin reseñas ni mensaje vacío, y con la descripción completa debajo. */
+  embedded?: boolean;
+}) {
   const g = useGc();
   const c = g.featured;
   const [open, setOpen] = useState<ProjectAlbum | null>(null);
   const list = typeof limit === "number" ? albums.slice(0, limit) : albums;
 
+  if (embedded && list.length === 0) return null;
+  const withPhotos = list;
+
   return (
-    <section id="selected-work" className="scroll-mt-20 bg-offwhite py-20 sm:py-28" aria-labelledby={home ? "selected-work-title" : undefined}>
+    <section id={embedded ? "new-construction-gallery" : "selected-work"} className={cn("scroll-mt-20 bg-offwhite", embedded ? "pb-4 pt-16 sm:pt-20" : "py-20 sm:py-28")} aria-labelledby={home ? "selected-work-title" : undefined}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {home && (
           <SectionHeading
@@ -230,18 +247,17 @@ export function ProjectAlbums({ albums, limit, home = false }: { albums: Project
           />
         )}
 
-        {list.length === 0 ? (
+        {withPhotos.length === 0 && !embedded ? (
           <p className={cn("border border-navy/15 bg-white p-10 text-center text-slate-500", home && "mt-12")}>{c.empty}</p>
         ) : (
           <div className={cn("grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3", home && "mt-12")}>
-            {list.map((a, i) => (
-              <AlbumCard key={a.key} album={a} index={i} large={i === 0 && list.length >= 3} onOpen={() => setOpen(a)} />
+            {withPhotos.map((a, i) => (
+              <AlbumCard key={a.key} album={a} index={i} large={i === 0 && withPhotos.length >= 3} onOpen={() => a.photos.length > 0 && setOpen(a)} fullDesc={embedded} />
             ))}
           </div>
         )}
 
-        {/* Reseñas de Google (solo si el CRM tiene un enlace válido guardado) */}
-        <GoogleReviewsCta />
+
       </div>
       <AlbumViewer album={open} onClose={() => setOpen(null)} />
     </section>

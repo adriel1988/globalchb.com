@@ -1,89 +1,23 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { GoogleReviewsLink, useSiteInfo } from "@/components/site-info";
-import { useGc, useLanguage } from "@/components/language-provider";
+import { useGc } from "@/components/language-provider";
 import { COMPANY } from "@/lib/i18n";
-import { privacyPolicy, termsOfService, type PolicySection } from "@/lib/policies";
-import { ShieldCheck, FileText } from "lucide-react";
-
-function PolicyDialog({
-  open,
-  onOpenChange,
-  title,
-  updated,
-  sections,
-  icon,
-  closeLabel,
-}: {
-  open: boolean;
-  onOpenChange: (v: boolean) => void;
-  title: string;
-  updated: string;
-  sections: PolicySection[];
-  icon: React.ReactNode;
-  closeLabel: string;
-}) {
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[85vh] sm:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            {icon}
-            {title}
-          </DialogTitle>
-          <DialogDescription>{updated}</DialogDescription>
-        </DialogHeader>
-        <ScrollArea className="max-h-[60vh] pr-4">
-          <div className="space-y-5">
-            {sections.map((s, idx) => (
-              <section key={s.heading || `section-${idx}`}>
-                {s.heading ? <h3 className="text-sm font-normal text-foreground">{s.heading}</h3> : null}
-                {s.body.map((p, i) => (
-                  <p key={i} className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                    {p}
-                  </p>
-                ))}
-              </section>
-            ))}
-          </div>
-        </ScrollArea>
-        <div className="flex justify-end">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {closeLabel}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
+import { ShieldCheck } from "lucide-react";
 
 const FOOTER_NAV = [
   { id: "projects", href: "/projects" },
-  { id: "capabilities", href: "/capabilities" },
   { id: "newConstruction", href: "/new-construction" },
-  { id: "technology", href: "/technology" },
-  { id: "about", href: "/about" },
+  { id: "capabilities", href: "/capabilities" },
   { id: "resources", href: "/resources" },
   { id: "catalog", href: "/catalogo" },
+  { id: "about", href: "/about" },
 ] as const;
 
 export function SiteFooter() {
-  const { t, locale } = useLanguage();
   const g = useGc();
   const { googleReviewsUrl } = useSiteInfo();
-  const [privacyOpen, setPrivacyOpen] = useState(false);
-  const [termsOpen, setTermsOpen] = useState(false);
 
   return (
     <footer className="mt-auto bg-navy text-slate-300">
@@ -148,35 +82,17 @@ export function SiteFooter() {
           </p>
           <div className="flex items-center gap-2 text-slate-500">
             <ShieldCheck className="h-3.5 w-3.5 text-gold" aria-hidden="true" />
-            <button onClick={() => setPrivacyOpen(true)} className="transition-colors hover:text-gold">
+            <Link href="/privacy" className="transition-colors hover:text-gold">
               {g.footer.privacy}
-            </button>
+            </Link>
             <span aria-hidden="true">·</span>
-            <button onClick={() => setTermsOpen(true)} className="transition-colors hover:text-gold">
+            <Link href="/terms" className="transition-colors hover:text-gold">
               {g.footer.terms}
-            </button>
+            </Link>
           </div>
         </div>
       </div>
 
-      <PolicyDialog
-        open={privacyOpen}
-        onOpenChange={setPrivacyOpen}
-        title={t.policies.privacyTitle}
-        updated={t.policies.privacyUpdated}
-        sections={privacyPolicy[locale]}
-        closeLabel={t.policies.close}
-        icon={<ShieldCheck className="h-5 w-5 text-primary" aria-hidden="true" />}
-      />
-      <PolicyDialog
-        open={termsOpen}
-        onOpenChange={setTermsOpen}
-        title={t.policies.termsTitle}
-        updated={t.policies.termsUpdated}
-        sections={termsOfService[locale]}
-        closeLabel={t.policies.close}
-        icon={<FileText className="h-5 w-5 text-primary" aria-hidden="true" />}
-      />
     </footer>
   );
 }

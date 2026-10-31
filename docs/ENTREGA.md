@@ -4,7 +4,7 @@
 **Repositorio:** `markos900313/WEB_site_global` (rama de producción: `main`)
 **Hosting:** Vercel — proyecto `sitio_web_de-global` (equipo *markos900313's projects*)
 **Base de datos / CRM:** Supabase `wdsellaywiykhhnnzkfm` — CRM en https://gtech.globalchb.com (repo `Global_technology`)
-**Fecha de entrega:** 27/09/2026
+**Fecha de entrega:** 27/09/2026 · **Última revisión previa al despliegue:** 31/10/2026
 
 ---
 
@@ -21,10 +21,10 @@ Web corporativa orientada a **developers, general contractors y equipos de preco
 |---|---|
 | `/` | Hero con fotos del CRM, proyectos, cifras, capacidades, obra nueva, ejecución, tecnología, credenciales, formulario y FAQ |
 | `/projects` | Portafolio completo (fotos y descripciones del CRM) con visor |
-| `/capabilities` | Los 6 sistemas: eléctrico, seguridad humana, energía de emergencia, bajo voltaje, EV, tecnología |
-| `/new-construction` | Secuencia de obra nueva en 10 fases y capacidad de ejecución |
-| `/technology` | BIM, Trimble, control de proyecto, QA/QC |
-| `/about` | Empresa, cifras, estructura del equipo y credenciales |
+| `/capabilities` | Los 6 sistemas (editables desde el CRM) y, debajo, la sección de Tecnología (BIM, Trimble, control de proyecto, QA/QC) |
+| `/new-construction` | Galería de obra nueva (CRM) y secuencia de 10 fases |
+| `/privacy` · `/terms` | Política de privacidad y Términos de servicio (indexables, ES/EN) |
+| `/about` | Empresa, cifras, estructura del equipo, **equipo por departamento (foto, nombre y cargo; CRM)** y credenciales |
 | `/resources` | Precalificación, servicios residenciales (CRM) y enlace al catálogo |
 | `/catalogo` | Catálogo de productos (CRM) con botón de pedido |
 | `/request-a-proposal` | Formulario de solicitud de propuesta con subida de planos |
@@ -38,6 +38,7 @@ Web corporativa orientada a **developers, general contractors y equipos de preco
 | `/equipo` | `/about#team` |
 | `/servicios` | `/capabilities` |
 | `/contacto` | `/request-a-proposal` |
+| `/technology` | `/capabilities` (la tecnología pasó a una sección de Capacidades) |
 
 ## 3. Qué se edita desde el CRM (sin tocar código)
 
@@ -48,11 +49,14 @@ La web lee del CRM en el servidor, con una clave secreta que nunca llega al nave
 | Fotos de proyectos (Home, `/projects`, fondo del Hero) | Galería / Portfolio | `portfolio_gallery` | `is_published_to_web = true`. Cada **título** es una tarjeta; fotos con el mismo título se agrupan. La descripción se muestra en la tarjeta y en el visor. |
 | Productos (`/catalogo`) | Catálogo de Productos | `product_catalog` | `is_active` y `is_published_to_web`, ordenados por `display_order`. Nombre y descripción en inglés: `name_en`, `description_en`. Precio 0 → "Consultar precio". |
 | Servicios residenciales (`/resources`) | Catálogo de Servicios | `service_catalog` | `is_active` y `show_on_web`, ordenados por `display_order`. Precio: `rate` + `rate_unit`. |
+| **Obra nueva** (`/new-construction`) | Publicidad › Galería: campo "Sección" = Obra nueva | `portfolio_gallery.section` | `is_published_to_web = true` y sección `new_construction`. Mismo título = una tarjeta. |
+| **Capacidades** (`/capabilities`, Home) | Publicidad › botón Capacidades | `web_capabilities` | Publicada = visible. ES/EN, viñetas y foto. Sin foto, la tarjeta sale con el espacio vacío. |
+| **Equipo** (`/about`) | Equipo y Personal › icono de globo (por persona o por departamento) | `staff.show_on_web`, `staff.web_photo_url` | Solo activos con globo en verde. Se muestra nombre, cargo y foto. |
 | **Enlace de reseñas de Google** | Galería / Portfolio › "Enlace de Reseñas de Google" | `organizations.google_reviews_url` | Solo se muestra si es una **URL válida** (ver 3.1). Sin enlace, no aparece nada. |
 
 ### 3.1 Enlace de reseñas de Google
 
-- **Dónde sale en la web:** en el pie de página de todas las páginas (bajo el horario, con 5 estrellas), en la sección "Trusted Experience" de la Home y en `/about`, y al final del portafolio. También se añade a los datos estructurados de la empresa (`sameAs`), para que Google relacione la web con su ficha.
+- **Dónde sale en la web:** solo en el pie de página de todas las páginas (bajo el horario, con 5 estrellas). También se añade a los datos estructurados de la empresa (`sameAs`), para que Google relacione la web con su ficha.
 - **Validación:** solo acepta una URL `https://…` limpia. Si el campo está vacío, o contiene texto que no es un enlace, la web no muestra nada.
 - **Estado actual:** el CRM tiene guardado el texto provisional `https://www.sffalcon.com(crear tu enlace de reseña y guardalo)`, que no es válido, así que **hoy no se muestra**. Para activarlo:
   1. En Google Business Profile › *Pedir reseñas* (*Ask for reviews*), copiar el enlace corto (por ejemplo `https://g.page/r/XXXX/review`).
@@ -67,7 +71,7 @@ La web lee del CRM en el servidor, con una clave secreta que nunca llega al nave
 | Cifras de "Capability at Scale" (unidades, ciudades, bonding, seguro, personal…) y video del Hero. Las que están en `null` no se muestran. | `src/lib/company-facts.ts` |
 | GCs y developers que se pueden citar (solo con `authorized: true`) | `src/lib/company-facts.ts` → `CLIENT_EXPERIENCE` |
 | Dirección, teléfono, email, WhatsApp | `src/lib/i18n.ts` → `COMPANY` |
-| Políticas de privacidad y términos | `src/lib/policies.ts` |
+| Políticas de privacidad y términos (páginas `/privacy` y `/terms`) | `src/lib/policies.ts` (fecha en `src/lib/i18n.ts` › `policies`) |
 | Imágenes fijas (capacidades, tecnología…) | `public/images/` |
 
 ## 4. Formularios → CRM
@@ -108,7 +112,7 @@ La web ya viene preparada para indexarse:
 
 | Elemento | Estado |
 |---|---|
-| `https://globalchb.com/sitemap.xml` | ✅ Las 9 páginas públicas |
+| `https://globalchb.com/sitemap.xml` | ✅ Las 10 páginas públicas (incluye `/privacy` y `/terms`) |
 | `https://globalchb.com/robots.txt` | ✅ Permite todo menos `/api/` y apunta al sitemap |
 | URL canónica en cada página | ✅ Apunta a `https://globalchb.com/...` |
 | Título, descripción y H1 único por página | ✅ |
@@ -134,7 +138,7 @@ La web ya viene preparada para indexarse:
 
 **Después de verificar:**
 1. **Sitemaps** › enviar `https://globalchb.com/sitemap.xml`.
-2. **Inspección de URLs** › `https://globalchb.com/` › **Solicitar indexación** (repetir con `/projects`, `/capabilities` y `/request-a-proposal`).
+2. **Inspección de URLs** › `https://globalchb.com/` › **Solicitar indexación** (repetir con `/projects`, `/capabilities`, `/request-a-proposal` y `/privacy`).
 3. En unos días, revisar **Páginas** y **Experiencia**.
 
 **Bing** (opcional, también alimenta a ChatGPT/Copilot): en Bing Webmaster Tools se puede importar directamente desde Search Console. También se puede verificar con la variable `BING_SITE_VERIFICATION`.
@@ -211,3 +215,11 @@ npm run dev                    # http://localhost:3000
 | 7 | Autorizar los GCs y developers que se pueden citar (`CLIENT_EXPERIENCE`) | Adriel |
 | 8 | Opcional: webhook de Supabase → `/api/revalidate` para cambios al instante | Programador CRM |
 | 9 | Borrar la variable `DATABASE_URL` de Vercel (ya no se usa) | Marcos |
+
+## 10. Revisión previa al despliegue (31/10/2026)
+
+Lista completa en [`CHECKLIST-DESPLIEGUE.md`](CHECKLIST-DESPLIEGUE.md).
+
+- Títulos de pestaña: "<Página> | GLOBAL TECHNOLOGY" y, en la Home, "GLOBAL TECHNOLOGY | Electrical Construction Subcontractor in Florida" (un título distinto por página, bueno para SEO). Se cambian en `src/app/layout.tsx`.
+- Los proyectos, capacidades y fotos de prueba que hay hoy en la base de datos son provisionales: Adriel los sustituye desde el CRM (Publicidad y Equipo y Personal) sin tocar código. Para quitar las tarjetas vacías de Proyectos: `src/app/projects/page.tsx`, opción `keepWithoutPhoto`.
+- Las fotos del equipo se publican como miniaturas (480 px) que el CRM crea al abrir Equipo y Personal. Si una persona no tiene miniatura, la web usa un enlace temporal de la foto original.

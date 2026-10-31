@@ -13,7 +13,7 @@ export function TechnologySection({ showCta = true }: { showCta?: boolean }) {
   const c = useGc().technology;
 
   return (
-    <section className="relative overflow-hidden bg-navy py-20 text-white sm:py-28" aria-labelledby="technology-title">
+    <section className="relative scroll-mt-20 overflow-hidden bg-navy py-20 text-white sm:py-28" aria-labelledby="technology-title" id="technology-detail">
       <div className="absolute inset-y-0 right-0 hidden w-1/2 lg:block" aria-hidden="true">
         <Image src="/images/svc-trimble.png" alt="" fill sizes="50vw" className="object-cover opacity-25" />
         <div className="absolute inset-0 bg-gradient-to-r from-navy to-navy/40" />
@@ -28,7 +28,7 @@ export function TechnologySection({ showCta = true }: { showCta?: boolean }) {
           dark
           action={
             showCta ? (
-              <Link href="/technology" className="text-sm font-semibold uppercase tracking-[0.16em] text-white hover:text-tech">
+              <Link href="/capabilities#technology-detail" className="text-sm font-semibold uppercase tracking-[0.16em] text-white hover:text-tech">
                 {c.cta} →
               </Link>
             ) : undefined

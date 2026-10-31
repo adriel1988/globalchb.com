@@ -58,3 +58,7 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# Archivos de agentes de IA (los regenera `next dev`; no van al repositorio)
+AGENTS.md
+CLAUDE.md

@@ -22,8 +22,8 @@ const barlowCondensed = Barlow_Condensed({
 
 export const metadata: Metadata = {
   title: {
-    default: "Global Technology & Electrical Services | Electrical Construction Subcontractor in Florida",
-    template: "%s | Global Technology & Electrical Services",
+    default: "GLOBAL TECHNOLOGY | Electrical Construction Subcontractor in Florida",
+    template: "%s | GLOBAL TECHNOLOGY",
   },
   description:
     "State-certified electrical construction subcontractor for multifamily, mixed-use and commercial projects in Florida: electrical, fire alarm, low voltage, BDA/ERCS, EV infrastructure and emergency power.",

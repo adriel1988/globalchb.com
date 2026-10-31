@@ -1,150 +1,174 @@
 export type PolicySection = { heading: string; body: string[] };
 
+const CO = "Global Technology & Electrical Services, Inc.";
+const MAIL = "hello@inbox.globalchb.com";
+const ADDR = "4860 SW 61 Avenue, Davie, FL 33314";
+
 export const privacyPolicy: Record<"es" | "en", PolicySection[]> = {
   es: [
     {
       heading: "",
       body: [
-        'Global Technology & Electrical Services, Inc. ("Global Technology", "nosotros") opera la plataforma Precision CRM para la gestión de nuestras operaciones, proyectos y relaciones con clientes. Esta política describe cómo recopilamos, usamos y protegemos la información dentro de este sistema.',
+        `${CO} ("Global Technology", "nosotros") es un contratista eléctrico con sede en Florida. Esta política explica qué información recopilamos cuando visita globalchb.com, solicita una propuesta, hace un pedido de producto o se comunica con nosotros, y cómo la usamos y protegemos.`,
       ],
     },
     {
       heading: "1. Información que recopilamos",
       body: [
-        "Recopilamos información de contacto (nombre, email, teléfono, dirección), información de proyectos (alcance, cronograma, presupuesto), comunicaciones (WhatsApp, email, SMS) relacionadas con nuestros servicios, y datos de uso de la plataforma por parte de usuarios autorizados.",
+        "Información que usted nos da: nombre, empresa, email, teléfono, detalles del proyecto (alcance, ubicación, cronograma), planos y especificaciones que adjunte, productos solicitados y cualquier mensaje que nos envíe por formulario, email, WhatsApp o SMS.",
+        "Información técnica: dirección IP, tipo de navegador y dispositivo, páginas visitadas y registros del servidor, necesarios para operar y proteger el sitio.",
+        "Cookies: usamos una cookie funcional (gchb-locale) para recordar su idioma y los servicios de seguridad de Cloudflare Turnstile para evitar envíos automáticos. No usamos cookies publicitarias ni seguimiento entre sitios. Si en el futuro añadimos analítica, actualizaremos esta política.",
       ],
     },
     {
       heading: "2. Cómo usamos la información",
       body: [
-        "Usamos la información exclusivamente para: coordinar y ejecutar proyectos eléctricos, comunicarnos con clientes y colaboradores, generar estimados y facturación, y mejorar nuestros procesos internos mediante análisis agregado.",
+        "Para responder a su solicitud, preparar propuestas y estimados, coordinar y ejecutar proyectos, procesar pedidos de productos, enviarle comunicaciones sobre su proyecto, proteger el sitio contra spam y abuso, cumplir obligaciones legales y mejorar nuestros servicios.",
       ],
     },
     {
-      heading: "3. Asistente de Inteligencia Artificial",
+      heading: "3. Archivos y planos que nos envía",
       body: [
-        "Nuestra plataforma utiliza asistentes de IA (Andrew / Sofía) para responder consultas de clientes por WhatsApp, email y SMS. Estos asistentes:",
-        "• Nunca comparten información financiera interna, costos, márgenes o estrategias de precios.",
-        "• Nunca comparten información de otros clientes o proyectos.",
-        "• Nunca comparten datos de empleados, subcontratistas o información legal confidencial.",
-        "• Escalan automáticamente a un miembro del equipo cualquier solicitud que exceda su nivel de autorización.",
+        "Los planos y documentos que adjunte se guardan en un almacenamiento privado, solo accesible por el personal autorizado de Global Technology que prepara su propuesta. No los publicamos ni los compartimos con otros clientes.",
       ],
     },
     {
       heading: "4. Con quién compartimos información",
       body: [
-        "No vendemos ni alquilamos información personal a terceros. Compartimos información únicamente con proveedores de servicio necesarios para operar la plataforma (hosting, procesamiento de pagos, mensajería) bajo acuerdos de confidencialidad, y cuando la ley lo requiera.",
+        "No vendemos ni alquilamos su información personal. Solo la compartimos con proveedores que nos ayudan a operar el sitio y atenderle, bajo obligaciones de confidencialidad: alojamiento web (Vercel), base de datos y almacenamiento (Supabase), correo electrónico transaccional (Resend), verificación anti-spam (Cloudflare) y mensajería (Meta WhatsApp Business y Twilio). También podemos divulgarla cuando la ley lo exija o para proteger nuestros derechos.",
       ],
     },
     {
-      heading: "5. Seguridad",
+      heading: "5. Asistentes de inteligencia artificial",
       body: [
-        "Implementamos controles de acceso basados en roles, cifrado en tránsito, y separación de datos entre proyectos y clientes. El acceso a información sensible está restringido según el rol del usuario dentro de la organización.",
+        "Podemos usar asistentes de IA (Andrew / Sofía) para responder consultas por WhatsApp, SMS o email. Estos asistentes no comparten información financiera interna, datos de otros clientes ni datos de empleados, y derivan a una persona del equipo cualquier solicitud que exceda su autorización. Usted puede pedir hablar con una persona en cualquier momento.",
       ],
     },
     {
-      heading: "6. Sus derechos",
+      heading: "6. Mensajes de texto (SMS) y WhatsApp",
       body: [
-        "Puede solicitar acceso, corrección o eliminación de su información de contacto escribiéndonos a hello@inbox.globalchb.com.",
+        "Si marca la casilla de consentimiento SMS en nuestro formulario o nos escribe por mensajería, acepta recibir mensajes sobre su proyecto: confirmaciones, seguimiento y comunicación general sobre nuestros servicios (normalmente de 1 a 4 mensajes por semana). Pueden aplicarse tarifas de mensajes y datos. El consentimiento no es condición para contratar nuestros servicios.",
+        "Puede responder STOP en cualquier momento para dejar de recibir mensajes, o HELP para obtener ayuda. También puede escribirnos a " + MAIL + ".",
+        "No se compartirá información de teléfono móvil con terceros o afiliados con fines de marketing o promoción. Los datos de mensajería no se usan para segmentación publicitaria.",
+        "Los mensajes de WhatsApp se rigen además por las políticas de WhatsApp Business (https://www.whatsapp.com/legal/business-policy/) y de Meta (https://www.facebook.com/privacy/policy/). Los SMS y llamadas se gestionan con Twilio (https://www.twilio.com/legal/privacy).",
       ],
     },
     {
-      heading: "7. Contacto",
+      heading: "7. Conservación y seguridad",
       body: [
-        "Global Technology & Electrical Services, Inc.",
-        "Email: hello@inbox.globalchb.com",
-        "Área de servicio: Florida (West Palm Beach a Homestead, Tampa a Marco Island)",
+        "Conservamos la información el tiempo necesario para atender su solicitud, ejecutar el proyecto y cumplir obligaciones legales, contables y contractuales. Aplicamos cifrado en tránsito, controles de acceso por rol y almacenamiento privado para documentos. Ningún sistema es 100 % seguro, pero trabajamos para proteger su información.",
       ],
     },
     {
-      heading: "8. Mensajes de Texto (SMS)",
+      heading: "8. Sus derechos y opciones",
       body: [
-        'Al proporcionar su número de teléfono, usted consiente recibir mensajes de texto (SMS) relacionados con confirmaciones de citas, seguimiento de proyectos y comunicación general sobre nuestros servicios. La frecuencia de mensajes varía según su interacción con nosotros (típicamente 1-4 mensajes por semana). Pueden aplicarse tarifas de mensajería y datos según su plan de telefonía ("Message and data rates may apply"). Su número de teléfono móvil nunca será compartido con terceros con fines de marketing. Puede responder STOP en cualquier momento para dejar de recibir mensajes, o HELP para obtener ayuda.',
+        "Puede solicitar acceso, corrección o eliminación de su información personal, o dejar de recibir comunicaciones, escribiéndonos a " + MAIL + ". Responderemos dentro de un plazo razonable y conforme a la ley aplicable.",
       ],
     },
     {
-      heading: "9. Proveedores de Mensajería (WhatsApp y SMS)",
+      heading: "9. Menores de edad",
       body: [
-        "Global Technology utiliza la API de WhatsApp Business de Meta Platforms, Inc. y los servicios de mensajería y voz de Twilio Inc. para enviar y recibir comunicaciones con nuestros clientes.",
-        "Los mensajes de WhatsApp se gestionan conforme a las Políticas de WhatsApp Business (https://www.whatsapp.com/legal/business-policy/) y (https://developers.facebook.com/terms/).",
-        "Los mensajes de texto (SMS) y llamadas de voz se gestionan conforme a la Política de Privacidad de Twilio (https://www.twilio.com/legal/privacy).",
-        "Los datos de mensajería no se comparten con terceros no autorizados ni se utilizan para segmentación publicitaria.",
-        "Los usuarios pueden solicitar en cualquier momento dejar de recibir mensajes respondiendo STOP, o contactándonos directamente en hello@inbox.globalchb.com.",
-        "Meta y Twilio pueden procesar datos de mensajería conforme a sus propias políticas de privacidad (Meta: https://www.facebook.com/privacy/policy/).",
+        "Este sitio está dirigido a empresas y profesionales de la construcción. No recopilamos a sabiendas información de menores de 18 años.",
       ],
+    },
+    {
+      heading: "10. Enlaces a terceros",
+      body: [
+        "El sitio puede enlazar a páginas de terceros (por ejemplo, Google o WhatsApp). No controlamos sus prácticas de privacidad; le recomendamos leer sus políticas.",
+      ],
+    },
+    {
+      heading: "11. Cambios a esta política",
+      body: [
+        "Podemos actualizar esta política. La fecha de la última actualización aparece al inicio de esta página y los cambios rigen desde su publicación.",
+      ],
+    },
+    {
+      heading: "12. Contacto",
+      body: [CO, `Email: ${MAIL}`, `Dirección: ${ADDR}`, "Teléfono: +1 (786) 952-7504", "Área de servicio: Florida"],
     },
   ],
   en: [
     {
       heading: "",
       body: [
-        'Global Technology & Electrical Services, Inc. ("Global Technology", "we", "us") operates the Precision CRM platform to manage our operations, projects, and client relationships. This policy describes how we collect, use, and protect information within this system.',
+        `${CO} ("Global Technology", "we", "us") is a Florida-based electrical contractor. This policy explains what information we collect when you visit globalchb.com, request a proposal, place a product order or contact us, and how we use and protect it.`,
       ],
     },
     {
       heading: "1. Information We Collect",
       body: [
-        "We collect contact information (name, email, phone, address), project details (scope, timeline, budget), communications (WhatsApp, email, SMS) related to our services, and platform usage data by authorized users.",
+        "Information you give us: name, company, email, phone, project details (scope, location, schedule), plans and specifications you attach, products requested, and any message you send us through a form, email, WhatsApp or SMS.",
+        "Technical information: IP address, browser and device type, pages visited and server logs, needed to operate and protect the site.",
+        "Cookies: we use one functional cookie (gchb-locale) to remember your language, and Cloudflare Turnstile security services to prevent automated submissions. We do not use advertising cookies or cross-site tracking. If we add analytics in the future, we will update this policy.",
       ],
     },
     {
       heading: "2. How We Use Information",
       body: [
-        "We use information exclusively to: coordinate and execute electrical projects, communicate with clients and collaborators, generate estimates and invoicing, and improve our internal processes through aggregated analysis.",
+        "To respond to your request, prepare proposals and estimates, coordinate and execute projects, process product orders, communicate with you about your project, protect the site from spam and abuse, meet legal obligations and improve our services.",
       ],
     },
     {
-      heading: "3. Artificial Intelligence Assistant",
+      heading: "3. Files and Plans You Send Us",
       body: [
-        "Our platform utilizes AI assistants (Andrew / Sofía) to answer client inquiries via WhatsApp, email, and SMS. These assistants:",
-        "• Never share internal financial information, costs, margins, or pricing strategies.",
-        "• Never share information regarding other clients or projects.",
-        "• Never share employee, subcontractor, or confidential legal data.",
-        "• Automatically escalate to a team member any request that exceeds their authorization level.",
+        "Plans and documents you attach are stored in private storage, accessible only to authorized Global Technology staff preparing your proposal. We do not publish them or share them with other clients.",
       ],
     },
     {
       heading: "4. Who We Share Information With",
       body: [
-        "We do not sell or rent personal information to third parties. We share information solely with service providers necessary to operate the platform (hosting, payment processing, messaging) under confidentiality agreements, and when required by law.",
+        "We do not sell or rent your personal information. We share it only with service providers that help us operate the site and serve you, under confidentiality obligations: web hosting (Vercel), database and storage (Supabase), transactional email (Resend), anti-spam verification (Cloudflare) and messaging (Meta WhatsApp Business and Twilio). We may also disclose it when required by law or to protect our rights.",
       ],
     },
     {
-      heading: "5. Security",
+      heading: "5. Artificial Intelligence Assistants",
       body: [
-        "We implement role-based access controls, encryption in transit, and data segregation between projects and clients. Access to sensitive information is restricted according to the user's role within the organization.",
+        "We may use AI assistants (Andrew / Sofía) to answer inquiries via WhatsApp, SMS or email. These assistants do not share internal financial information, other clients' data or employee data, and they escalate to a team member any request beyond their authorization. You may ask to speak with a person at any time.",
       ],
     },
     {
-      heading: "6. Your Rights",
+      heading: "6. Text Messages (SMS) and WhatsApp",
       body: [
-        "You may request access to, correction of, or deletion of your contact information by contacting us at hello@inbox.globalchb.com.",
+        "If you check the SMS consent box on our form or message us, you agree to receive messages about your project: confirmations, follow-ups and general communication about our services (typically 1–4 messages per week). Message and data rates may apply. Consent is not a condition of purchasing our services.",
+        "You may reply STOP at any time to opt out, or HELP for assistance. You can also contact us at " + MAIL + ".",
+        "No mobile information will be shared with third parties or affiliates for marketing or promotional purposes. Messaging data is not used for advertising targeting.",
+        "WhatsApp messages are also governed by WhatsApp Business policies (https://www.whatsapp.com/legal/business-policy/) and Meta's privacy policy (https://www.facebook.com/privacy/policy/). SMS and voice are handled through Twilio (https://www.twilio.com/legal/privacy).",
       ],
     },
     {
-      heading: "7. Contact",
+      heading: "7. Retention and Security",
       body: [
-        "Global Technology & Electrical Services, Inc.",
-        "Email: hello@inbox.globalchb.com",
-        "Service area: Florida (West Palm Beach to Homestead, Tampa to Marco Island)",
+        "We keep information as long as needed to handle your request, perform the project and meet legal, accounting and contractual obligations. We use encryption in transit, role-based access controls and private storage for documents. No system is 100% secure, but we work to protect your information.",
       ],
     },
     {
-      heading: "8. Text Messages (SMS)",
+      heading: "8. Your Rights and Choices",
       body: [
-        'By providing your phone number, you consent to receive text messages (SMS) related to appointment confirmations, project follow-ups, and general communication regarding our services. Message frequency varies based on your interaction with us (typically 1–4 messages per week). Message and data rates may apply. Your mobile number will never be shared with third parties for marketing purposes. You may reply STOP at any time to opt out of messages, or HELP for assistance.',
+        "You may request access to, correction of or deletion of your personal information, or opt out of communications, by contacting us at " + MAIL + ". We will respond within a reasonable time and as required by applicable law.",
       ],
     },
     {
-      heading: "9. Messaging Providers (WhatsApp & SMS)",
+      heading: "9. Children",
       body: [
-        "Global Technology utilizes Meta Platforms, Inc.'s WhatsApp Business API and Twilio Inc.'s messaging and voice services to send and receive communications with our clients.",
-        "WhatsApp messages are handled in accordance with WhatsApp Business Policies (https://www.whatsapp.com/legal/business-policy/) and (https://developers.facebook.com/terms/).",
-        "Text messages (SMS) and voice calls are handled in accordance with Twilio's Privacy Policy (https://www.twilio.com/legal/privacy).",
-        "Messaging data is not shared with unauthorized third parties nor used for advertising targeting.",
-        "Users may at any time request to stop receiving messages by replying STOP, or by contacting us directly at hello@inbox.globalchb.com.",
-        "Meta and Twilio may process messaging data according to their own privacy policies (Meta: https://www.facebook.com/privacy/policy/).",
+        "This site is directed to construction businesses and professionals. We do not knowingly collect information from anyone under 18.",
       ],
+    },
+    {
+      heading: "10. Third-Party Links",
+      body: [
+        "The site may link to third-party pages (for example, Google or WhatsApp). We do not control their privacy practices; please review their policies.",
+      ],
+    },
+    {
+      heading: "11. Changes to This Policy",
+      body: [
+        "We may update this policy. The date of the latest update appears at the top of this page and changes apply from the time they are posted.",
+      ],
+    },
+    {
+      heading: "12. Contact",
+      body: [CO, `Email: ${MAIL}`, `Address: ${ADDR}`, "Phone: +1 (786) 952-7504", "Service area: Florida"],
     },
   ],
 };
@@ -154,126 +178,156 @@ export const termsOfService: Record<"es" | "en", PolicySection[]> = {
     {
       heading: "",
       body: [
-        "Estos términos rigen el uso de la plataforma Precision CRM por parte de empleados, subcontratistas autorizados y clientes de Global Technology & Electrical Services, Inc.",
+        `Estos términos regulan el uso del sitio globalchb.com, operado por ${CO}. Al usar el sitio usted acepta estos términos; si no está de acuerdo, no lo utilice.`,
       ],
     },
     {
-      heading: "1. Uso autorizado",
+      heading: "1. Uso del sitio",
       body: [
-        "El acceso a esta plataforma está restringido a personal autorizado de Global Technology y a clientes con credenciales asignadas. Cada usuario es responsable de mantener la confidencialidad de sus credenciales de acceso.",
+        "Puede usar el sitio para conocer nuestros servicios, solicitar propuestas y pedir productos. No puede usarlo para fines ilegales, enviar información falsa, intentar acceder sin autorización a nuestros sistemas, ni enviar contenido malicioso o spam.",
       ],
     },
     {
-      heading: "2. Naturaleza de la información",
+      heading: "2. Información del sitio",
       body: [
-        "La información contenida en esta plataforma (presupuestos, cronogramas, datos de proyectos, comunicaciones) es propiedad de Global Technology & Electrical Services, Inc. y de sus clientes respectivos, y se maneja bajo estricta confidencialidad según los principios descritos en nuestra Política de Privacidad.",
+        "Procuramos que el contenido (servicios, proyectos, fotos, productos y precios) sea exacto y actual, pero puede cambiar sin previo aviso y no constituye una oferta vinculante. Las fotos de proyectos son referenciales.",
       ],
     },
     {
-      heading: "3. Presupuestos y estimados generados por IA",
+      heading: "3. Propuestas, estimados y pedidos",
       body: [
-        "Los presupuestos aproximados generados por el asistente de IA son referenciales únicamente. Todo presupuesto final debe ser revisado y aprobado por el departamento de estimación de Global Technology antes de considerarse vinculante.",
+        "Enviar un formulario no crea un contrato. Toda propuesta, estimado o precio, incluidos los preparados con ayuda de herramientas de inteligencia artificial, es referencial hasta que Global Technology lo revise y lo confirme por escrito. Los pedidos de productos están sujetos a disponibilidad y a confirmación.",
       ],
     },
     {
-      heading: "4. Responsabilidades del usuario",
+      heading: "4. Contenido que usted envía",
       body: [
-        "Los usuarios se comprometen a utilizar la plataforma únicamente para fines relacionados con proyectos y operaciones de Global Technology, a no compartir información confidencial fuera de los canales autorizados, y a reportar cualquier uso indebido o incidente de seguridad de inmediato.",
+        "Usted garantiza que tiene derecho a compartir los planos, documentos y datos que nos envía. Los usaremos solo para atender su solicitud según nuestra Política de Privacidad.",
       ],
     },
     {
-      heading: "5. Disponibilidad del servicio",
+      heading: "5. Propiedad intelectual",
       body: [
-        "Global Technology hace esfuerzos razonables para mantener la plataforma disponible, pero no garantiza operación ininterrumpida. Nos reservamos el derecho de realizar mantenimiento programado con aviso previo cuando sea posible.",
+        "Los textos, logotipos, fotografías, diseños y demás contenido del sitio pertenecen a Global Technology o a sus licenciantes y están protegidos por la ley. No puede copiarlos ni usarlos con fines comerciales sin nuestra autorización escrita.",
       ],
     },
     {
-      heading: "6. Modificaciones",
+      heading: "6. Comunicaciones automatizadas",
       body: [
-        "Global Technology puede actualizar estos términos periódicamente. Los cambios significativos serán comunicados a los usuarios activos.",
+        "Podemos comunicarnos con usted por email, WhatsApp, SMS y llamadas, y usar asistentes de inteligencia artificial (Andrew / Sofía) para responder consultas. Usted puede estar interactuando con un asistente de IA y puede pedir hablar con una persona en cualquier momento. Los mensajes SMS se rigen por la sección 6 de nuestra Política de Privacidad (responda STOP para darse de baja). Las comunicaciones por WhatsApp y Twilio están sujetas también a los términos de esas plataformas.",
       ],
     },
     {
-      heading: "7. Contacto",
+      heading: "7. Enlaces de terceros",
       body: [
-        "Global Technology & Electrical Services, Inc.",
-        "Email: hello@inbox.globalchb.com",
+        "El sitio puede enlazar a sitios de terceros. No somos responsables de su contenido ni de sus prácticas.",
       ],
     },
     {
-      heading: "8. Comunicaciones Automatizadas (IA, WhatsApp, SMS, Voz)",
+      heading: "8. Exclusión de garantías",
       body: [
-        "Global Technology utiliza asistentes de inteligencia artificial (Andrew / Sofía) para responder consultas por WhatsApp, SMS, email y llamadas de voz, a través de los servicios de Meta Platforms, Inc. y Twilio Inc. Estas comunicaciones automatizadas están sujetas a los Términos de la Plataforma de Meta (https://developers.facebook.com/terms/) y (https://www.twilio.com/legal/tos), además de estos Términos.",
+        'El sitio se ofrece "tal cual" y "según disponibilidad". No garantizamos que funcione sin interrupciones ni errores.',
       ],
     },
     {
-      heading: "9. Interacción con Inteligencia Artificial",
+      heading: "9. Limitación de responsabilidad",
       body: [
-        "Al comunicarse con Global Technology & Electrical Services por WhatsApp, SMS o Email, usted reconoce que puede estar interactuando con un asistente de inteligencia artificial (Andrew / Sofía), no con una persona directamente. El asistente puede escalar su consulta a un miembro humano del equipo en cualquier momento. Al hacer clic en el enlace de confirmación enviado en su primera comunicación, usted acepta recibir comunicaciones de nuestra parte por el canal correspondiente.",
+        "En la medida permitida por la ley, Global Technology no será responsable de daños indirectos, incidentales o consecuentes derivados del uso del sitio. Esto no limita las obligaciones que surjan de un contrato de servicios firmado.",
       ],
+    },
+    {
+      heading: "10. Ley aplicable",
+      body: [
+        "Estos términos se rigen por las leyes del Estado de Florida, EE. UU. Cualquier disputa se someterá a los tribunales competentes del condado de Broward, Florida.",
+      ],
+    },
+    {
+      heading: "11. Cambios",
+      body: [
+        "Podemos modificar estos términos en cualquier momento. La versión vigente es la publicada en esta página, con su fecha de actualización.",
+      ],
+    },
+    {
+      heading: "12. Contacto",
+      body: [CO, `Email: ${MAIL}`, `Dirección: ${ADDR}`, "Teléfono: +1 (786) 952-7504"],
     },
   ],
   en: [
     {
       heading: "",
       body: [
-        "These terms govern the use of the Precision CRM platform by employees, authorized subcontractors, and clients of Global Technology & Electrical Services, Inc.",
+        `These terms govern your use of globalchb.com, operated by ${CO}. By using the site you accept these terms; if you do not agree, please do not use it.`,
       ],
     },
     {
-      heading: "1. Authorized Use",
+      heading: "1. Use of the Site",
       body: [
-        "Access to this platform is restricted to authorized Global Technology personnel and clients with assigned credentials. Each user is responsible for maintaining the confidentiality of their login credentials.",
+        "You may use the site to learn about our services, request proposals and order products. You may not use it for unlawful purposes, submit false information, attempt unauthorized access to our systems, or send malicious content or spam.",
       ],
     },
     {
-      heading: "2. Nature of Information",
+      heading: "2. Site Information",
       body: [
-        "The information contained within this platform (estimates, schedules, project data, communications) is the property of Global Technology & Electrical Services, Inc. and its respective clients, and is managed under strict confidentiality according to the principles described in our Privacy Policy.",
+        "We strive to keep content (services, projects, photos, products and prices) accurate and current, but it may change without notice and is not a binding offer. Project photos are for reference.",
       ],
     },
     {
-      heading: "3. AI-Generated Quotes and Estimates",
+      heading: "3. Proposals, Estimates and Orders",
       body: [
-        "Approximate estimates generated by the AI assistant are for reference purposes only. Any final quote must be reviewed and approved by the Global Technology estimating department before being considered binding.",
+        "Submitting a form does not create a contract. Any proposal, estimate or price, including those prepared with the help of artificial intelligence tools, is for reference until Global Technology reviews and confirms it in writing. Product orders are subject to availability and confirmation.",
       ],
     },
     {
-      heading: "4. User Responsibilities",
+      heading: "4. Content You Submit",
       body: [
-        "Users agree to use the platform solely for purposes related to Global Technology projects and operations, not to share confidential information outside authorized channels, and to report any misuse or security incident immediately.",
+        "You represent that you have the right to share the plans, documents and data you send us. We will use them only to handle your request in accordance with our Privacy Policy.",
       ],
     },
     {
-      heading: "5. Service Availability",
+      heading: "5. Intellectual Property",
       body: [
-        "Global Technology makes reasonable efforts to maintain platform availability, but does not guarantee uninterrupted operation. We reserve the right to perform scheduled maintenance with advance notice whenever possible.",
+        "The text, logos, photographs, designs and other content on the site belong to Global Technology or its licensors and are protected by law. You may not copy or use them commercially without our written permission.",
       ],
     },
     {
-      heading: "6. Modifications",
+      heading: "6. Automated Communications",
       body: [
-        "Global Technology may update these terms periodically. Significant changes will be communicated to active users.",
+        "We may contact you by email, WhatsApp, SMS and voice, and may use artificial intelligence assistants (Andrew / Sofía) to answer inquiries. You may be interacting with an AI assistant and may ask to speak with a person at any time. SMS messages are governed by section 6 of our Privacy Policy (reply STOP to opt out). WhatsApp and Twilio communications are also subject to those platforms' terms.",
       ],
     },
     {
-      heading: "7. Contact",
+      heading: "7. Third-Party Links",
       body: [
-        "Global Technology & Electrical Services, Inc.",
-        "Email: hello@inbox.globalchb.com",
+        "The site may link to third-party sites. We are not responsible for their content or practices.",
       ],
     },
     {
-      heading: "8. Automated Communications (AI, WhatsApp, SMS, Voice)",
+      heading: "8. Disclaimer of Warranties",
       body: [
-        "Global Technology uses artificial intelligence assistants (Andrew / Sofía) to respond to inquiries via WhatsApp, SMS, email, and voice calls, through the services of Meta Platforms, Inc. and Twilio Inc. These automated communications are subject to Meta's Platform Terms (https://developers.facebook.com/terms/) and Twilio's Terms of Service (https://www.twilio.com/legal/tos), in addition to these Terms.",
+        'The site is provided "as is" and "as available". We do not guarantee uninterrupted or error-free operation.',
       ],
     },
     {
-      heading: "9. Interaction with Artificial Intelligence",
+      heading: "9. Limitation of Liability",
       body: [
-        "When communicating with Global Technology & Electrical Services via WhatsApp, SMS, or Email, you acknowledge that you may be interacting with an artificial intelligence assistant (Andrew / Sofía), rather than directly with a person. The assistant may escalate your inquiry to a human team member at any time. By clicking the confirmation link sent in your initial communication, you agree to receive communications from us via the corresponding channel.",
+        "To the extent permitted by law, Global Technology will not be liable for indirect, incidental or consequential damages arising from use of the site. This does not limit obligations arising under a signed services contract.",
       ],
+    },
+    {
+      heading: "10. Governing Law",
+      body: [
+        "These terms are governed by the laws of the State of Florida, USA. Any dispute will be submitted to the competent courts of Broward County, Florida.",
+      ],
+    },
+    {
+      heading: "11. Changes",
+      body: [
+        "We may modify these terms at any time. The version in effect is the one posted on this page, with its update date.",
+      ],
+    },
+    {
+      heading: "12. Contact",
+      body: [CO, `Email: ${MAIL}`, `Address: ${ADDR}`, "Phone: +1 (786) 952-7504"],
     },
   ],
 };

@@ -5,7 +5,8 @@
  * Nunca se expone al cliente — solo se llama desde Server Components de Next.js.
  *
  * Tablas y filtros:
- *  - Proyectos  → portfolio_gallery  (is_published_to_web = true, order by display_order)
+ *  - Proyectos  → portfolio_gallery  (section = projects, is_published_to_web = true, order by display_order)
+ *  - Obra nueva → portfolio_gallery  (section = new_construction, mismos filtros)
  *  - Catálogo   → product_catalog    (is_active, is_published_to_web, order by display_order)
  *  - Servicios  → service_catalog    (is_active, show_on_web, order by display_order)
  *  - Reseñas    → organizations.google_reviews_url (id = ORG_ID)
@@ -23,12 +24,21 @@ import type { ProjectItem } from "@/components/projects-team";
  */
 const CACHE_SECONDS = 60;
 
+/**
+ * En desarrollo (npm run dev) no se cachea nada: al refrescar se ve el cambio del CRM al instante.
+ * En producción se mantiene la caché de 60 s (o /api/revalidate).
+ */
+const cached: typeof unstable_cache =
+  process.env.NODE_ENV === "development" ? ((fn: any) => fn) as unknown as typeof unstable_cache : unstable_cache;
+
 /** Etiquetas de caché por tabla del CRM. */
 export const CACHE_TAGS = {
   portfolio_gallery: "portfolio",
   product_catalog: "products",
   service_catalog: "services",
   organizations: "organization",
+  web_capabilities: "capabilities",
+  staff: "team",
 } as const;
 
 const ORG_ID =
@@ -36,11 +46,15 @@ const ORG_ID =
 
 // ─── Proyectos ────────────────────────────────────────────────────────────────
 
-async function fetchProjects(): Promise<ProjectItem[]> {
+/** `section` de portfolio_gallery: "projects" (página Proyectos) o "new_construction" (página Obra nueva). */
+type GallerySection = "projects" | "new_construction";
+
+async function fetchGallery(section: GallerySection): Promise<ProjectItem[]> {
   const { data, error } = await getSupabaseAdmin()
     .from("portfolio_gallery")
     .select("id, project_id, title, description, photo_url, display_order, is_published_to_web, created_at")
     .eq("is_published_to_web", true)
+    .eq("section", section)
     .eq("organization_id", ORG_ID)
     .order("display_order", { ascending: true })
     .order("created_at", { ascending: false });
@@ -59,7 +73,10 @@ async function fetchProjects(): Promise<ProjectItem[]> {
   })) as ProjectItem[];
 }
 
-const cachedProjects = unstable_cache(fetchProjects, ["getProjects"], { revalidate: CACHE_SECONDS, tags: [CACHE_TAGS.portfolio_gallery] });
+const fetchProjects = () => fetchGallery("projects");
+const fetchNewConstruction = () => fetchGallery("new_construction");
+
+const cachedProjects = cached(fetchProjects, ["getProjects"], { revalidate: CACHE_SECONDS, tags: [CACHE_TAGS.portfolio_gallery] });
 
 export async function getProjects(): Promise<ProjectItem[]> {
   try {
@@ -67,6 +84,125 @@ export async function getProjects(): Promise<ProjectItem[]> {
   } catch (err) {
     // Los errores no se guardan en caché: el siguiente intento vuelve a consultar.
     console.error("[getProjects]", err);
+    return [];
+  }
+}
+
+const cachedNewConstruction = cached(fetchNewConstruction, ["getNewConstruction"], { revalidate: CACHE_SECONDS, tags: [CACHE_TAGS.portfolio_gallery] });
+
+/** Fotos y descripción de "Obra nueva" publicadas desde el CRM (Publicidad). */
+export async function getNewConstructionGallery(): Promise<ProjectItem[]> {
+  try {
+    return await cachedNewConstruction();
+  } catch (err) {
+    console.error("[getNewConstructionGallery]", err);
+    return [];
+  }
+}
+
+// ─── Capacidades ──────────────────────────────────────────────────────────────
+
+/** Capacidad publicada desde el CRM (Configuración › Publicidad › Capacidades). */
+export type WebCapability = {
+  key: string;
+  titleEs: string;
+  titleEn: string;
+  descEs: string;
+  descEn: string;
+  bulletsEs: string[];
+  bulletsEn: string[];
+  photo: string | null;
+};
+
+async function fetchCapabilities(): Promise<WebCapability[]> {
+  const { data, error } = await getSupabaseAdmin()
+    .from("web_capabilities")
+    .select("id, cap_key, title_es, title_en, desc_es, desc_en, bullets_es, bullets_en, photo_url, display_order, created_at")
+    .eq("is_published_to_web", true)
+    .eq("organization_id", ORG_ID)
+    .order("display_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error) throw new Error(error.message);
+
+  const list = (v: unknown): string[] => (Array.isArray(v) ? v.map(String).filter(Boolean) : []);
+  return (data ?? []).map((row) => ({
+    key: row.cap_key || row.id,
+    titleEs: row.title_es ?? "",
+    titleEn: row.title_en || row.title_es || "",
+    descEs: row.desc_es ?? "",
+    descEn: row.desc_en || row.desc_es || "",
+    bulletsEs: list(row.bullets_es),
+    bulletsEn: list(row.bullets_en).length ? list(row.bullets_en) : list(row.bullets_es),
+    photo: normalizePhotoUrl(row.photo_url),
+  }));
+}
+
+const cachedCapabilities = cached(fetchCapabilities, ["getCapabilities"], { revalidate: CACHE_SECONDS, tags: [CACHE_TAGS.web_capabilities] });
+
+/** Si la tabla está vacía o falla, la web usa el contenido por defecto (gc-content.ts). */
+export async function getCapabilities(): Promise<WebCapability[]> {
+  try {
+    return await cachedCapabilities();
+  } catch (err) {
+    console.error("[getCapabilities]", err);
+    return [];
+  }
+}
+
+// ─── Equipo (Nosotros) ────────────────────────────────────────────────────────
+
+export type WebTeamMember = { id: string; name: string; role: string; photo: string | null };
+export type WebTeamGroup = { department: string; members: WebTeamMember[] };
+
+const TEAM_ORDER = ["administration", "projects", "electrical", "procurement", "finance", "hr"];
+
+async function fetchTeam(): Promise<WebTeamGroup[]> {
+  const { data, error } = await getSupabaseAdmin()
+    .from("staff")
+    .select("id, full_name, role, department, web_photo_url, reference_photo_url")
+    .eq("organization_id", ORG_ID)
+    .eq("status", "active")
+    .eq("show_on_web", true)
+    .order("full_name", { ascending: true });
+  if (error) throw new Error(error.message);
+  const sb = getSupabaseAdmin();
+  const rows = data ?? [];
+  const isRef = (r: { reference_photo_url: unknown }) => !!r.reference_photo_url && !String(r.reference_photo_url).startsWith("auto-close/");
+  const bucketOf = (pth: string) => (pth.startsWith("avatars/") ? "project-photos" : "employee-selfies");
+
+  const thumbBy = new Map<string, string>();
+
+  // Respaldo: URL firmada (24 h) de la foto original para quien no tenga miniatura.
+  const signedBy = new Map<string, string>();
+  const need = rows.filter((r) => !normalizePhotoUrl(r.web_photo_url) && !thumbBy.has(r.id) && isRef(r));
+  for (const bucket of ["employee-selfies", "project-photos"]) {
+    const paths = need.map((r) => String(r.reference_photo_url)).filter((pth) => bucketOf(pth) === bucket);
+    if (paths.length === 0) continue;
+    const { data: signed } = await sb.storage.from(bucket).createSignedUrls(paths, 60 * 60 * 24);
+    for (const it of signed ?? []) if (it.path && it.signedUrl) signedBy.set(it.path, it.signedUrl);
+  }
+  const map = new Map<string, WebTeamMember[]>();
+  for (const r of rows) {
+    const photo = normalizePhotoUrl(r.web_photo_url) ?? thumbBy.get(r.id) ?? signedBy.get(String(r.reference_photo_url)) ?? null;
+    const dept = String(r.department ?? "").trim().toLowerCase() || "other";
+    if (!map.has(dept)) map.set(dept, []);
+    map.get(dept)!.push({ id: r.id, name: r.full_name ?? "", role: String(r.role ?? "").trim(), photo });
+  }
+  const rank = (d: string) => (TEAM_ORDER.indexOf(d) === -1 ? 99 : TEAM_ORDER.indexOf(d));
+  return Array.from(map.entries())
+    .sort((a, b) => rank(a[0]) - rank(b[0]))
+    .map(([department, members]) => ({ department, members }));
+}
+
+const cachedTeam = cached(fetchTeam, ["getTeam"], { revalidate: CACHE_SECONDS, tags: [CACHE_TAGS.staff] });
+
+/** Personas marcadas con el icono Web en CRM › Equipo y Personal, agrupadas por departamento. */
+export async function getTeam(): Promise<WebTeamGroup[]> {
+  try {
+    return await cachedTeam();
+  } catch (err) {
+    console.error("[getTeam]", err);
     return [];
   }
 }
@@ -101,7 +237,7 @@ async function fetchProducts(): Promise<ProductItem[]> {
   })) as ProductItem[];
 }
 
-const cachedProducts = unstable_cache(fetchProducts, ["getProducts"], { revalidate: CACHE_SECONDS, tags: [CACHE_TAGS.product_catalog] });
+const cachedProducts = cached(fetchProducts, ["getProducts"], { revalidate: CACHE_SECONDS, tags: [CACHE_TAGS.product_catalog] });
 
 export async function getProducts(): Promise<ProductItem[]> {
   try {
@@ -142,7 +278,7 @@ async function fetchServices(): Promise<ServiceItem[]> {
   })) as ServiceItem[];
 }
 
-const cachedServices = unstable_cache(fetchServices, ["getServices"], { revalidate: CACHE_SECONDS, tags: [CACHE_TAGS.service_catalog] });
+const cachedServices = cached(fetchServices, ["getServices"], { revalidate: CACHE_SECONDS, tags: [CACHE_TAGS.service_catalog] });
 
 export async function getServices(): Promise<ServiceItem[]> {
   try {
@@ -172,7 +308,7 @@ async function fetchGoogleReviewsUrl(): Promise<string | null> {
   return validPublicUrl(data?.google_reviews_url);
 }
 
-const cachedGoogleReviewsUrl = unstable_cache(fetchGoogleReviewsUrl, ["getGoogleReviewsUrl"], {
+const cachedGoogleReviewsUrl = cached(fetchGoogleReviewsUrl, ["getGoogleReviewsUrl"], {
   revalidate: CACHE_SECONDS,
   tags: [CACHE_TAGS.organizations],
 });
@@ -267,10 +403,10 @@ export type ProjectAlbum = {
  * de `portfolio_gallery` es una tarjeta en la web (aunque varias fotos compartan
  * `project_id`). Conserva el orden de `display_order` / `created_at`.
  */
-export function groupProjectAlbums(items: ProjectItem[]): ProjectAlbum[] {
+export function groupProjectAlbums(items: ProjectItem[], opts: { keepWithoutPhoto?: boolean } = {}): ProjectAlbum[] {
   const albums = new Map<string, ProjectAlbum>();
   for (const item of items) {
-    if (!item.image) continue;
+    if (!item.image && !opts.keepWithoutPhoto) continue;
     const title = item.name.trim() || "—";
     const key = title
       .toLowerCase()
@@ -282,8 +418,10 @@ export function groupProjectAlbums(items: ProjectItem[]): ProjectAlbum[] {
       albums.set(key, album);
     }
     const desc = item.descEs?.trim() || null;
-    album.photos.push(item.image);
-    album.captions.push(desc);
+    if (item.image) {
+      album.photos.push(item.image);
+      album.captions.push(desc);
+    }
     if (desc && !album.description) album.description = desc;
   }
   return [...albums.values()];

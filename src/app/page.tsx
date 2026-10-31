@@ -13,7 +13,7 @@ import { getGoogleReviewsUrl, getProjects, groupProjectAlbums } from "@/lib/supa
 import { COMPANY } from "@/lib/i18n";
 import { OG_IMAGE, SITE_URL, businessJsonLd } from "@/lib/seo";
 
-const TITLE = "Global Technology & Electrical Services | Electrical Construction Subcontractor in Florida";
+const TITLE = "GLOBAL TECHNOLOGY | Electrical Construction Subcontractor in Florida";
 const DESCRIPTION =
   "Full-service electrical construction for multifamily, mixed-use and commercial projects in Florida. Electrical, fire alarm, low voltage, BDA/ERCS, EV infrastructure and emergency power — built for developers and general contractors.";
 

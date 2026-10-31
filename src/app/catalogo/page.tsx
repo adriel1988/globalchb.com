@@ -5,7 +5,7 @@ import { CatalogSection } from "@/components/catalog-section";
 import { getProducts } from "@/lib/supabase-data";
 
 export const metadata: Metadata = {
-  title: "Product Catalog — Electrical Equipment & Materials",
+  title: "Product Catalog",
   description:
     "Electrical equipment and materials available through Global Technology & Electrical Services: panels, EV charging, lighting and protection.",
   alternates: { canonical: "/catalogo" },
