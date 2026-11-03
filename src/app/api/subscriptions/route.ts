@@ -9,7 +9,19 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => ({}));
     const rawEmail = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
     const language = body.language === "es" ? "es" : "en";
-    const sourcePage = typeof body.page === "string" && body.page.trim() ? body.page.trim().slice(0, 120) : "/";
+    let sourcePage = typeof body.page === "string" && body.page.trim() ? body.page.trim().slice(0, 120) : "";
+    if (!sourcePage || sourcePage === "/") {
+      const ref = req.headers.get("referer");
+      if (ref) {
+        try {
+          const refPath = new URL(ref).pathname;
+          if (refPath) sourcePage = refPath.slice(0, 120);
+        } catch {
+          // ignore
+        }
+      }
+    }
+    if (!sourcePage) sourcePage = "/";
 
     if (!rawEmail || !EMAIL_RE.test(rawEmail)) {
       return NextResponse.json({ ok: false, error: "INVALID_EMAIL" }, { status: 400 });
@@ -50,3 +62,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "SERVER_ERROR" }, { status: 500 });
   }
 }
+

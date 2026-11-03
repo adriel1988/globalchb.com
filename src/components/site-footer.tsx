@@ -36,13 +36,17 @@ export function SiteFooter() {
     }
     try {
       setStatus("sending");
+      const currentPath =
+        typeof window !== "undefined" && window.location.pathname
+          ? window.location.pathname
+          : pathname || "/";
       const res = await fetch("/api/subscriptions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: clean,
           language: locale,
-          page: pathname || "/",
+          page: currentPath,
         }),
       });
       if (!res.ok) throw new Error("Failed");
