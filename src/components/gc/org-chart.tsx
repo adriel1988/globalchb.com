@@ -9,7 +9,13 @@ const l = (en: string, es: string): L => ({ en, es });
 
 /** Organigrama (estructura aprobada por la dirección). Cambios de nombres/puestos: editar este archivo. */
 const CEO = { id: "3ca98e03-f8ef-4071-8b4f-88d44177b42e", name: "Adriel de León", title: l("President & CEO", "Presidente y CEO") };
-const QC = { title: l("QC Division", "División de Control de Calidad"), note: l("Estimating & Preconstruction", "Estimación y Preconstrucción") };
+const QC = {
+  id: "aa60d582-3aa5-483d-8c62-da85f13b435c",
+  name: "Ernesto Chavez",
+  title: l("QC Division", "División de Control de Calidad"),
+  note: l("Estimating & Preconstruction", "Estimación y Preconstrucción"),
+  role: l("Operational Quality Control", "Control de calidad operativo"),
+};
 const VP = { id: "60c810f3-5a1f-4750-849a-9a2548636821", name: "Vladimir Suri de León", title: l("VP Operations", "VP de Operaciones"), note: l("Distribution & Execution", "Distribución y ejecución") };
 const OFFICE = { id: "80ada731-aee8-45b4-a06c-8da66b31fff4", name: "Yuni Almeida", title: l("Office Manager", "Gerente de oficina"), note: l("Administration", "Administración") };
 
@@ -25,16 +31,16 @@ const DEPTS: Array<{ title: L; lead?: P & { role: L }; people?: P[]; items?: L[]
     ],
   },
   {
-    title: l("Qualified & QC", "Calificado y Control de Calidad"),
-    lead: { id: "aa60d582-3aa5-483d-8c62-da85f13b435c", name: "Ernesto Chavez", role: l("Operational Quality Control", "Control de calidad operativo") },
-  },
-  {
     title: l("Services Department", "Departamento de servicios"),
     lead: { id: "62efbcf5-0290-4637-813e-656b42d1b1ed", name: "Manuel", role: l("Service Operations", "Operaciones de servicio") },
   },
   {
     title: l("Fire Alarm Department", "Departamento de alarma contra incendios"),
     lead: { id: "0576df42-da30-4a3d-8045-1ad356330be4", name: "Elvis", role: l("Fire Alarm Systems", "Sistemas de alarma contra incendios") },
+  },
+  {
+    title: l("Development & Marketing", "Desarrollo y marketing"),
+    lead: { id: "0bf1053c-c4b8-4819-912a-f04ce175b0f0", name: "Marcos", role: l("Development & Marketing", "Desarrollo y marketing") },
   },
   {
     title: l("Low Voltage Division", "División de bajo voltaje"),
@@ -136,7 +142,8 @@ export function OrgChart({ team }: { team: WebTeamGroup[] }) {
               </Box>
               <div aria-hidden className="mx-auto h-4 w-px bg-navy/30" />
               <Box className="border-dashed">
-                <p className="text-sm text-slate-700">{t(QC.note)}</p>
+                <p className="mb-3 text-sm text-slate-700">{t(QC.note)}</p>
+                <Person p={QC} role={t(QC.role)} src={ph(QC.id)} w="w-36" />
               </Box>
             </div>
             <div className="mx-auto w-[11.7rem] text-center">
