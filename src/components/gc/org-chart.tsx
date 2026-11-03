@@ -14,6 +14,7 @@ const QC = {
   name: "Ernesto Chavez",
   title: l("QC Division", "División de Control de Calidad"),
   note: l("Estimating & Preconstruction", "Estimación y Preconstrucción"),
+  dept: l("Qualified & QC", "Calificado y Control de Calidad"),
   role: l("Operational Quality Control", "Control de calidad operativo"),
 };
 const VP = { id: "60c810f3-5a1f-4750-849a-9a2548636821", name: "Vladimir Suri de León", title: l("VP Operations", "VP de Operaciones"), note: l("Distribution & Execution", "Distribución y ejecución") };
@@ -114,7 +115,11 @@ export function OrgChart({ team }: { team: WebTeamGroup[] }) {
   const t = (x: L) => (locale === "es" ? x.es : x.en);
   const photos = new Map<string, string | null>();
   for (const g of team ?? []) for (const m of g.members) photos.set(m.id, m.photo);
-  const ph = (id: string) => photos.get(id) ?? null;
+  const ph = (id: string) =>
+    photos.get(id) ??
+    (id === "0bf1053c-c4b8-4819-912a-f04ce175b0f0"
+      ? "https://wdsellaywiykhhnnzkfm.supabase.co/storage/v1/object/public/project-photos/team/0bf1053c-c4b8-4819-912a-f04ce175b0f0-thumb.jpg"
+      : null);
 
   return (
     <section id="org-chart" className="scroll-mt-20 bg-white py-20 sm:py-28" aria-labelledby="org-title">
@@ -142,7 +147,11 @@ export function OrgChart({ team }: { team: WebTeamGroup[] }) {
               </Box>
               <div aria-hidden className="mx-auto h-4 w-px bg-navy/30" />
               <Box className="border-dashed">
-                <p className="mb-3 text-sm text-slate-700">{t(QC.note)}</p>
+                <p className="text-sm text-slate-700">{t(QC.note)}</p>
+              </Box>
+              <div aria-hidden className="mx-auto h-4 w-px bg-navy/30" />
+              <Box className="border-dashed">
+                <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-gold">{t(QC.dept)}</p>
                 <Person p={QC} role={t(QC.role)} src={ph(QC.id)} w="w-36" />
               </Box>
             </div>
